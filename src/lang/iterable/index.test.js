@@ -35,6 +35,7 @@ describe('unfold item, accu: ...', ()=> {
 
   it('parses', ()=> {
     expect(
+      // TODO: no need for accu as we can return tuple
       parse_expr(strip_block`
         unfold curr=start, accu=0:
           (start + accu, accu + 1)
