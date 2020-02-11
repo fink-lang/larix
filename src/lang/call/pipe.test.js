@@ -14,17 +14,17 @@ describe('pipe: ... | ...', ()=> {
     ).toEqual({
       type: 'pipe',
       op: '|',
-      left: parse_expr(`foo`),
-      right: {
+      left: {
         type: 'pipe',
         op: '|',
-        left: parse_expr('      bar'),
-        right: parse_expr('            spam'),
+        left: parse_expr('foo'),
+        right: parse_expr('      bar'),
         loc: {
-          start: {pos: 6, line: 1, column: 6},
-          end: {pos: 16, line: 1, column: 16}
+          start: {pos: 0, line: 1, column: 0},
+          end: {pos: 9, line: 1, column: 9}
         }
       },
+      right: parse_expr(`            spam`),
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 16, line: 1, column: 16}
