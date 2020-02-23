@@ -9,7 +9,7 @@ module.exports = {
   env: {
     // Used as the default for running babel-node scripts
     development: {
-      sourceMaps: false,
+      sourceMaps: 'both',
       presets: [
         ['@babel/preset-env', {
           targets: {
