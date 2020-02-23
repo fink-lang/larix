@@ -9,7 +9,7 @@ import {add_arithmetic_operators} from './arithmitic';
 import {add_comments} from './comments';
 import {add_call_operators} from './call';
 import {add_func} from './func';
-import {add_group} from './group-or-func';
+import {add_group} from './group';
 import {add_identifier} from './identifier';
 import {add_assignment_operators} from './assignment';
 import {add_iterables} from './iterable';
