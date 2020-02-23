@@ -34,3 +34,21 @@ describe('other symbols', ()=> {
     });
   });
 });
+
+
+describe('symbols as infix operators', ()=> {
+  it('parses a word', ()=> {
+    expect(
+      parse_expr(`123 add 2`)
+    ).toEqual({
+      type: 'infix',
+      op: 'add',
+      left: parse_expr(`123`),
+      right: parse_expr(`        2`),
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 9, line: 1, column: 9}
+      }
+    });
+  });
+});
