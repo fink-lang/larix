@@ -8,7 +8,7 @@ const assign = (op)=> infix_right(op, 'assign');
 
 export const add_assignment_operators = (ctx)=> (
   ctx
-    // TODO: not really an assignment
+    // TODO: not really an assignment but rather a value
     |> add_non_binding(block(':'))
     |> add_operator_like(assign('='))
 );
