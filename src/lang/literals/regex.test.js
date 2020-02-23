@@ -71,7 +71,7 @@ describe('regex - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`rx/foo.bar/n`)
     ).toThrow(strip_block`
-      Cannot use 'n' as an infix operator:
+      Unexpected end of code:
       1| rx/foo.bar/n
                     ^`
     );
