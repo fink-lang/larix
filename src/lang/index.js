@@ -8,7 +8,8 @@ import {add_comparison_operators} from './comparison';
 import {add_arithmetic_operators} from './arithmitic';
 import {add_comments} from './comments';
 import {add_call_operators} from './call';
-import {add_group_or_func} from './group-or-func';
+import {add_func} from './func';
+import {add_group} from './group';
 import {add_identifier} from './identifier';
 import {add_assignment_operators} from './assignment';
 import {add_iterables} from './iterable';
@@ -16,6 +17,8 @@ import {add_spread_operator} from './spread';
 import {add_async} from './async';
 import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
+import {add_non_separating, add_operator_like} from '@fink/prattler/symbols';
+import {named_block} from './generic/block';
 
 
 export const init_language = (ctx)=> (
@@ -25,11 +28,15 @@ export const init_language = (ctx)=> (
     |> add_whitespace_tokens
     |> add_comments
 
-    |> add_identifier
+    |> add_func
+    // TODO: pipe: ... was here
 
     |> add_conditionals
     |> add_iterables
     |> add_assignment_operators
+
+    // TODO: was before func
+    |> add_identifier
 
     |> add_logical_operators
     |> add_comparison_operators
@@ -43,7 +50,8 @@ export const init_language = (ctx)=> (
     |> add_jsx
     |> add_call_operators
 
-    |> add_group_or_func
+    |> add_group
 
     |> add_prop_access
+
 );

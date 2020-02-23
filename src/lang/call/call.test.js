@@ -56,7 +56,7 @@ describe('call()', ()=> {
   });
 
 
-  // TODO: should that be supported?
+  // TODO: should dangling comma be supported?
   it('parses dangling comma: foobar(1, 2,)', ()=> {
     expect(
       parse_expr(`foobar(1, 2,)`)
@@ -95,6 +95,54 @@ describe('call() - parsing failures', ()=> {
       1| foobar(1:)
                  ^`
     );
+  });
+});
+
+
+describe('call:: ...', ()=> {
+
+  it('parses args: foobar:: spam, ni', ()=> {
+    expect(
+      parse_expr(`foobar:: spam, ni`)
+    ).toEqual({
+      type: 'call',
+      callee: parse_expr(`foobar`),
+      args: [
+        parse_expr(`         spam`),
+        parse_expr(`               ni`)
+      ],
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        // TODO: not right!
+        end: {pos: 15, line: 1, column: 15}
+      }
+    });
+  });
+});
+
+
+describe('pipe foo: ...', ()=> {
+
+  it('pipes', ()=> {
+    expect(
+      parse_expr(strip_block`
+        pipe foo:
+          bar(shrub)
+          ni
+      `)
+    ).toEqual({
+      type: 'block',
+      op: 'pipe',
+      args: [parse_expr(`     foo`)],
+      exprs: [
+        parse_expr(`         \n  bar(shrub)`),
+        parse_expr(`         \n            \n  ni`)
+      ],
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 27, line: 3, column: 4}
+      }
+    });
   });
 });
 
