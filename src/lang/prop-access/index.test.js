@@ -19,4 +19,19 @@ describe('prop access', ()=> {
       }
     });
   });
+
+  it('parses member expr: foo.`bar spam`', ()=> {
+    expect(
+      parse_expr('foo.`bar spam`')
+    ).toEqual({
+      type: 'member',
+      op: '.',
+      left: parse_expr(`foo`),
+      right: parse_expr('    `bar spam`'),
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 14, line: 1, column: 14}
+      }
+    });
+  });
 });
