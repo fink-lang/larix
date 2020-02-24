@@ -6,8 +6,8 @@ import {symbol} from '../symbols';
 
 
 const member_expr = (ctx, lbp)=> {
-  // TODO: next tokens can only be a string or an identifier
-  if (next_is(ctx, '`')) {
+  // TODO: next tokens can only be a string or an identifier or a group
+  if (next_is(ctx, '`') || next_is(ctx, '(')) {
     return expression(ctx, lbp);
   }
   const key_ctx = advance(ctx);
