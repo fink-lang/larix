@@ -20,6 +20,7 @@ describe('prop access', ()=> {
     });
   });
 
+
   it('parses member expr: foo.`bar spam`', ()=> {
     expect(
       parse_expr('foo.`bar spam`')
@@ -31,6 +32,22 @@ describe('prop access', ()=> {
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 14, line: 1, column: 14}
+      }
+    });
+  });
+
+
+  it('parses member expr: foo.(Symbol.iterator)', ()=> {
+    expect(
+      parse_expr('foo.(Symbol.iterator)')
+    ).toEqual({
+      type: 'member',
+      op: '.',
+      left: parse_expr(`foo`),
+      right: parse_expr('    (Symbol.iterator)'),
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 21, line: 1, column: 21}
       }
     });
   });
