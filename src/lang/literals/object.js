@@ -17,6 +17,20 @@ const value_expr = (ctx, key)=> {
 };
 
 
+const default_assignment = (ctx, left)=> {
+  const expr_ctx = advance(ctx);
+
+  const [right, next_ctx] = expression(expr_ctx, 0);
+  const {loc: {end}} = right;
+
+  // TODO: assign and this func should use common code
+  return [
+    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
+    next_ctx
+  ];
+};
+
+
 const key_expr = (ctx)=> {
   if (next_is(ctx, '`') || next_is(ctx, '...')) {
     return expression(ctx, 0);
@@ -24,14 +38,25 @@ const key_expr = (ctx)=> {
 
   const key_ctx = advance(ctx);
   const loc = curr_loc(key_ctx);
+  const key = {type: other_token, value: curr_value(key_ctx), loc};
 
-  return [{type: other_token, value: curr_value(key_ctx), loc}, key_ctx];
+  if (next_is(key_ctx, '=')) {
+    return default_assignment(key_ctx, key);
+  }
+
+  return [key, key_ctx];
 };
 
 
 const prop_expr = (ctx)=> {
-  const [key, value_ctx] = key_expr(ctx);
-  const [value, next_ctx] = value_expr(value_ctx, key);
+  const [key_or_default, value_ctx] = key_expr(ctx);
+  const [value, next_ctx] = value_expr(value_ctx, key_or_default);
+
+  const key = (
+    key_or_default.type === 'assign'
+      ? key_or_default.left
+      :key_or_default
+  );
 
   const {start} = key.loc;
   const {end} = value.loc;
