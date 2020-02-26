@@ -95,6 +95,7 @@ describe('object {...}', ()=> {
     });
   });
 
+
   it('parses single str prop: {`foo`: spam}', ()=> {
     expect(
       parse_expr('{`foo`: spam}')
@@ -112,6 +113,28 @@ describe('object {...}', ()=> {
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 13, line: 1, column: 13}
+      }
+    });
+  });
+
+
+  it('parses default assignment prop: {foo=123}', ()=> {
+    expect(
+      parse_expr(`{foo=123}`)
+    ).toEqual({
+      type: 'object',
+      props: [{
+        type: 'prop',
+        key: parse_expr(` foo`),
+        value: parse_expr(` foo=123`),
+        loc: {
+          start: {pos: 1, line: 1, column: 1},
+          end: {pos: 8, line: 1, column: 8}
+        }
+      }],
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 9, line: 1, column: 9}
       }
     });
   });
