@@ -52,6 +52,24 @@ describe('array [...]', ()=> {
     });
   });
 
+  // TODO: should that be supported?
+  it('parses leading commas: [,, foo]', ()=> {
+    expect(
+      parse_expr(`[,, foo]`)
+    ).toEqual({
+      type: 'array',
+      elems: [
+        null,
+        null,
+        parse_expr(`    foo`)
+      ],
+      loc: {
+        start: {pos: 0, line: 1, column: 0},
+        end: {pos: 8, line: 1, column: 8}
+      }
+    });
+  });
+
 
   // TODO: should that be supported?
   it('parses dangling comma: [1, 2,]', ()=> {

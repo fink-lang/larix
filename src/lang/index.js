@@ -15,6 +15,7 @@ import {add_assignment_operators} from './assignment';
 import {add_iterables} from './iterable';
 import {add_spread_operator} from './spread';
 import {add_async} from './async';
+import {add_import} from './import';
 import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
 import {add_non_separating, add_operator_like} from '@fink/prattler/symbols';
@@ -44,6 +45,7 @@ export const init_language = (ctx)=> (
 
     |> add_spread_operator
     |> add_async
+    |> add_import
 
     |> add_literals
 
