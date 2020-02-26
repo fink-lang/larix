@@ -12,7 +12,8 @@ const infix_led = (lbp)=> (ctx, left)=> {
   const op = curr_value(ctx);
 
   const {loc: {start}} = left;
-  const [right, next_ctx] = expression(ctx, lbp-1);
+  // TODO: precedence left to right (+1) or right to left (-1)
+  const [right, next_ctx] = expression(ctx, lbp+1);
   const {loc: {end}} = right;
 
   return [{type, op, left, right, loc: {start, end}}, next_ctx];
