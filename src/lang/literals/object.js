@@ -61,6 +61,7 @@ const prop_expr = (ctx)=> {
   const {start} = key.loc;
   const {end} = value.loc;
 
+  // TODO: should `key, value` just be `left, right` to simplify matters
   return [{type: 'prop', key, value, loc: {start, end}}, next_ctx];
 };
 
@@ -70,9 +71,9 @@ export const object = (op)=> ({
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
-    const [props, next_ctx] = seq(ctx, '}', prop_expr);
+    const [exprs, next_ctx] = seq(ctx, '}', prop_expr);
     const {end} = curr_loc(next_ctx);
 
-    return [{type: 'object', props, loc: {start, end}}, next_ctx];
+    return [{type: 'object', exprs, loc: {start, end}}, next_ctx];
   }
 });

@@ -10,17 +10,7 @@ describe('module', ()=> {
       spam = ni
     `);
 
-    expect(mod).toEqual({
-      type: 'module',
-      exprs: [
-        parse_expr('foo = bar'),
-        parse_expr('         \nspam = ni\n')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 19, line: 2, column: 9}
-      }
-    });
+    expect(mod).toMatchSnapshot();
   });
 });
 

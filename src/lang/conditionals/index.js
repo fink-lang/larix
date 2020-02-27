@@ -12,13 +12,13 @@ const test_expr = (ctx)=> {
 
 
 const test_result_expr = (ctx)=> {
-  const [test, result_ctx] = test_expr(ctx);
-  const [result, next_ctx] = get_block(result_ctx);
-  const {start} = test.loc;
-  const {end} = result.loc;
+  const [left, result_ctx] = test_expr(ctx);
+  const [right, next_ctx] = get_block(result_ctx);
+  const {start} = left.loc;
+  const {end} = right.loc;
   return [
     // TODO: improve type
-    {type: 'cond:test:result', test, result, loc: {start, end}},
+    {type: 'cond:test:result', left, right, loc: {start, end}},
     next_ctx
   ];
 };

@@ -12,21 +12,7 @@ describe('fold item, accu: ...', ()=> {
         fold item, accu=0:
           item + accu
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'fold',
-      args: [
-        parse_expr('     item'),
-        parse_expr('           accu=0')
-      ],
-      exprs: [
-        parse_expr('                  \n  item + accu')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 32, line: 2, column: 13}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -40,21 +26,7 @@ describe('unfold item, accu: ...', ()=> {
         unfold curr=start, accu=0:
           (start + accu, accu + 1)
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'unfold',
-      args: [
-        parse_expr('       curr=start'),
-        parse_expr('                   accu=0')
-      ],
-      exprs: [
-        parse_expr('                          \n  (start + accu, accu + 1)')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 53, line: 2, column: 26}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -67,20 +39,7 @@ describe('map item: ...', ()=> {
         map item:
           item * 2
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'map',
-      args: [
-        parse_expr('    item')
-      ],
-      exprs: [
-        parse_expr('         \n  item * 2')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 20, line: 2, column: 10}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -93,20 +52,7 @@ describe('flat_map item: ...', ()=> {
         flat_map item:
           [item, item * 2]
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'flat_map',
-      args: [
-        parse_expr('         item')
-      ],
-      exprs: [
-        parse_expr('              \n  [item, item * 2]')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 33, line: 2, column: 18}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -119,19 +65,6 @@ describe('filter item: ...', ()=> {
         filter item:
           item % 2 == 0
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'filter',
-      args: [
-        parse_expr('       item')
-      ],
-      exprs: [
-        parse_expr('            \n  item % 2 == 0')
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 28, line: 2, column: 15}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });

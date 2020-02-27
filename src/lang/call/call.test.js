@@ -11,48 +11,21 @@ describe('call()', ()=> {
   it('parses empty: foobar()', ()=> {
     expect(
       parse_expr(`foobar()`)
-    ).toEqual({
-      type: 'call',
-      callee: parse_expr(`foobar`),
-      args: [],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 8, line: 1, column: 8}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
   it('parses single arg: foobar(1)', ()=> {
     expect(
       parse_expr(`foobar(1)`)
-    ).toEqual({
-      type: 'call',
-      callee: parse_expr(`foobar`),
-      args: [parse_expr(`       1`)],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 9, line: 1, column: 9}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
   it('parses multiple args: foobar(1, 2)', ()=> {
     expect(
       parse_expr(`foobar(1, 2)`)
-    ).toEqual({
-      type: 'call',
-      callee: parse_expr(`foobar`),
-      args: [
-        parse_expr(`       1`),
-        parse_expr(`          2`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 12, line: 1, column: 12}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
@@ -60,18 +33,7 @@ describe('call()', ()=> {
   it('parses dangling comma: foobar(1, 2,)', ()=> {
     expect(
       parse_expr(`foobar(1, 2,)`)
-    ).toEqual({
-      type: 'call',
-      callee: parse_expr(`foobar`),
-      args: [
-        parse_expr(`       1`),
-        parse_expr(`          2`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 13, line: 1, column: 13}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -104,19 +66,7 @@ describe('call:: ...', ()=> {
   it('parses args: foobar:: spam, ni', ()=> {
     expect(
       parse_expr(`foobar:: spam, ni`)
-    ).toEqual({
-      type: 'call',
-      callee: parse_expr(`foobar`),
-      args: [
-        parse_expr(`         spam`),
-        parse_expr(`               ni`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        // TODO: not right!
-        end: {pos: 15, line: 1, column: 15}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
@@ -130,19 +80,7 @@ describe('pipe foo: ...', ()=> {
           bar(shrub)
           ni
       `)
-    ).toEqual({
-      type: 'block',
-      op: 'pipe',
-      args: [parse_expr(`     foo`)],
-      exprs: [
-        parse_expr(`         \n  bar(shrub)`),
-        parse_expr(`         \n            \n  ni`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 27, line: 3, column: 4}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 

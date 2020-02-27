@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`regex rx/.../ parses empty: rx// 1`] = `
+regex (1:0-1:4)
+  //
+`;
+
+exports[`regex rx/.../ parses flags: rx//gimsuy 1`] = `
+regex (1:0-1:10)
+  //gimsuy
+`;
+
+exports[`regex rx/.../ parses regex: rx/.+foo/ 1`] = `
+regex (1:0-1:15)
+  /.+foo/gimsuy
+`;

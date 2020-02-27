@@ -5,6 +5,9 @@ module.exports = {
   transform: {'^.+\\.js$': 'babel-jest'},
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
+  snapshotSerializers: ['<rootDir>/src/testing/snapshot'],
+  snapshotResolver: '<rootDir>/src/testing/resolver',
+
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 
   testMatch: ['<rootDir>/**/*.test.js'],
@@ -18,6 +21,10 @@ module.exports = {
 
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.js'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/src/testing/resolver.js'
+  ],
   coverageDirectory: './build/cov',
   coverageReporters: ['lcov'],
   coverageThreshold: {

@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`comparison parses single line: a != b 1`] = `
+comp != (1:0-1:6)
+  other (1:0-1:1) a
+  other (1:5-1:6) b
+`;
+
+exports[`comparison parses single line: a < b 1`] = `
+comp < (1:0-1:5)
+  other (1:0-1:1) a
+  other (1:4-1:5) b
+`;
+
+exports[`comparison parses single line: a <= b 1`] = `
+comp <= (1:0-1:6)
+  other (1:0-1:1) a
+  other (1:5-1:6) b
+`;
+
+exports[`comparison parses single line: a == b 1`] = `
+comp == (1:0-1:6)
+  other (1:0-1:1) a
+  other (1:5-1:6) b
+`;
+
+exports[`comparison parses single line: a > b 1`] = `
+comp > (1:0-1:5)
+  other (1:0-1:1) a
+  other (1:4-1:5) b
+`;
+
+exports[`comparison parses single line: a >= b 1`] = `
+comp >= (1:0-1:6)
+  other (1:0-1:1) a
+  other (1:5-1:6) b
+`;

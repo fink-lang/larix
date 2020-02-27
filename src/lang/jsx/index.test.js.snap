@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JSX <Foobar>...</Foobar> parses elem with children: <Foobar><Spam /></Foobar> 1`] = `
+jsx-elem (1:0-3:9) Foobar
+  jsx-attr (1:8-1:10) ni
+    null
+  :
+  jsx-text (1:10-1:11)
+    "\\n  "
+  jsx-elem (2:2-2:10) Spam
+  jsx-text (2:8-2:10)
+    "\\n"
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses elem with expr in body: <Foobar> {...} </Foobar> 1`] = `
+jsx-elem (1:0-3:9) Foobar
+  :
+  jsx-text (1:7-1:8)
+    "\\n  "
+  jsx-expr-container (2:2-2:8)
+    block (2:2-2:8)
+      arithm + (2:3-2:8)
+        other (2:3-2:4) 1
+        other (2:7-2:8) 2
+  jsx-text (2:8-2:9)
+    "\\n"
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses empty elem: <Foobar></Foobar> 1`] = `jsx-elem (1:0-1:17) Foobar`;
+
+exports[`JSX <Foobar>...</Foobar> parses self closing elem with expr attr: <Foobar spam={ni} /> 1`] = `
+jsx-elem (1:0-1:20) Foobar
+  jsx-attr (1:8-1:17) spam
+        jsx-expr-container (1:13-1:16)
+      block (1:13-1:16)
+        other (1:14-1:16) ni
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses self closing elem with short attr: <Foobar spam /> 1`] = `
+jsx-elem (1:0-1:15) Foobar
+  jsx-attr (1:8-1:12) spam
+    null
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses self closing elem with str attr: <Foobar spam="ni" /> 1`] = `
+jsx-elem (1:0-1:20) Foobar
+  jsx-attr (1:8-1:17) spam
+        jsx-string (1:13-1:17)
+      'ni'
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses self closing elem with str attr: <Foobar spam='ni' /> 1`] = `
+jsx-elem (1:0-1:20) Foobar
+  jsx-attr (1:8-1:17) spam
+        jsx-string (1:13-1:17)
+      'ni'
+`;
+
+exports[`JSX <Foobar>...</Foobar> parses self closing elem: <Foobar /> 1`] = `jsx-elem (1:0-1:10) Foobar`;

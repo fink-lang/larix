@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`arithmitic parses grouped: (a - b) * c 1`] = `
+arithm * (1:0-1:11)
+  group (1:0-1:7)
+    arithm - (1:1-1:6)
+      other (1:1-1:2) a
+      other (1:5-1:6) b
+  other (1:10-1:11) c
+`;
+
+exports[`arithmitic parses single line: a % b / c 1`] = `
+arithm / (1:0-1:9)
+  arithm % (1:0-1:5)
+    other (1:0-1:1) a
+    other (1:4-1:5) b
+  other (1:8-1:9) c
+`;
+
+exports[`arithmitic parses single line: a * -b 1`] = `
+arithm * (1:0-1:6)
+  other (1:0-1:1) a
+  arithm_prefix - (1:4-1:6)
+    other (1:5-1:6) b
+`;
+
+exports[`arithmitic parses single line: a * b + c 1`] = `
+arithm + (1:0-1:9)
+  arithm * (1:0-1:5)
+    other (1:0-1:1) a
+    other (1:4-1:5) b
+  other (1:8-1:9) c
+`;
+
+exports[`arithmitic parses single line: a + b * c 1`] = `
+arithm + (1:0-1:9)
+  other (1:0-1:1) a
+  arithm * (1:4-1:9)
+    other (1:4-1:5) b
+    other (1:8-1:9) c
+`;
+
+exports[`arithmitic parses single line: a ^ b * c 1`] = `
+arithm * (1:0-1:9)
+  arithm_right ^ (1:0-1:5)
+    other (1:0-1:1) a
+    other (1:4-1:5) b
+  other (1:8-1:9) c
+`;
