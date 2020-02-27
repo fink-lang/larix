@@ -13,7 +13,7 @@ describe('array [...]', ()=> {
       parse_expr(`[]`)
     ).toEqual({
       type: 'array',
-      elems: [],
+      exprs: [],
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 2, line: 1, column: 2}
@@ -27,7 +27,7 @@ describe('array [...]', ()=> {
       parse_expr(`[1]`)
     ).toEqual({
       type: 'array',
-      elems: [parse_expr(` 1`)],
+      exprs: [parse_expr(` 1`)],
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 3, line: 1, column: 3}
@@ -41,7 +41,7 @@ describe('array [...]', ()=> {
       parse_expr(`[1, 2]`)
     ).toEqual({
       type: 'array',
-      elems: [
+      exprs: [
         parse_expr(` 1`),
         parse_expr(`    2`)
       ],
@@ -58,7 +58,7 @@ describe('array [...]', ()=> {
       parse_expr(`[,, foo]`)
     ).toEqual({
       type: 'array',
-      elems: [
+      exprs: [
         null,
         null,
         parse_expr(`    foo`)
@@ -77,7 +77,7 @@ describe('array [...]', ()=> {
       parse_expr(`[1, 2,]`)
     ).toEqual({
       type: 'array',
-      elems: [
+      exprs: [
         parse_expr(` 1`),
         parse_expr(`    2`)
       ],

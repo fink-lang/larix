@@ -13,7 +13,7 @@ describe('object {...}', ()=> {
       parse_expr(`{}`)
     ).toEqual({
       type: 'object',
-      props: [],
+      exprs: [],
       loc: {
         start: {pos: 0, line: 1, column: 0},
         end: {pos: 2, line: 1, column: 2}
@@ -27,7 +27,7 @@ describe('object {...}', ()=> {
       parse_expr(`{foo}`)
     ).toEqual({
       type: 'object',
-      props: [{
+      exprs: [{
         type: 'prop',
         key: parse_expr(` foo`),
         value: parse_expr(` foo`),
@@ -44,12 +44,12 @@ describe('object {...}', ()=> {
   });
 
 
-  it('parses multiple shorthand props: {foo, bar}', ()=> {
+  it('parses multiple shorthand exprs: {foo, bar}', ()=> {
     expect(
       parse_expr(`{foo, bar}`)
     ).toEqual({
       type: 'object',
-      props: [{
+      exprs: [{
         type: 'prop',
         key: parse_expr(` foo`),
         value: parse_expr(` foo`),
@@ -79,7 +79,7 @@ describe('object {...}', ()=> {
       parse_expr(`{foo: spam}`)
     ).toEqual({
       type: 'object',
-      props: [{
+      exprs: [{
         type: 'prop',
         key: parse_expr(` foo`),
         value: parse_expr(`    : spam`),
@@ -101,7 +101,7 @@ describe('object {...}', ()=> {
       parse_expr('{`foo`: spam}')
     ).toEqual({
       type: 'object',
-      props: [{
+      exprs: [{
         type: 'prop',
         key: parse_expr(' `foo`'),
         value: parse_expr(`      : spam`),
@@ -123,7 +123,7 @@ describe('object {...}', ()=> {
       parse_expr(`{foo=123}`)
     ).toEqual({
       type: 'object',
-      props: [{
+      exprs: [{
         type: 'prop',
         key: parse_expr(` foo`),
         value: parse_expr(` foo=123`),

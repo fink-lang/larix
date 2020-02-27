@@ -20,16 +20,16 @@ describe('match ...:', ()=> {
       args: [parse_expr('      item')],
       exprs: [{
         type: 'cond:test:result',
-        test: parse_expr('           \n  foo'),
-        result: parse_expr('           \n     : bar'),
+        left: parse_expr('           \n  foo'),
+        right: parse_expr('           \n     : bar'),
         loc: {
           start: {pos: 14, line: 2, column: 2},
           end: {pos: 22, line: 2, column: 10}
         }
       }, {
         type: 'cond:test:result',
-        test: parse_expr('           \n          \n  else'),
-        result: parse_expr('           \n          \n      : spam'),
+        left: parse_expr('           \n          \n  else'),
+        right: parse_expr('           \n          \n      : spam'),
         loc: {
           start: {pos: 25, line: 3, column: 2},
           end: {pos: 35, line: 3, column: 12}
