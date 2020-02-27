@@ -70,9 +70,9 @@ export const object = (op)=> ({
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
-    const [props, next_ctx] = seq(ctx, '}', prop_expr);
+    const [exprs, next_ctx] = seq(ctx, '}', prop_expr);
     const {end} = curr_loc(next_ctx);
 
-    return [{type: 'object', props, loc: {start, end}}, next_ctx];
+    return [{type: 'object', exprs, loc: {start, end}}, next_ctx];
   }
 });

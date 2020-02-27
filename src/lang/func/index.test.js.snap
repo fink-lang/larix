@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`func: fn ...: ... parses multi line: fn foo, bar: foo 1`] = `
+block fn (1:0-3:5)
+  other (1:3-1:6) foo
+  other (1:8-1:11) bar
+  :
+  other (2:2-2:5) foo
+  other (3:2-3:5) bar
+`;
+
+exports[`func: fn ...: ... parses single line: fn foo, bar: foo 1`] = `
+block fn (1:0-1:16)
+  other (1:3-1:6) foo
+  other (1:8-1:11) bar
+  :
+  other (1:13-1:16) foo
+`;

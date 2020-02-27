@@ -9,9 +9,9 @@ export const array = (op)=> ({
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
-    const [elems, next_ctx] = seq(ctx, ']');
+    const [exprs, next_ctx] = seq(ctx, ']');
     const {end} = curr_loc(next_ctx);
 
-    return [{type: 'array', elems, loc: {start, end}}, next_ctx];
+    return [{type: 'array', exprs, loc: {start, end}}, next_ctx];
   }
 });

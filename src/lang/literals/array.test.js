@@ -11,63 +11,28 @@ describe('array [...]', ()=> {
   it('parses empty: []', ()=> {
     expect(
       parse_expr(`[]`)
-    ).toEqual({
-      type: 'array',
-      elems: [],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 2, line: 1, column: 2}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
   it('parses single elemement: [1]', ()=> {
     expect(
       parse_expr(`[1]`)
-    ).toEqual({
-      type: 'array',
-      elems: [parse_expr(` 1`)],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 3, line: 1, column: 3}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
   it('parses multiple elements: [1, 2]', ()=> {
     expect(
       parse_expr(`[1, 2]`)
-    ).toEqual({
-      type: 'array',
-      elems: [
-        parse_expr(` 1`),
-        parse_expr(`    2`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 6, line: 1, column: 6}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
   // TODO: should that be supported?
   it('parses leading commas: [,, foo]', ()=> {
     expect(
       parse_expr(`[,, foo]`)
-    ).toEqual({
-      type: 'array',
-      elems: [
-        null,
-        null,
-        parse_expr(`    foo`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 8, line: 1, column: 8}
-      }
-    });
+    ).toMatchSnapshot();
   });
 
 
@@ -75,17 +40,7 @@ describe('array [...]', ()=> {
   it('parses dangling comma: [1, 2,]', ()=> {
     expect(
       parse_expr(`[1, 2,]`)
-    ).toEqual({
-      type: 'array',
-      elems: [
-        parse_expr(` 1`),
-        parse_expr(`    2`)
-      ],
-      loc: {
-        start: {pos: 0, line: 1, column: 0},
-        end: {pos: 7, line: 1, column: 7}
-      }
-    });
+    ).toMatchSnapshot();
   });
 });
 
