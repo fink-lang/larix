@@ -6,7 +6,9 @@ export const print = (ast)=> serialize(ast);
 
 export const test = (val)=> (
   val
+    // eslint-disable-next-line no-prototype-builtins
     && val.hasOwnProperty('type')
+    // eslint-disable-next-line no-prototype-builtins
     && val.hasOwnProperty('loc')
 );
 

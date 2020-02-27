@@ -61,6 +61,7 @@ const prop_expr = (ctx)=> {
   const {start} = key.loc;
   const {end} = value.loc;
 
+  // TODO: should `key, value` just be `left, right` to simplify matters
   return [{type: 'prop', key, value, loc: {start, end}}, next_ctx];
 };
 

@@ -14,6 +14,16 @@ object (1:0-1:2)
 
 `;
 
+exports[`object {...} parses multiple shorthand exprs: {foo, bar} 1`] = `
+object (1:0-1:10)
+  prop (1:1-1:4)
+    other (1:1-1:4) foo
+    other (1:1-1:4) foo
+  prop (1:6-1:9)
+    other (1:6-1:9) bar
+    other (1:6-1:9) bar
+`;
+
 exports[`object {...} parses multiple shorthand props: {foo, bar} 1`] = `
 object (1:0-1:10)
   prop (1:1-1:4)
