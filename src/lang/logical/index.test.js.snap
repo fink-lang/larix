@@ -2,21 +2,21 @@
 
 exports[`logical parses single line: !a 1`] = `
 logical ! (1:0-1:2)
-  other (1:1-1:2) a
+  ident (1:1-1:2) a
 `;
 
 exports[`logical parses single line: a && b || c 1`] = `
 logical || (1:0-1:11)
   logical && (1:0-1:6)
-    other (1:0-1:1) a
-    other (1:5-1:6) b
-  other (1:10-1:11) c
+    ident (1:0-1:1) a
+    ident (1:5-1:6) b
+  ident (1:10-1:11) c
 `;
 
 exports[`logical parses single line: a || b && c 1`] = `
 logical || (1:0-1:11)
-  other (1:0-1:1) a
+  ident (1:0-1:1) a
   logical && (1:5-1:11)
-    other (1:5-1:6) b
-    other (1:10-1:11) c
+    ident (1:5-1:6) b
+    ident (1:10-1:11) c
 `;

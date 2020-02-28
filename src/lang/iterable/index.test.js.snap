@@ -2,61 +2,61 @@
 
 exports[`filter item: ... parses 1`] = `
 block filter (1:0-2:15)
-  other (1:7-1:11) item
+  ident (1:7-1:11) item
   :
   comp == (2:2-2:15)
     arithm % (2:2-2:10)
-      other (2:2-2:6) item
-      other (2:9-2:10) 2
-    other (2:14-2:15) 0
+      ident (2:2-2:6) item
+      number (2:9-2:10) 2
+    number (2:14-2:15) 0
 `;
 
 exports[`flat_map item: ... parses 1`] = `
 block flat_map (1:0-2:18)
-  other (1:9-1:13) item
+  ident (1:9-1:13) item
   :
   array (2:2-2:18)
-    other (2:3-2:7) item
+    ident (2:3-2:7) item
     arithm * (2:9-2:17)
-      other (2:9-2:13) item
-      other (2:16-2:17) 2
+      ident (2:9-2:13) item
+      number (2:16-2:17) 2
 `;
 
 exports[`fold item, accu: ... parses 1`] = `
 block fold (1:0-2:13)
-  other (1:5-1:9) item
+  ident (1:5-1:9) item
   assign = (1:11-1:17)
-    other (1:11-1:15) accu
-    other (1:16-1:17) 0
+    ident (1:11-1:15) accu
+    number (1:16-1:17) 0
   :
   arithm + (2:2-2:13)
-    other (2:2-2:6) item
-    other (2:9-2:13) accu
+    ident (2:2-2:6) item
+    ident (2:9-2:13) accu
 `;
 
 exports[`map item: ... parses 1`] = `
 block map (1:0-2:10)
-  other (1:4-1:8) item
+  ident (1:4-1:8) item
   :
   arithm * (2:2-2:10)
-    other (2:2-2:6) item
-    other (2:9-2:10) 2
+    ident (2:2-2:6) item
+    number (2:9-2:10) 2
 `;
 
 exports[`unfold item, accu: ... parses 1`] = `
 block unfold (1:0-2:26)
   assign = (1:7-1:17)
-    other (1:7-1:11) curr
-    other (1:12-1:17) start
+    ident (1:7-1:11) curr
+    ident (1:12-1:17) start
   assign = (1:19-1:25)
-    other (1:19-1:23) accu
-    other (1:24-1:25) 0
+    ident (1:19-1:23) accu
+    number (1:24-1:25) 0
   :
   group (2:2-2:26)
     arithm + (2:3-2:15)
-      other (2:3-2:8) start
-      other (2:11-2:15) accu
+      ident (2:3-2:8) start
+      ident (2:11-2:15) accu
     arithm + (2:17-2:25)
-      other (2:17-2:21) accu
-      other (2:24-2:25) 1
+      ident (2:17-2:21) accu
+      number (2:24-2:25) 1
 `;

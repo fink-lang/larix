@@ -5,7 +5,6 @@ import {
 
 import {symbol} from '../symbols';
 import {seq} from '../generic/sequence';
-import {other_token} from '@fink/prattler/symbols';
 
 
 const value_expr = (ctx, key)=> {
@@ -38,7 +37,7 @@ const key_expr = (ctx)=> {
 
   const key_ctx = advance(ctx);
   const loc = curr_loc(key_ctx);
-  const key = {type: other_token, value: curr_value(key_ctx), loc};
+  const key = {type: 'ident', value: curr_value(key_ctx), loc};
 
   if (next_is(key_ctx, '=')) {
     return default_assignment(key_ctx, key);

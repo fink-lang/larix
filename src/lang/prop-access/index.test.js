@@ -1,5 +1,3 @@
-import {other_token} from '@fink/prattler/symbols';
-
 import {parse_expr} from '../../';
 
 

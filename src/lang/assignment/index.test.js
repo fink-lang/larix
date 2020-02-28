@@ -1,7 +1,4 @@
-import {other_token} from '@fink/prattler/symbols';
-
 import {parse_expr} from '../../';
-import {strip_block} from '../../string-utils';
 
 
 describe('assignment', ()=> {

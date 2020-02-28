@@ -2,6 +2,6 @@
 
 exports[`group: (...) parses single line: (foo, bar) 1`] = `
 group (1:0-1:10)
-  other (1:1-1:4) foo
-  other (1:6-1:9) bar
+  ident (1:1-1:4) foo
+  ident (1:6-1:9) bar
 `;

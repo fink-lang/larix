@@ -1,7 +1,7 @@
 import {
   advance, curr_loc, curr_value, next_is, expression
 } from '@fink/prattler';
-import {add_operator_like, other_token} from '@fink/prattler/symbols';
+import {add_operator_like} from '@fink/prattler/symbols';
 import {symbol} from '../symbols';
 
 
@@ -13,7 +13,7 @@ const member_expr = (ctx, lbp)=> {
   const key_ctx = advance(ctx);
   const loc = curr_loc(key_ctx);
 
-  return [{type: other_token, value: curr_value(key_ctx), loc}, key_ctx];
+  return [{type: 'ident', value: curr_value(key_ctx), loc}, key_ctx];
 };
 
 
