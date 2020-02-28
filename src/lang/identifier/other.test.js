@@ -1,8 +1,4 @@
-import {other_token} from '@fink/prattler/symbols';
-
 import {parse_expr, parse} from '../../';
-
-
 import {strip_block} from '../../string-utils';
 
 

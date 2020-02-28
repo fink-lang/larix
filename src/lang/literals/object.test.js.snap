@@ -3,9 +3,9 @@
 exports[`object {...} parses default assignment prop: {foo=123} 1`] = `
 object (1:0-1:9)
   prop (1:1-1:8)
-    other (1:1-1:4) foo
+    ident (1:1-1:4) foo
     assign = (1:1-1:8)
-      other (1:1-1:4) foo
+      ident (1:1-1:4) foo
       number (1:5-1:8) 123
 `;
 
@@ -17,17 +17,17 @@ object (1:0-1:2)
 exports[`object {...} parses multiple shorthand exprs: {foo, bar} 1`] = `
 object (1:0-1:10)
   prop (1:1-1:4)
-    other (1:1-1:4) foo
-    other (1:1-1:4) foo
+    ident (1:1-1:4) foo
+    ident (1:1-1:4) foo
   prop (1:6-1:9)
-    other (1:6-1:9) bar
-    other (1:6-1:9) bar
+    ident (1:6-1:9) bar
+    ident (1:6-1:9) bar
 `;
 
 exports[`object {...} parses single prop: {foo: spam} 1`] = `
 object (1:0-1:11)
   prop (1:1-1:10)
-    other (1:1-1:4) foo
+    ident (1:1-1:4) foo
     block (1:4-1:10)
       ident (1:6-1:10) spam
 `;
@@ -35,8 +35,8 @@ object (1:0-1:11)
 exports[`object {...} parses single shorthand prop: {foo} 1`] = `
 object (1:0-1:5)
   prop (1:1-1:4)
-    other (1:1-1:4) foo
-    other (1:1-1:4) foo
+    ident (1:1-1:4) foo
+    ident (1:1-1:4) foo
 `;
 
 exports[`object {...} parses single str prop: {\`foo\`: spam} 1`] = `

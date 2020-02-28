@@ -1,7 +1,5 @@
 import {init_parser, start_parser, next_is_end, next_loc} from '@fink/prattler';
-import {other_token} from '@fink/prattler/symbols';
 
-import {parse_expr} from '../../';
 import {init_language} from '..';
 
 

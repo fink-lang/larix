@@ -1,15 +1,9 @@
-import {other_token} from '@fink/prattler/symbols';
 
-
-const str_type_op = ({type, op, loc: {start, end}})=> {
-  if (type === other_token) {
-    type = 'other';
-  }
-
-  return op && op !== type
+const str_type_op = ({type, op, loc: {start, end}})=> (
+  op && op !== type
     ? `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
-    : `${type} (${start.line}:${start.column}-${end.line}:${end.column})`;
-};
+    : `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
+);
 
 
 const serialize_block = (node, serialize, indent)=> {
@@ -131,7 +125,7 @@ export const serialize = (node, indent='')=> {
 
   const head = str_type_op(node);
 
-  if (node.type !== other_token && node.type.startsWith('jsx-')) {
+  if (node.type.startsWith('jsx-')) {
     return serialize_jsx(node, serialize, indent);
 
   } if (node.type === 'regex') {
