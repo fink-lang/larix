@@ -6,8 +6,8 @@ string \` (1:0-1:2)
 `;
 
 exports[`string \`...\` parses escape characters 1`] = `
-string \` (1:0-1:14)
-  \`\\n \\t \\\\ \\\` \`
+string \` (1:0-1:15)
+  \` \\n \\t \\\\ \\\` \`
 `;
 
 exports[`string \`...\` parses multi line string 1`] = `
