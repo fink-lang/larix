@@ -2,14 +2,14 @@
 
 exports[`match ...: parses single line: match foo: bar 1`] = `
 cond match (1:0-3:12)
-  other (1:6-1:10) item
+  ident (1:6-1:10) item
   :
   cond:test:result (2:2-2:10)
-    other (2:2-2:5) foo
+    ident (2:2-2:5) foo
     block (2:5-2:10)
-      other (2:7-2:10) bar
+      ident (2:7-2:10) bar
   cond:test:result (3:2-3:12)
-    other (3:2-3:6) else
+    ident (3:2-3:6) else
     block (3:6-3:12)
-      other (3:8-3:12) spam
+      ident (3:8-3:12) spam
 `;

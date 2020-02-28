@@ -2,48 +2,48 @@
 
 exports[`call() parses dangling comma: foobar(1, 2,) 1`] = `
 call (1:0-1:13)
-  other (1:0-1:6) foobar
-  other (1:7-1:8) 1
-  other (1:10-1:11) 2
+  ident (1:0-1:6) foobar
+  number (1:7-1:8) 1
+  number (1:10-1:11) 2
 
 `;
 
 exports[`call() parses empty: foobar() 1`] = `
 call (1:0-1:8)
-  other (1:0-1:6) foobar
+  ident (1:0-1:6) foobar
 
 `;
 
 exports[`call() parses multiple args: foobar(1, 2) 1`] = `
 call (1:0-1:12)
-  other (1:0-1:6) foobar
-  other (1:7-1:8) 1
-  other (1:10-1:11) 2
+  ident (1:0-1:6) foobar
+  number (1:7-1:8) 1
+  number (1:10-1:11) 2
 
 `;
 
 exports[`call() parses single arg: foobar(1) 1`] = `
 call (1:0-1:9)
-  other (1:0-1:6) foobar
-  other (1:7-1:8) 1
+  ident (1:0-1:6) foobar
+  number (1:7-1:8) 1
 
 `;
 
 exports[`call:: ... parses args: foobar:: spam, ni 1`] = `
 call (1:0-1:15)
-  other (1:0-1:6) foobar
-  other (1:9-1:13) spam
-  other (1:15-1:17) ni
+  ident (1:0-1:6) foobar
+  ident (1:9-1:13) spam
+  ident (1:15-1:17) ni
 
 `;
 
 exports[`pipe foo: ... pipes 1`] = `
 block pipe (1:0-3:4)
-  other (1:5-1:8) foo
+  ident (1:5-1:8) foo
   :
   call (2:2-2:12)
-    other (2:2-2:5) bar
-    other (2:6-2:11) shrub
+    ident (2:2-2:5) bar
+    ident (2:6-2:11) shrub
 
-  other (3:2-3:4) ni
+  ident (3:2-3:4) ni
 `;

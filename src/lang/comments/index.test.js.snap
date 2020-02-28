@@ -2,12 +2,12 @@
 
 exports[`comments parses doc-comment 1`] = `
 assign = (4:0-4:9)
-  other (4:0-4:4) spam
-  other (4:7-4:9) ni
+  ident (4:0-4:4) spam
+  ident (4:7-4:9) ni
 `;
 
 exports[`comments parses line comment 1`] = `
 assign = (2:0-2:9)
-  other (2:0-2:4) spam
-  other (2:7-2:9) ni
+  ident (2:0-2:4) spam
+  ident (2:7-2:9) ni
 `;

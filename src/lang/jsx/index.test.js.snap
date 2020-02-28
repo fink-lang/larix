@@ -20,8 +20,8 @@ jsx-elem (1:0-3:9) Foobar
   jsx-expr-container (2:2-2:8)
     block (2:2-2:8)
       arithm + (2:3-2:8)
-        other (2:3-2:4) 1
-        other (2:7-2:8) 2
+        number (2:3-2:4) 1
+        number (2:7-2:8) 2
   jsx-text (2:8-2:9)
     "\\n"
 `;
@@ -33,7 +33,7 @@ jsx-elem (1:0-1:20) Foobar
   jsx-attr (1:8-1:17) spam
         jsx-expr-container (1:13-1:16)
       block (1:13-1:16)
-        other (1:14-1:16) ni
+        ident (1:14-1:16) ni
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with short attr: <Foobar spam /> 1`] = `

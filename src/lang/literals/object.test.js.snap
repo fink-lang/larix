@@ -6,7 +6,7 @@ object (1:0-1:9)
     other (1:1-1:4) foo
     assign = (1:1-1:8)
       other (1:1-1:4) foo
-      other (1:5-1:8) 123
+      number (1:5-1:8) 123
 `;
 
 exports[`object {...} parses empty: {} 1`] = `
@@ -29,7 +29,7 @@ object (1:0-1:11)
   prop (1:1-1:10)
     other (1:1-1:4) foo
     block (1:4-1:10)
-      other (1:6-1:10) spam
+      ident (1:6-1:10) spam
 `;
 
 exports[`object {...} parses single shorthand prop: {foo} 1`] = `
@@ -45,5 +45,5 @@ object (1:0-1:13)
     string \` (1:1-1:6)
       \`foo\`
     block (1:6-1:12)
-      other (1:8-1:12) spam
+      ident (1:8-1:12) spam
 `;
