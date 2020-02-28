@@ -8,7 +8,7 @@ import {get_next_line_indentation} from '../indentation';
 import {unindent_text} from '../../string-utils';
 
 
-const get_text = (ctx, op)=> {
+export const get_text = (ctx, op)=> {
   let [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op);
   let new_text = null;
 

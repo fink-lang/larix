@@ -1,10 +1,11 @@
-import {assert_advance, collect_text, advance} from '@fink/prattler';
+import {assert_advance, advance} from '@fink/prattler';
 import {next_is, next_is_end, next_matches, next_loc} from '@fink/prattler';
 import {curr_is, curr_value, curr_loc} from '@fink/prattler';
 
 import {symbol} from '../symbols';
 import {unindent_text} from '../../string-utils';
 import {get_next_line_indentation} from '../indentation';
+import {get_text} from './string';
 
 
 // TODO: move to larix or utils?
@@ -35,11 +36,12 @@ export const regex = (op)=> ({
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
     const ind = get_next_line_indentation(ctx);
-    const [text, flags_ctx] = collect_text(ctx, '/');
+
+    const [text, flags_ctx] = get_text(ctx, '/');
     const pattern = unindent_text(text.text, ind);
     const [flags, end_ctx] = get_flags(flags_ctx);
-    const {end} = curr_loc(end_ctx);
 
+    const {end} = curr_loc(end_ctx);
     return [{type: 'regex', pattern, flags, loc: {start, end}}, end_ctx];
   }
 });

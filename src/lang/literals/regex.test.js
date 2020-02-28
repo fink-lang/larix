@@ -25,8 +25,7 @@ describe('regex rx/.../', ()=> {
   });
 
 
-  // TODO: fix escapeing \/
-  it.skip('parses escaped chars: rx/\\n\\t/', ()=> {
+  it('parses escaped chars: rx/\\n\\t/', ()=> {
     expect(
       parse_expr(String.raw`rx/\n \\ \/ /`)
     ).toMatchSnapshot();

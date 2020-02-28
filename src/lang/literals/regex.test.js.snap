@@ -5,6 +5,11 @@ regex (1:0-1:4)
   //
 `;
 
+exports[`regex rx/.../ parses escaped chars: rx/\\n\\t/ 1`] = `
+regex (1:0-1:13)
+  /\\n \\\\ \\/ /
+`;
+
 exports[`regex rx/.../ parses flags: rx//gimsuy 1`] = `
 regex (1:0-1:10)
   //gimsuy
