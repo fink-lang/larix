@@ -63,7 +63,6 @@ const number = (ctx)=> {
 export const other = ()=> ({
   ...symbol(other_token),
 
-  // eslint-disable-next-line max-statements
   nud: ()=> (ctx)=> {
     const value = curr_value(ctx);
     const loc = curr_loc(ctx);
