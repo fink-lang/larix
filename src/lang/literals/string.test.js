@@ -28,10 +28,9 @@ describe('string `...`', ()=> {
     ).toMatchSnapshot();
   });
 
-  // TODO:
-  it.skip('parses escape characters', ()=> {
+  it.only('parses escape characters', ()=> {
     expect(
-      parse_expr(String.raw`${'`'} \n \t \\ ${'`'}`)
+      parse_expr(String.raw`${'`'}\n \t \\ \` ${'`'}`)
     ).toMatchSnapshot();
   });
 });
