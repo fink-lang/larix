@@ -2,7 +2,7 @@ import {add_operator_like} from '@fink/prattler/symbols';
 
 import {symbol} from '../symbols';
 import {get_block} from '../generic/block';
-import { enter_comma, exit_comma } from '../comma';
+import {enter_comma, exit_comma} from '../comma';
 
 
 export const enter_colon = (enable)=> (ctx)=> {
