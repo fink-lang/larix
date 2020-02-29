@@ -1,61 +1,98 @@
-import {curr_loc, next_loc, next_is, expression} from '@fink/prattler';
-import {advance, assert_advance} from '@fink/prattler';
-import {token_error} from '@fink/prattler/errors';
+import {next_is, next_is_end, assert_next} from '@fink/prattler';
+import {curr_loc, curr_value} from '@fink/prattler';
+import {advance, assert_advance, expression} from '@fink/prattler';
 
 import {symbol} from '../symbols';
 import {enter_comma, exit_comma} from '../comma';
-import {enter_colon, exit_colon} from '../colon';
 
 
-const to_props = (exprs)=> {
-  const props = exprs.map((prop)=> {
-    const {type, left, right, loc} = prop;
+export const seq = (ctx, closing_symbol, seq_expr)=> {
+  const expressions = [];
 
-    if (type === 'colon') {
-      return {type: 'prop', key: left, value: right, loc};
+  while (!next_is_end(ctx, closing_symbol)) {
+    const [expr, seq_ctx] = seq_expr(ctx);
+    expressions.push(expr);
 
-    } else if (type === 'assign') {
-      return {type: 'prop', key: left, value: prop, loc};
-    }
+    ctx = next_is_end(seq_ctx, closing_symbol)
+      ? seq_ctx
+      : assert_advance(seq_ctx, ',');
+  }
 
-    return {type: 'prop', key: prop, value: prop, loc};
-  });
-  return props;
+  const next_ctx = assert_advance(ctx, closing_symbol);
+  return [expressions, next_ctx];
 };
 
 
-export const object = (type, op, end_op)=> ({
+const value_expr = (ctx, key)=> {
+  if (next_is(ctx, ':')) {
+    return expression(ctx, 0);
+  }
+
+  return [key, ctx];
+};
+
+
+const default_assignment = (ctx, left)=> {
+  const expr_ctx = advance(ctx);
+
+  const [right, next_ctx] = expression(expr_ctx, 0);
+  const {loc: {end}} = right;
+
+  // TODO: assign and this func should use common code
+  return [
+    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
+    next_ctx
+  ];
+};
+
+
+const key_expr = (ctx)=> {
+  if (next_is(ctx, '`') || next_is(ctx, '...')) {
+    return expression(ctx, 0);
+  }
+
+  const key_ctx = advance(ctx);
+  const loc = curr_loc(key_ctx);
+  const key = {type: 'ident', value: curr_value(key_ctx), loc};
+
+  if (next_is(key_ctx, '=')) {
+    return default_assignment(key_ctx, key);
+  }
+
+  return [key, key_ctx];
+};
+
+
+const prop_expr = (ctx)=> {
+  const [key_or_default, value_ctx] = key_expr(ctx);
+  const [value, next_ctx] = value_expr(value_ctx, key_or_default);
+
+  const key = (
+    key_or_default.type === 'assign'
+      ? key_or_default.left
+      :key_or_default
+  );
+
+  const {start} = key.loc;
+  const {end} = value.loc;
+
+  // TODO: should `key, value` just be `left, right` to simplify matters
+  return [{type: 'prop', key, value, loc: {start, end}}, next_ctx];
+};
+
+
+export const object = (op)=> ({
   ...symbol(op),
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
-
-    if (next_is(ctx, end_op)) {
-      const {end} = next_loc(ctx);
-      return [
-        {type, exprs: [], loc: {start, end}},
-        advance(ctx)
-      ];
-    }
-
-    const [elems, end_ctx] = ctx
-      |> enter_colon(type)
-      |> enter_comma(type)
-      |> ((expr_ctx)=> expression(expr_ctx, 0))
-      |> exit_comma
-      |> exit_colon;
-
-    const next_ctx = assert_advance(end_ctx, end_op);
+    const [[exprs], next_ctx] = ctx
+      |> enter_comma(false)
+      |> ((seq_ctx)=> seq(seq_ctx, '}', prop_expr))
+      |> exit_comma;
 
     const {end} = curr_loc(next_ctx);
-    return [
-      {
-        type,
-        exprs: to_props(elems),
-        loc: {start, end}
-      },
-      next_ctx
-    ];
+
+    return [{type: 'object', exprs, loc: {start, end}}, next_ctx];
   }
 });
-

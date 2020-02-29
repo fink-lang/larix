@@ -19,8 +19,8 @@ const add_array_literal = (ctx)=> (
 
 const add_object_literal= (ctx)=> (
   ctx
-    |> add_operator_like(object('object', '{', '}'))
-    |> add_operator_like(comma(',', 'comma'))
+    |> add_operator_like(object('{', '}'))
+    // |> add_non_binding(symbol(','))
     |> add_non_binding(symbol('}'))
 );
 

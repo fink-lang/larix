@@ -63,28 +63,17 @@ describe('object {...} - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`{`)
     ).toThrow(strip_block`
-      Unexpected end of code:
+      Expected '}' but found Symbol(end):
       1| {
-         ^`
+          ^`
     );
   });
-
-  // TODO: used to fail
-  // it('throws when missing value after`:`', ()=> {
-  //   expect(
-  //     ()=> parse_expr(`{foo:,}`)
-  //   ).toThrow(strip_block`
-  //     Cannot use ',' as start of expression:
-  //     1| {foo:,}
-  //             ^`
-  //   );
-  // });
 
   it('throws when missing `,`', ()=> {
     expect(
       ()=> parse_expr(`{foo) bar}`)
     ).toThrow(strip_block`
-      Expected '}' but found ')':
+      Expected ',' but found ')':
       1| {foo) bar}
              ^`
     );

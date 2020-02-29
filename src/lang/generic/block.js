@@ -91,7 +91,11 @@ export const named_block = (op, type='block', block_expr=default_expr)=> ({
     const [args, expr_ctx] = get_args(ctx, type);
     const body_ctx = assert_advance(expr_ctx, ':');
 
-    const [{exprs, loc}, next_ctx] = get_block(body_ctx, type, block_expr);
+    const [[{exprs, loc}], next_ctx] = body_ctx
+      // TODO: move inside get_block
+      |> enter_comma(false)
+      |> ((block_ctx)=> get_block(block_ctx, type, block_expr))
+      |> exit_comma;
 
     return [
       {type, op, args, exprs, loc: {start, end: loc.end}},
