@@ -1,13 +1,14 @@
-import {expression, assert_curr, curr_loc, next_loc} from '@fink/prattler';
+import {curr_loc, curr_value, next_loc, next_is} from '@fink/prattler';
+import {assert_curr, assert_next, assert_advance} from '@fink/prattler';
+import {expression} from '@fink/prattler';
 import {token_error} from '@fink/prattler/errors';
 
-
 import {symbol} from '../symbols';
-import {seq} from './sequence';
 
 import {next_is_unindented} from '../indentation';
 import {get_next_line_indentation, indentation} from '../indentation';
 import {push_indentation, pop_indentation} from '../indentation';
+import {start_colon, end_comma, start_comma} from '../comma';
 
 
 const default_expr = (ctx)=> expression(ctx, 0);
@@ -72,10 +73,25 @@ export const named_block = (op, type='block', block_expr=default_expr)=> ({
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
-    const [args, body_ctx] = seq(ctx, ':');
+
+    const arg_ctx = start_comma(ctx, type);
+    const [args, expr_ctx] = expression(arg_ctx, 0);
+    const col_ctx = end_comma(expr_ctx, type);
+    const body_ctx = assert_advance(col_ctx, ':');
+
     const [{exprs, loc}, next_ctx] = get_block(body_ctx, type, block_expr);
 
-    return [{type, op, args, exprs, loc: {start, end: loc.end}}, next_ctx];
+    return [
+      {
+        type,
+        op,
+        args: args.exprs
+          ? args.exprs
+          : [args],
+        exprs, loc: {start, end: loc.end}
+      },
+      next_ctx
+    ];
   }
 });
 

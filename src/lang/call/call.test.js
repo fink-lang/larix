@@ -23,14 +23,6 @@ describe('call()', ()=> {
       parse_expr(`foobar(1, 2)`)
     ).toMatchSnapshot();
   });
-
-
-  // TODO: should dangling comma be supported?
-  it('parses dangling comma: foobar(1, 2,)', ()=> {
-    expect(
-      parse_expr(`foobar(1, 2,)`)
-    ).toMatchSnapshot();
-  });
 });
 
 
@@ -39,9 +31,9 @@ describe('call() - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`foobar(`)
     ).toThrow(strip_block`
-      Expected ')' but found Symbol(end):
+      Unexpected end of code:
       1| foobar(
-                ^`
+               ^`
     );
   });
 
@@ -49,7 +41,7 @@ describe('call() - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`foobar(1:)`)
     ).toThrow(strip_block`
-      Expected ',' but found ':':
+      Expected ')' but found ':':
       1| foobar(1:)
                  ^`
     );

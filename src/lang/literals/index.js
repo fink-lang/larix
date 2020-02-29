@@ -6,24 +6,21 @@ import {array} from './array';
 import {object} from './object';
 import {string} from './string';
 import {regex} from './regex';
+import {comma} from '../comma';
 
 
 const add_array_literal = (ctx)=> (
   ctx
-    |> add_operator_like(array('['))
-    |> add_non_binding(symbol(','))
+    |> add_operator_like(array('array', '[', ']'))
+    |> add_operator_like(comma(',', 'comma'))
     |> add_non_binding(symbol(']'))
-  // TODO: duplicate of add_object_literal?
-    // |> add_operator_like(object('{'))
-    // |> add_non_binding(symbol(','))
-    // |> add_non_binding(symbol('}'))
 );
 
 
-const add_object_literal = (ctx)=> (
+const add_object_literal= (ctx)=> (
   ctx
-    |> add_operator_like(object('{'))
-    |> add_non_binding(symbol(','))
+    |> add_operator_like(object('object', '{', '}'))
+    |> add_operator_like(comma(',', 'comma'))
     |> add_non_binding(symbol('}'))
 );
 

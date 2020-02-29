@@ -1,3 +1,5 @@
+import {add_operator_like} from '@fink/prattler/symbols';
+
 import {init_indentation} from './indentation';
 
 import {add_jsx} from './jsx';
@@ -18,8 +20,8 @@ import {add_async} from './async';
 import {add_import} from './import';
 import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
-import {add_non_separating, add_operator_like} from '@fink/prattler/symbols';
 import {named_block} from './generic/block';
+import {colon} from './colon';
 
 
 export const init_language = (ctx)=> (
@@ -29,14 +31,14 @@ export const init_language = (ctx)=> (
     |> add_whitespace_tokens
     |> add_comments
 
-    |> add_func
-    // TODO: pipe: ... was here
+    |> add_literals
+    |> add_group
 
+    |> add_func
     |> add_conditionals
     |> add_iterables
     |> add_assignment_operators
 
-    // TODO: was before func
     |> add_identifier
 
     |> add_logical_operators
@@ -47,13 +49,10 @@ export const init_language = (ctx)=> (
     |> add_async
     |> add_import
 
-    |> add_literals
+    |> add_operator_like(colon(':', 'colon'))
 
     |> add_jsx
     |> add_call_operators
 
-    |> add_group
-
     |> add_prop_access
-
 );

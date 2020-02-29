@@ -24,6 +24,15 @@ object (1:0-1:10)
     ident (1:6-1:9) bar
 `;
 
+exports[`object {...} parses single prop with block value: {foo: spam ...} 1`] = `
+object (1:0-5:1)
+  prop (2:2-4:6)
+    ident (2:2-2:5) foo
+    block (2:5-4:6)
+      ident (3:4-3:8) spam
+      ident (4:4-4:6) ni
+`;
+
 exports[`object {...} parses single prop: {foo: spam} 1`] = `
 object (1:0-1:11)
   prop (1:1-1:10)

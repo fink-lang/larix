@@ -31,6 +31,17 @@ describe('object {...}', ()=> {
     ).toMatchSnapshot();
   });
 
+  it('parses single prop with block value: {foo: spam ...}', ()=> {
+    expect(
+      parse_expr(strip_block`
+        {
+          foo:
+            spam
+            ni
+        }
+      `)
+    ).toMatchSnapshot();
+  });
 
   it('parses single str prop: {`foo`: spam}', ()=> {
     expect(
@@ -52,9 +63,9 @@ describe('object {...} - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`{`)
     ).toThrow(strip_block`
-      Expected '}' but found Symbol(end):
+      Unexpected end of code:
       1| {
-          ^`
+         ^`
     );
   });
 
@@ -73,7 +84,7 @@ describe('object {...} - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`{foo) bar}`)
     ).toThrow(strip_block`
-      Expected ',' but found ')':
+      Expected '}' but found ')':
       1| {foo) bar}
              ^`
     );

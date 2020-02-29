@@ -18,24 +18,16 @@ describe('array [...]', ()=> {
   });
 
 
-  it('parses multiple elements: [1, 2]', ()=> {
+  it('parses multiple elements: [1, 2, 3]', ()=> {
     expect(
-      parse_expr(`[1, 2]`)
+      parse_expr(`[1, 2, 3]`)
     ).toMatchSnapshot();
   });
 
-  // TODO: should that be supported?
+
   it('parses leading commas: [,, foo]', ()=> {
     expect(
       parse_expr(`[,, foo]`)
-    ).toMatchSnapshot();
-  });
-
-
-  // TODO: should that be supported?
-  it('parses dangling comma: [1, 2,]', ()=> {
-    expect(
-      parse_expr(`[1, 2,]`)
     ).toMatchSnapshot();
   });
 });
@@ -46,9 +38,9 @@ describe('array [...] - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`[`)
     ).toThrow(strip_block`
-      Expected ']' but found Symbol(end):
+      Unexpected end of code:
       1| [
-          ^`
+         ^`
     );
   });
 
@@ -56,10 +48,16 @@ describe('array [...] - parsing failures', ()=> {
     expect(
       ()=> parse_expr(`[1)]`)
     ).toThrow(strip_block`
-      Expected ',' but found ')':
+      Expected ']' but found ')':
       1| [1)]
            ^`
     );
+  });
+
+  it('foo', ()=> {
+    expect(
+      ()=> parse_expr(`[] []`)
+    ).toMatchSnapshot();
   });
 });
 
