@@ -14,14 +14,20 @@ object (1:0-1:2)
 
 `;
 
-exports[`object {...} parses multiple shorthand exprs: {foo, bar} 1`] = `
-object (1:0-1:10)
+exports[`object {...} parses multiple exprs: {foo, bar: 123, shrub: \`ni\`} 1`] = `
+object (1:0-1:28)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
     ident (1:1-1:4) foo
-  prop (1:6-1:9)
+  prop (1:6-1:14)
     ident (1:6-1:9) bar
-    ident (1:6-1:9) bar
+    block (1:9-1:14)
+      number (1:11-1:14) 123
+  prop (1:16-1:27)
+    ident (1:16-1:21) shrub
+    block (1:21-1:27)
+      string ' (1:23-1:27)
+        \`ni\`
 `;
 
 exports[`object {...} parses single prop with block value: {foo: spam ...} 1`] = `
