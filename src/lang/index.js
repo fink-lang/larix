@@ -21,7 +21,7 @@ import {add_import} from './import';
 import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
 import {named_block} from './generic/block';
-import {colon} from './colon';
+import {add_colon} from './colon';
 
 
 export const init_language = (ctx)=> (
@@ -49,7 +49,7 @@ export const init_language = (ctx)=> (
     |> add_async
     |> add_import
 
-    |> add_operator_like(colon(':', 'colon'))
+    |> add_colon
 
     |> add_jsx
     |> add_call_operators

@@ -1,16 +1,25 @@
 import {expression, curr_loc} from '@fink/prattler';
+
 import {symbol} from '../symbols';
 
 
-export const start_comma = (ctx, parent)=> {
+export const enter_comma = (enable)=> (ctx)=> {
   const {comma_foo=[]} = ctx;
-  return {...ctx, comma_foo: [parent, ...comma_foo]};
+  const next_ctx = {...ctx, comma_foo: [enable, ...comma_foo]};
+  return next_ctx;
 };
 
 
-export const end_comma = (ctx)=> {
+export const exit_comma = ([result, ctx])=> {
   const {comma_foo: [, ...comma_foo]} = ctx;
-  return {...ctx, comma_foo};
+  const next_ctx = {...ctx, comma_foo};
+
+  const expressions = (
+    result.type === 'comma'
+      ? result.exprs
+      : [result]
+  );
+  return [expressions, next_ctx];
 };
 
 
@@ -30,6 +39,7 @@ export const comma =(op, type)=> ({
 
   led: (lbp)=> (ctx, left)=> {
     const {loc: {start}} = left;
+
     const [right, next_ctx] = expression(ctx, lbp);
 
     const exprs = (
@@ -47,6 +57,7 @@ export const comma =(op, type)=> ({
     const {start} = curr_loc(ctx);
 
     const [right, next_ctx] = expression(ctx, lbp);
+
     const exprs = (
       right.type === type
         ? [null, ...right.exprs]
@@ -58,3 +69,4 @@ export const comma =(op, type)=> ({
     return [{type, op, exprs, loc: {start, end}}, next_ctx, next_ctx];
   }
 });
+

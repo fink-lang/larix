@@ -6,7 +6,7 @@ import {
 import {symbol} from '../symbols';
 import {get_block} from '../generic/block';
 import {next_is_unindented} from '../indentation';
-import {start_comma, end_comma} from '../comma';
+import {start_comma, end_comma, enter_comma, exit_comma} from '../comma';
 
 
 export const call = (op)=> ({
@@ -23,39 +23,20 @@ export const call = (op)=> ({
       ];
     }
 
-    const arg_ctx = start_comma(ctx, 'call');
-    const [args, expr_ctx] = expression(arg_ctx, 0);
-    const end_ctx = end_comma(expr_ctx, 'call');
+    const [args, end_ctx] = ctx
+      |> enter_comma('call')
+      |> ((arg_ctx)=> expression(arg_ctx, 0))
+      |> exit_comma;
+
     const next_ctx = assert_advance(end_ctx, ')');
     const {end} = curr_loc(next_ctx);
 
     return [
-      {
-        type: 'call',
-        callee, args: args.exprs ? args.exprs : [args],
-        loc: {start, end}
-      },
+      {type: 'call', callee, args, loc: {start, end}},
       next_ctx
     ];
   }
 });
-
-
-// export const params = (ctx)=> {
-//   const expressions = [];
-
-//   // TODO: is this the right check?
-//   // eslint-disable-next-line no-constant-condition
-//   while (true) {
-//     const [expr, seq_ctx] = expression(ctx, 0);
-//     expressions.push(expr);
-
-//     if (!next_is(seq_ctx, ',')) {
-//       return [expressions, seq_ctx];
-//     }
-//     ctx = assert_advance(seq_ctx, ',');
-//   }
-// };
 
 
 export const call_no_parens = (op)=> ({
@@ -64,17 +45,13 @@ export const call_no_parens = (op)=> ({
   led: ()=> (ctx, callee)=> {
     const {start} = callee.loc;
 
-    const arg_ctx = start_comma(ctx, 'call-no-parens');
-    const [args, body_ctx_] = expression(arg_ctx, 0);
-    const next_ctx = end_comma(body_ctx_, 'call-no-parens');
+    const [args, next_ctx] = ctx
+      |> enter_comma('call-no-parens')
+      |> ((arg_ctx)=> expression(arg_ctx, 0))
+      |> exit_comma;
 
     return [
-      {
-        type: 'call',
-        callee,
-        args: [...args.exprs],
-        loc: {start, end: curr_loc(next_ctx).start}
-      },
+      {type: 'call', callee, args, loc: {start, end: curr_loc(next_ctx).start}},
       next_ctx
     ];
   }

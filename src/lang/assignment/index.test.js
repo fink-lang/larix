@@ -10,6 +10,7 @@ describe('assignment', ()=> {
     ).toMatchSnapshot();
   });
 
+  // TODO: move to colon?
   it('parses block:  foo = : bar ', ()=> {
     expect(
       parse_expr(strip_block`

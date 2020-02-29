@@ -3,24 +3,23 @@ import {advance, assert_advance} from '@fink/prattler';
 import {token_error} from '@fink/prattler/errors';
 
 import {symbol} from '../symbols';
-import {start_comma, end_comma} from '../comma';
-import {start_colon, end_colon} from '../colon';
+import {enter_comma, exit_comma} from '../comma';
+import {enter_colon, exit_colon} from '../colon';
 
-const to_props = (expr)=> {
-  const props = (expr.type === 'comma' ? expr.exprs : [expr])
-    .map((prop)=> {
-      const {type, left, right, loc} = prop;
 
-      if (type === 'colon') {
-        return {type: 'prop', key: left, value: right, loc};
+const to_props = (exprs)=> {
+  const props = exprs.map((prop)=> {
+    const {type, left, right, loc} = prop;
 
-      } else if (type === 'assign') {
-        return {type: 'prop', key: left, value: prop, loc};
-      }
+    if (type === 'colon') {
+      return {type: 'prop', key: left, value: right, loc};
 
-      return {type: 'prop', key: prop, value: prop, loc};
+    } else if (type === 'assign') {
+      return {type: 'prop', key: left, value: prop, loc};
+    }
 
-    });
+    return {type: 'prop', key: prop, value: prop, loc};
+  });
   return props;
 };
 
@@ -28,7 +27,6 @@ const to_props = (expr)=> {
 export const object = (type, op, end_op)=> ({
   ...symbol(op),
 
-  // eslint-disable-next-line max-statements
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
 
@@ -40,13 +38,14 @@ export const object = (type, op, end_op)=> ({
       ];
     }
 
-    const expr_ctx = start_comma(ctx, 'dict');
-    const expr_ctx2 = start_colon(expr_ctx, 'dict');
-    const [elems, end_ctx] = expression(expr_ctx2, 0);
-    const end_op_ctx = end_comma(end_ctx);
-    const end_op_ctx2 = end_colon(end_op_ctx);
-    const next_ctx = assert_advance(end_op_ctx2, end_op);
+    const [elems, end_ctx] = ctx
+      |> enter_colon(type)
+      |> enter_comma(type)
+      |> ((expr_ctx)=> expression(expr_ctx, 0))
+      |> exit_comma
+      |> exit_colon;
 
+    const next_ctx = assert_advance(end_ctx, end_op);
 
     const {end} = curr_loc(next_ctx);
     return [
@@ -59,5 +58,4 @@ export const object = (type, op, end_op)=> ({
     ];
   }
 });
-
 

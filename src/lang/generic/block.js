@@ -8,7 +8,7 @@ import {symbol} from '../symbols';
 import {next_is_unindented} from '../indentation';
 import {get_next_line_indentation, indentation} from '../indentation';
 import {push_indentation, pop_indentation} from '../indentation';
-import {start_colon, end_comma, start_comma} from '../comma';
+import {enter_comma, exit_comma} from '../comma';
 
 
 const default_expr = (ctx)=> expression(ctx, 0);
@@ -74,31 +74,17 @@ export const named_block = (op, type='block', block_expr=default_expr)=> ({
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
 
-    const arg_ctx = start_comma(ctx, type);
-    const [args, expr_ctx] = expression(arg_ctx, 0);
-    const col_ctx = end_comma(expr_ctx, type);
-    const body_ctx = assert_advance(col_ctx, ':');
+    const [args, expr_ctx] = ctx
+      |> enter_comma('call')
+      |> ((arg_ctx)=> expression(arg_ctx, 0))
+      |> exit_comma;
 
+    const body_ctx = assert_advance(expr_ctx, ':');
     const [{exprs, loc}, next_ctx] = get_block(body_ctx, type, block_expr);
 
     return [
-      {
-        type,
-        op,
-        args: args.exprs
-          ? args.exprs
-          : [args],
-        exprs, loc: {start, end: loc.end}
-      },
+      {type, op, args, exprs, loc: {start, end: loc.end}},
       next_ctx
     ];
   }
 });
-
-
-export const block = (op)=> ({
-  ...symbol(op),
-
-  nud: ()=> (ctx)=> get_block(ctx, 'block')
-});
-
