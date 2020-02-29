@@ -68,18 +68,30 @@ export const get_block = (ctx, type='block', block_expr=default_expr)=> {
 };
 
 
+const get_args = (ctx, type)=> {
+  if (next_is(ctx, ':')) {
+    return [[], ctx];
+  }
+
+  const [args, next_ctx] = ctx
+    |> enter_comma(type)
+    |> ((arg_ctx)=> expression(arg_ctx, 0))
+    |> exit_comma;
+
+  return [args, next_ctx];
+};
+
+
+
 export const named_block = (op, type='block', block_expr=default_expr)=> ({
   ...symbol(op),
 
   nud: ()=> (ctx)=> {
     const {start} = curr_loc(ctx);
 
-    const [args, expr_ctx] = ctx
-      |> enter_comma('call')
-      |> ((arg_ctx)=> expression(arg_ctx, 0))
-      |> exit_comma;
-
+    const [args, expr_ctx] = get_args(ctx, type);
     const body_ctx = assert_advance(expr_ctx, ':');
+
     const [{exprs, loc}, next_ctx] = get_block(body_ctx, type, block_expr);
 
     return [

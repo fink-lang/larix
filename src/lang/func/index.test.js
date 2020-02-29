@@ -9,6 +9,18 @@ describe('func: fn ...: ...', ()=> {
     ).toMatchSnapshot();
   });
 
+  it('parses single arg: fn foo: bar', ()=> {
+    expect(
+      parse_expr(`fn foo: bar`)
+    ).toMatchSnapshot();
+  });
+
+  it('parses no arg: fn: foo', ()=> {
+    expect(
+      parse_expr(`fn: foo`)
+    ).toMatchSnapshot();
+  });
+
 
   it('parses multi line: fn foo, bar: foo', ()=> {
     expect(

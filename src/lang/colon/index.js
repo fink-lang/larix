@@ -2,6 +2,7 @@ import {add_operator_like} from '@fink/prattler/symbols';
 
 import {symbol} from '../symbols';
 import {get_block} from '../generic/block';
+import { enter_comma, exit_comma } from '../comma';
 
 
 export const enter_colon = (enable)=> (ctx)=> {
@@ -35,7 +36,12 @@ export const colon = (op, type)=> ({
   led: ()=> (ctx, left)=> {
     const {loc: {start}} = left;
 
-    const [right, next_ctx] = get_block(ctx);
+    const [[right], next_ctx] = ctx
+      |> enter_colon(false)
+      |> enter_comma(false)
+      |> get_block
+      |> exit_comma
+      |> exit_colon;
 
     const {loc: {end}} = right;
     return [{type, op, left, right, loc: {start, end}}, next_ctx];

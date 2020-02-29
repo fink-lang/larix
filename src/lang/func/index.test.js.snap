@@ -9,6 +9,20 @@ block fn (1:0-3:5)
   ident (3:2-3:5) bar
 `;
 
+exports[`func: fn ...: ... parses no arg: fn: foo 1`] = `
+block fn (1:0-1:7)
+
+  :
+  ident (1:4-1:7) foo
+`;
+
+exports[`func: fn ...: ... parses single arg: fn foo: bar 1`] = `
+block fn (1:0-1:11)
+  ident (1:3-1:6) foo
+  :
+  ident (1:8-1:11) bar
+`;
+
 exports[`func: fn ...: ... parses single line: fn foo, bar: foo 1`] = `
 block fn (1:0-1:16)
   ident (1:3-1:6) foo

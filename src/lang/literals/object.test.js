@@ -20,7 +20,7 @@ describe('object {...}', ()=> {
 
   it('parses multiple shorthand exprs: {foo, bar}', ()=> {
     expect(
-      parse_expr(`{foo, bar}`)
+      parse_expr(`{foo, bar: 123, shrub: 'ni'}`)
     ).toMatchSnapshot();
   });
 
