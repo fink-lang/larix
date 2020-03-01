@@ -22,6 +22,7 @@ import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
 import {named_block} from './generic/block';
 import {add_colon} from './colon';
+import {add_comma} from './comma';
 
 
 export const init_language = (ctx)=> (
@@ -33,6 +34,9 @@ export const init_language = (ctx)=> (
 
     |> add_literals
     |> add_group
+
+    |> add_comma
+    |> add_colon
 
     |> add_func
     |> add_conditionals
@@ -48,8 +52,6 @@ export const init_language = (ctx)=> (
     |> add_spread_operator
     |> add_async
     |> add_import
-
-    |> add_colon
 
     |> add_jsx
     |> add_call_operators

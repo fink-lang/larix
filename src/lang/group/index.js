@@ -7,6 +7,5 @@ import {symbol} from '../symbols';
 export const add_group = (ctx)=> (
   ctx
     |> add_operator_like(array('group', '(', ')'))
-    |> add_operator_like(comma(',', 'comma'))
     |> add_non_binding(symbol(')'))
 );

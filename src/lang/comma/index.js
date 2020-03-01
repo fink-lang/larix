@@ -1,6 +1,7 @@
 import {expression, curr_loc} from '@fink/prattler';
 
 import {symbol} from '../symbols';
+import { add_operator_like } from '@fink/prattler/symbols';
 
 
 export const enter_comma = (enable)=> (ctx)=> {
@@ -70,3 +71,8 @@ export const comma =(op, type)=> ({
   }
 });
 
+
+export const add_comma = (ctx)=> (
+  ctx
+   |> add_operator_like(comma(',', 'comma'))
+);

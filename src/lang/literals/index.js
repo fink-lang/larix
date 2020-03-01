@@ -12,7 +12,6 @@ import {comma} from '../comma';
 const add_array_literal = (ctx)=> (
   ctx
     |> add_operator_like(array('array', '[', ']'))
-    |> add_operator_like(comma(',', 'comma'))
     |> add_non_binding(symbol(']'))
 );
 
