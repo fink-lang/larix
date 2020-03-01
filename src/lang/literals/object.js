@@ -30,7 +30,7 @@ const default_assignment = (ctx, left)=> {
 
 
 const key_expr = (ctx)=> {
-  if (next_is(ctx, '`') || next_is(ctx, '...')) {
+  if (next_is(ctx, '(') || next_is(ctx, '`') || next_is(ctx, '...')) {
     return expression(ctx, 0);
   }
 
