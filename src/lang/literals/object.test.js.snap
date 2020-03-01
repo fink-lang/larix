@@ -24,6 +24,31 @@ object (1:0-1:10)
     ident (1:6-1:9) bar
 `;
 
+exports[`object {...} parses multiple shorthand exprs: {foo, bar} 2`] = `
+object (1:0-1:28)
+  prop (1:1-1:4)
+    ident (1:1-1:4) foo
+    ident (1:1-1:4) foo
+  prop (1:6-1:14)
+    ident (1:6-1:9) bar
+    block (1:9-1:14)
+      number (1:11-1:14) 123
+  prop (1:16-1:27)
+    ident (1:16-1:21) shrub
+    block (1:21-1:27)
+      string ' (1:23-1:27)
+        \`ni\`
+`;
+
+exports[`object {...} parses single prop with block value: {foo: spam ...} 1`] = `
+object (1:0-5:1)
+  prop (2:2-4:6)
+    ident (2:2-2:5) foo
+    block (2:5-4:6)
+      ident (3:4-3:8) spam
+      ident (4:4-4:6) ni
+`;
+
 exports[`object {...} parses single prop: {foo: spam} 1`] = `
 object (1:0-1:11)
   prop (1:1-1:10)

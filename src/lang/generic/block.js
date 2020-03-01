@@ -1,4 +1,5 @@
 import {expression, assert_curr, curr_loc, next_loc} from '@fink/prattler';
+import {add_non_binding} from '@fink/prattler/symbols';
 import {token_error} from '@fink/prattler/errors';
 
 
@@ -86,3 +87,8 @@ export const block = (op)=> ({
   nud: ()=> (ctx)=> get_block(ctx, 'block')
 });
 
+
+export const add_block = (ctx)=> (
+  ctx
+    |> add_non_binding(block(':'))
+);
