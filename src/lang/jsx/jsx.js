@@ -42,12 +42,11 @@ const jsx_body = (name, ctx)=> {
       [expr, ctx] = jsx_expr_container(ctx);
       children.push(expr);
 
-    } else { // TODO:? if (curr_is(ctx, '</')) {
+    } else {
       break;
     }
   }
 
-  // TODO: ? ctx = assert_advance(ctx, '</');
   ctx = assert_advance(ctx, name);
   ctx = assert_advance(ctx, '>');
 

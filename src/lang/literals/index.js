@@ -35,7 +35,6 @@ const add_string_literal = (ctx)=> (
 const add_regex_literal = (ctx)=> (
   ctx
     |> add_operator_like(regex('rx/'))
-    // TODO: |> add_non_binding(regex('/'))
 );
 
 

@@ -25,7 +25,6 @@ export const call = (op)=> ({
 export const params = (ctx)=> {
   const expressions = [];
 
-  // TODO: is this the right check?
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const [expr, seq_ctx] = expression(ctx, 0);

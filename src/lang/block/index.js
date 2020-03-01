@@ -17,7 +17,6 @@ export const get_indentations = (ctx)=> {
   const next_line_ind = get_next_line_indentation(ctx);
 
   if (next_line_ind > 0 && next_line_ind <= curr_ind) {
-    // TODO: assert_next should accept a test func and custom error msg.
     throw token_error(
       `Expected indentation > ${curr_ind}:`,
       ctx.next_token, ctx

@@ -2,22 +2,11 @@ import {assert_advance, advance} from '@fink/prattler';
 import {next_is, next_is_end, next_matches, next_loc} from '@fink/prattler';
 import {curr_is, curr_value, curr_loc} from '@fink/prattler';
 
-import {symbol} from '../symbols';
 import {unindent_text} from '../../string-utils';
-import {get_next_line_indentation} from '../indentation';
+import {symbol} from '../symbols';
+import {get_next_line_indentation, curr_next_adjecent} from '../indentation';
 import {get_text} from './string';
 
-
-// TODO: move to larix or utils?
-const curr_next_adjecent = (ctx)=> {
-  const curr = curr_loc(ctx);
-  const next = next_loc(ctx);
-
-  return (
-    curr.end.line === next.start.line
-    && curr.end.column === next.start.column
-  );
-};
 
 const get_flags = (ctx)=> {
   if (curr_next_adjecent(ctx) && next_matches(ctx, /[gimsuy]/)) {

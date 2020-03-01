@@ -22,7 +22,6 @@ const default_assignment = (ctx, left)=> {
   const [right, next_ctx] = expression(expr_ctx, 0);
   const {loc: {end}} = right;
 
-  // TODO: assign and this func should use common code
   return [
     {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
     next_ctx

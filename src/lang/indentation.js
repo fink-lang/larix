@@ -36,6 +36,17 @@ export const next_is_unindented = (ctx)=> (
 );
 
 
+export const curr_next_adjecent = (ctx)=> {
+  const curr = curr_loc(ctx);
+  const next = next_loc(ctx);
+
+  return (
+    curr.end.line === next.start.line
+    && curr.end.column === next.start.column
+  );
+};
+
+
 export const init_indentation = (ctx)=> ({
   ...ctx,
   indent: [1]

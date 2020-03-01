@@ -17,8 +17,7 @@ const test_result_expr = (ctx)=> {
   const {start} = left.loc;
   const {end} = right.loc;
   return [
-    // TODO: improve type
-    {type: 'cond:test:result', left, right, loc: {start, end}},
+    {type: 'cond:expr', left, right, loc: {start, end}},
     next_ctx
   ];
 };
