@@ -6,7 +6,6 @@ import {array} from './array';
 import {object} from './object';
 import {string} from './string';
 import {regex} from './regex';
-import {comma} from '../comma';
 
 
 const add_array_literal = (ctx)=> (
@@ -18,8 +17,7 @@ const add_array_literal = (ctx)=> (
 
 const add_object_literal= (ctx)=> (
   ctx
-    |> add_operator_like(object('{', '}'))
-    // |> add_non_binding(symbol(','))
+    |> add_operator_like(object('{'))
     |> add_non_binding(symbol('}'))
 );
 
