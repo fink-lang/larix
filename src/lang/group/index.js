@@ -3,7 +3,7 @@ import {next_is, curr_loc} from '@fink/prattler';
 
 import {symbol} from '../symbols';
 import {seq} from '../generic/sequence';
-import {get_block} from '../generic/block';
+import {get_block} from '../block';
 
 
 export const group = (op)=> ({

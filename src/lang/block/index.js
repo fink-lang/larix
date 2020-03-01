@@ -1,13 +1,12 @@
 import {expression, assert_curr, curr_loc, next_loc} from '@fink/prattler';
+import {add_non_binding} from '@fink/prattler/symbols';
 import {token_error} from '@fink/prattler/errors';
 
-
 import {symbol} from '../symbols';
-import {seq} from './sequence';
-
 import {next_is_unindented} from '../indentation';
 import {get_next_line_indentation, indentation} from '../indentation';
 import {push_indentation, pop_indentation} from '../indentation';
+import {seq} from '../generic/sequence';
 
 
 const default_expr = (ctx)=> expression(ctx, 0);
@@ -18,7 +17,6 @@ export const get_indentations = (ctx)=> {
   const next_line_ind = get_next_line_indentation(ctx);
 
   if (next_line_ind > 0 && next_line_ind <= curr_ind) {
-    // TODO: assert_next should accept a test func and custom error msg.
     throw token_error(
       `Expected indentation > ${curr_ind}:`,
       ctx.next_token, ctx
@@ -77,12 +75,5 @@ export const named_block = (op, type='block', block_expr=default_expr)=> ({
 
     return [{type, op, args, exprs, loc: {start, end: loc.end}}, next_ctx];
   }
-});
-
-
-export const block = (op)=> ({
-  ...symbol(op),
-
-  nud: ()=> (ctx)=> get_block(ctx, 'block')
 });
 

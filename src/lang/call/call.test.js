@@ -23,14 +23,6 @@ describe('call()', ()=> {
       parse_expr(`foobar(1, 2)`)
     ).toMatchSnapshot();
   });
-
-
-  // TODO: should dangling comma be supported?
-  it('parses dangling comma: foobar(1, 2,)', ()=> {
-    expect(
-      parse_expr(`foobar(1, 2,)`)
-    ).toMatchSnapshot();
-  });
 });
 
 

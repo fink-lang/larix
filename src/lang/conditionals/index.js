@@ -1,7 +1,7 @@
 import {add_non_separating} from '@fink/prattler/symbols';
 import {assert_advance, expression, curr_loc} from '@fink/prattler';
 
-import {get_block, named_block} from '../generic/block';
+import {get_block, named_block} from '../block';
 
 
 const test_expr = (ctx)=> {
@@ -17,8 +17,7 @@ const test_result_expr = (ctx)=> {
   const {start} = left.loc;
   const {end} = right.loc;
   return [
-    // TODO: improve type
-    {type: 'cond:test:result', left, right, loc: {start, end}},
+    {type: 'cond:expr', left, right, loc: {start, end}},
     next_ctx
   ];
 };

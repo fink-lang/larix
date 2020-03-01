@@ -19,10 +19,29 @@ describe('unfold item, accu: ...', ()=> {
 
   it('parses', ()=> {
     expect(
-      // TODO: no need for accu as we can return tuple
       parse_expr(strip_block`
         unfold curr=start, accu=0:
           (start + accu, accu + 1)
+      `)
+    ).toMatchSnapshot();
+  });
+
+
+  it('parses no accu', ()=> {
+    expect(
+      parse_expr(strip_block`
+        unfold curr=start:
+          (start + accu, accu + 1)
+      `)
+    ).toMatchSnapshot();
+  });
+
+
+  it('parses no args', ()=> {
+    expect(
+      parse_expr(strip_block`
+        unfold:
+          foo
       `)
     ).toMatchSnapshot();
   });

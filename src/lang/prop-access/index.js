@@ -6,7 +6,6 @@ import {symbol} from '../symbols';
 
 
 const member_expr = (ctx, lbp)=> {
-  // TODO: next tokens can only be a string or an identifier or a group
   if (next_is(ctx, '`') || next_is(ctx, '(')) {
     return expression(ctx, lbp);
   }
@@ -30,7 +29,6 @@ const prop_access = (op, type)=> ({
 });
 
 
-// TODO: right hand side cannot be any expr
 export const add_prop_access = (ctx)=> (
   ctx
     |> add_operator_like(prop_access('.', 'member'))

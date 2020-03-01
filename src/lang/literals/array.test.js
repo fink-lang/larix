@@ -24,18 +24,10 @@ describe('array [...]', ()=> {
     ).toMatchSnapshot();
   });
 
-  // TODO: should that be supported?
+
   it('parses leading commas: [,, foo]', ()=> {
     expect(
       parse_expr(`[,, foo]`)
-    ).toMatchSnapshot();
-  });
-
-
-  // TODO: should that be supported?
-  it('parses dangling comma: [1, 2,]', ()=> {
-    expect(
-      parse_expr(`[1, 2,]`)
     ).toMatchSnapshot();
   });
 });

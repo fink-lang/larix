@@ -1,6 +1,6 @@
 import {add_non_separating} from '@fink/prattler/symbols';
 
-import {named_block} from '../generic/block';
+import {named_block} from '../block';
 
 
 export const add_func = (ctx)=> (

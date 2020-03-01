@@ -3,7 +3,7 @@ import {next_is, next_is_end, assert_next} from '@fink/prattler';
 import {assert_advance, advance, collect_text} from '@fink/prattler';
 
 import {symbol} from '../symbols';
-import {get_block} from '../generic/block';
+import {get_block} from '../block';
 import {token_error} from '@fink/prattler/errors';
 
 
@@ -42,12 +42,11 @@ const jsx_body = (name, ctx)=> {
       [expr, ctx] = jsx_expr_container(ctx);
       children.push(expr);
 
-    } else { // TODO:? if (curr_is(ctx, '</')) {
+    } else {
       break;
     }
   }
 
-  // TODO: ? ctx = assert_advance(ctx, '</');
   ctx = assert_advance(ctx, name);
   ctx = assert_advance(ctx, '>');
 

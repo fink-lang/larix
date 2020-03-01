@@ -25,6 +25,13 @@ describe('object {...}', ()=> {
   });
 
 
+  it('parses multiple shorthand exprs: {foo, bar}', ()=> {
+    expect(
+      parse_expr(`{foo, bar: 123, shrub: 'ni'}`)
+    ).toMatchSnapshot();
+  });
+
+
   it('parses single prop: {foo: spam}', ()=> {
     expect(
       parse_expr(`{foo: spam}`)
@@ -44,6 +51,19 @@ describe('object {...}', ()=> {
       parse_expr(`{foo=123}`)
     ).toMatchSnapshot();
   });
+
+
+  it('parses single prop with block value: {foo: spam ...}', ()=> {
+    expect(
+      parse_expr(strip_block`
+        {
+          foo:
+            spam
+            ni
+        }
+      `)
+    ).toMatchSnapshot();
+  });
 });
 
 
@@ -57,17 +77,6 @@ describe('object {...} - parsing failures', ()=> {
           ^`
     );
   });
-
-  // TODO: used to fail
-  // it('throws when missing value after`:`', ()=> {
-  //   expect(
-  //     ()=> parse_expr(`{foo:,}`)
-  //   ).toThrow(strip_block`
-  //     Cannot use ',' as start of expression:
-  //     1| {foo:,}
-  //             ^`
-  //   );
-  // });
 
   it('throws when missing `,`', ()=> {
     expect(

@@ -10,7 +10,7 @@ const prefix_logical = (op)=> prefix(op, 'logical');
 
 export const add_logical_operators = (ctx)=> (
   ctx
-    // TODO: call them `and` `or` `not`
+    // TODO: call them `and`, `or`, `not`
     |> add_operator_like(logical('||'))
     |> add_operator_like(logical('&&'))
     |> add_operator_like(prefix_logical('!'))

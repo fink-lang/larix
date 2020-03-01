@@ -13,6 +13,16 @@ describe('match ...:', ()=> {
     ).toMatchSnapshot();
   });
 
-  // TODO: multi line match
+
+  it('parses complex: {foo}: bar', ()=> {
+    expect(
+      parse_expr(strip_block`
+        match item:
+          {foo, spam: {ni}}: bar
+          [foo, [1, 2]]: bar
+          else: spam
+      `)
+    ).toMatchSnapshot();
+  });
 });
 

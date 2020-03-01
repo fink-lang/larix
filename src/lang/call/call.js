@@ -5,7 +5,7 @@ import {
 
 import {symbol} from '../symbols';
 import {seq} from '../generic/sequence';
-import {get_block} from '../generic/block';
+import {get_block} from '../block';
 import {next_is_unindented} from '../indentation';
 
 
@@ -25,7 +25,6 @@ export const call = (op)=> ({
 export const params = (ctx)=> {
   const expressions = [];
 
-  // TODO: is this the right check?
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const [expr, seq_ctx] = expression(ctx, 0);

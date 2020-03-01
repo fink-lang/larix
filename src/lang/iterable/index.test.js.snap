@@ -60,3 +60,25 @@ block unfold (1:0-2:26)
       ident (2:17-2:21) accu
       number (2:24-2:25) 1
 `;
+
+exports[`unfold item, accu: ... parses no accu 1`] = `
+block unfold (1:0-2:26)
+  assign = (1:7-1:17)
+    ident (1:7-1:11) curr
+    ident (1:12-1:17) start
+  :
+  group (2:2-2:26)
+    arithm + (2:3-2:15)
+      ident (2:3-2:8) start
+      ident (2:11-2:15) accu
+    arithm + (2:17-2:25)
+      ident (2:17-2:21) accu
+      number (2:24-2:25) 1
+`;
+
+exports[`unfold item, accu: ... parses no args 1`] = `
+block unfold (1:0-2:5)
+
+  :
+  ident (2:2-2:5) foo
+`;

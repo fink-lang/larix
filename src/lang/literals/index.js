@@ -13,10 +13,6 @@ const add_array_literal = (ctx)=> (
     |> add_operator_like(array('['))
     |> add_non_binding(symbol(','))
     |> add_non_binding(symbol(']'))
-  // TODO: duplicate of add_object_literal?
-    // |> add_operator_like(object('{'))
-    // |> add_non_binding(symbol(','))
-    // |> add_non_binding(symbol('}'))
 );
 
 
@@ -39,7 +35,6 @@ const add_string_literal = (ctx)=> (
 const add_regex_literal = (ctx)=> (
   ctx
     |> add_operator_like(regex('rx/'))
-    // TODO: |> add_non_binding(regex('/'))
 );
 
 

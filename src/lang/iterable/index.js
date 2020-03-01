@@ -1,4 +1,4 @@
-import {named_block} from '../generic/block';
+import {named_block} from '../block';
 import {add_non_separating} from '@fink/prattler/symbols';
 
 

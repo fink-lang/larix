@@ -3,7 +3,7 @@ import {
 } from '@fink/prattler/symbols';
 
 import {call, call_no_parens} from './call';
-import {named_block} from '../generic/block';
+import {named_block} from '../block';
 
 
 export const add_call_operators = (ctx)=> (
