@@ -53,6 +53,13 @@ describe('object {...}', ()=> {
   });
 
 
+  it('parses calculated prop: {(Symbol(`foo`)): 123, ...}', ()=> {
+    expect(
+      parse_expr('{foo, (Symbol(`bar`)): 123, spam}')
+    ).toMatchSnapshot();
+  });
+
+
   it('parses single prop with block value: {foo: spam ...}', ()=> {
     expect(
       parse_expr(strip_block`
