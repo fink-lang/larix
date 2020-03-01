@@ -19,7 +19,7 @@ import {add_import} from './import';
 import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
 import {add_non_separating, add_operator_like} from '@fink/prattler/symbols';
-import {named_block, add_block} from './generic/block';
+import {add_colon} from './colon';
 
 
 export const init_language = (ctx)=> (
@@ -35,7 +35,7 @@ export const init_language = (ctx)=> (
     |> add_iterables
 
     |> add_assignment_operators
-    |> add_block
+    |> add_colon
 
     |> add_identifier
 

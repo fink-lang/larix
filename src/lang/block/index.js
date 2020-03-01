@@ -2,13 +2,11 @@ import {expression, assert_curr, curr_loc, next_loc} from '@fink/prattler';
 import {add_non_binding} from '@fink/prattler/symbols';
 import {token_error} from '@fink/prattler/errors';
 
-
 import {symbol} from '../symbols';
-import {seq} from './sequence';
-
 import {next_is_unindented} from '../indentation';
 import {get_next_line_indentation, indentation} from '../indentation';
 import {push_indentation, pop_indentation} from '../indentation';
+import {seq} from '../generic/sequence';
 
 
 const default_expr = (ctx)=> expression(ctx, 0);
@@ -80,15 +78,3 @@ export const named_block = (op, type='block', block_expr=default_expr)=> ({
   }
 });
 
-
-export const block = (op)=> ({
-  ...symbol(op),
-
-  nud: ()=> (ctx)=> get_block(ctx, 'block')
-});
-
-
-export const add_block = (ctx)=> (
-  ctx
-    |> add_non_binding(block(':'))
-);

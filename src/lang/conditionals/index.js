@@ -1,7 +1,7 @@
 import {add_non_separating} from '@fink/prattler/symbols';
 import {assert_advance, expression, curr_loc} from '@fink/prattler';
 
-import {get_block, named_block} from '../generic/block';
+import {get_block, named_block} from '../block';
 
 
 const test_expr = (ctx)=> {
