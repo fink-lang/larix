@@ -1,14 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`match ...: parses complex: {foo}: bar 1`] = `
+cond match (1:0-4:12)
+  ident (1:6-1:10) item
+  :
+  cond:expr (2:2-2:24)
+    object (2:2-2:19)
+      prop (2:3-2:6)
+        ident (2:3-2:6) foo
+        ident (2:3-2:6) foo
+      prop (2:8-2:18)
+        ident (2:8-2:12) spam
+        block (2:12-2:18)
+          object (2:14-2:18)
+            prop (2:15-2:17)
+              ident (2:15-2:17) ni
+              ident (2:15-2:17) ni
+    block (2:19-2:24)
+      ident (2:21-2:24) bar
+  cond:expr (3:2-3:20)
+    array (3:2-3:15)
+      ident (3:3-3:6) foo
+      array (3:8-3:14)
+        number (3:9-3:10) 1
+        number (3:12-3:13) 2
+    block (3:15-3:20)
+      ident (3:17-3:20) bar
+  cond:expr (4:2-4:12)
+    ident (4:2-4:6) else
+    block (4:6-4:12)
+      ident (4:8-4:12) spam
+`;
+
 exports[`match ...: parses single line: match foo: bar 1`] = `
 cond match (1:0-3:12)
   ident (1:6-1:10) item
   :
-  cond:test:result (2:2-2:10)
+  cond:expr (2:2-2:10)
     ident (2:2-2:5) foo
     block (2:5-2:10)
       ident (2:7-2:10) bar
-  cond:test:result (3:2-3:12)
+  cond:expr (3:2-3:12)
     ident (3:2-3:6) else
     block (3:6-3:12)
       ident (3:8-3:12) spam
