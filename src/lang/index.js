@@ -20,6 +20,7 @@ import {add_prop_access} from './prop-access';
 import {add_whitespace_tokens} from './whitespace';
 import {add_non_separating, add_operator_like} from '@fink/prattler/symbols';
 import {add_colon} from './colon';
+import {add_js_ops} from './js-compat';
 
 
 export const init_language = (ctx)=> (
@@ -51,6 +52,8 @@ export const init_language = (ctx)=> (
 
     |> add_jsx
     |> add_call_operators
+
+    |> add_js_ops
 
     |> add_group
 

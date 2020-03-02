@@ -64,10 +64,12 @@ const serialize_prefix = (node, serialize, indent)=> {
 
 const serialize_str = (node, serialize, indent)=> {
   const head = str_type_op(node);
+  const tag = node.tag ? ` ${node.tag.value}` : '';
+
   const [lne, ...lns] = node.parts.join('').split('\n');
   const str = [lne, ...lns.map((ln)=> `${indent}  ${ln}`)].join('\n');
 
-  return `${indent}${head}\n${indent}  \`${str}\``;
+  return `${indent}${head}\n${indent}  ${tag}\`${str}\``;
 };
 
 

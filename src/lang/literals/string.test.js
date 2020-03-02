@@ -28,11 +28,20 @@ describe('string `...`', ()=> {
     ).toMatchSnapshot();
   });
 
+
   it('parses escape characters', ()=> {
     expect(
       parse_expr(String.raw`${'`'} \n \t \\ \` ${'`'}`)
     ).toMatchSnapshot();
   });
+
+
+  it('parses tagged string: foo`bar spam`', ()=> {
+    expect(
+      parse_expr('foo`bar spam`')
+    ).toMatchSnapshot();
+  });
+
 });
 
 
@@ -45,6 +54,16 @@ describe('string - parsing failures', ()=> {
       Unexpected end of code:
       1| \`foo bar,
                  ^`
+    );
+  });
+
+  it('throws when not tagged with identifier', ()=> {
+    expect(
+      ()=> parse_expr('12`bar spam`')
+    ).toThrow(strip_block`
+      Expected identifier for tagged string:
+      1| 12\`bar spam\`
+         ^`
     );
   });
 });
