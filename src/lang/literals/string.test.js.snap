@@ -21,3 +21,8 @@ exports[`string \`...\` parses single line string: \`foo bar\` 1`] = `
 string \` (1:0-1:9)
   \`foo bar\`
 `;
+
+exports[`string \`...\` parses tagged string: foo\`bar spam\` 1`] = `
+string \` (1:0-1:13)
+   foo\`bar spam\`
+`;
