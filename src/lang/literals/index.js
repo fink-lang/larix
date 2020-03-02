@@ -1,6 +1,6 @@
-import {
-  add_operator_like, symbol, add_non_binding
-} from '@fink/prattler/symbols';
+import {add_operator_like, add_non_binding} from '@fink/prattler/symbols';
+
+import {symbol} from '../symbols';
 
 import {array} from './array';
 import {object} from './object';

@@ -61,7 +61,7 @@ export const string = (op)=> ({
     return [{...str, tag: left, loc: {start, end}}, next_ctx];
   },
 
-  nud: ()=> (ctx)=> {
-    return get_unindented_text(ctx, op);
-  }
+  nud: ()=> (ctx)=> (
+    get_unindented_text(ctx, op)
+  )
 });
