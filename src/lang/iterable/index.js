@@ -12,4 +12,5 @@ export const add_iterables = (ctx)=> (
 
     |> add_non_separating(named_block('filter'))
     |> add_non_separating(named_block('while'))
+    |> add_non_separating(named_block('find'))
 );

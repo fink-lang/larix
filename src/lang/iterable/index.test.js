@@ -31,7 +31,7 @@ describe('unfold item, accu: ...', ()=> {
     expect(
       parse_expr(strip_block`
         unfold curr=start:
-          (start + accu, accu + 1)
+          start + accu
       `)
     ).toMatchSnapshot();
   });
@@ -85,3 +85,30 @@ describe('filter item: ...', ()=> {
     ).toMatchSnapshot();
   });
 });
+
+
+describe('while item: ...', ()=> {
+
+  it('parses', ()=> {
+    expect(
+      parse_expr(strip_block`
+        while item:
+          item % 2 == 0
+      `)
+    ).toMatchSnapshot();
+  });
+});
+
+
+describe('find item: ...', ()=> {
+
+  it('parses', ()=> {
+    expect(
+      parse_expr(strip_block`
+        find item:
+          item % 2 == 0
+      `)
+    ).toMatchSnapshot();
+  });
+});
+
