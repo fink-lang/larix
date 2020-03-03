@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`string \`...\` handles default indentation for lbp 1`] = `
+module (1:0-2:6)
+  string ' (1:0-1:8)
+    \`foobar\`
+  string ' (2:0-2:6)
+    \`spam\`
+`;
+
 exports[`string \`...\` parses empty: \`\` 1`] = `
 string \` (1:0-1:2)
   \`\`
