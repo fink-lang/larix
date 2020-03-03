@@ -1,4 +1,4 @@
-import {assert_advance, collect_text, curr_loc} from '@fink/prattler';
+import {assert_advance, collect_text, curr_loc, next_loc} from '@fink/prattler';
 import {curr_is, next_is, next_is_end, ignored_text} from '@fink/prattler';
 import {curr_value} from '@fink/prattler';
 import {token_error} from '@fink/prattler/errors';
@@ -6,7 +6,7 @@ import {token_error} from '@fink/prattler/errors';
 
 import {symbol} from '../symbols';
 
-import {get_next_line_indentation} from '../indentation';
+import {get_next_line_indentation, indentation} from '../indentation';
 import {unindent_text} from '../../string-utils';
 
 
@@ -43,13 +43,18 @@ export const string = (op)=> ({
   ...symbol(op),
 
   lbp: (lbp)=> (ctx, left)=> {
+    // default indentation behaviour
+    if (next_loc(ctx).start.column <= indentation(ctx)) {
+      return 0;
+    }
+
     if (left.type === 'ident') {
       return lbp;
     }
 
     throw token_error(
-      `Expected identifier for tagged string:`,
-      left, ctx
+      `Expected identifier before tagged string:`,
+      ctx.next_token, ctx
     );
   },
 

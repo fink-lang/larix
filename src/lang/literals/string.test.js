@@ -1,4 +1,4 @@
-import {parse_expr} from '../../';
+import {parse_expr, parse} from '../../';
 import {strip_block} from '../../string-utils';
 
 
@@ -42,6 +42,15 @@ describe('string `...`', ()=> {
     ).toMatchSnapshot();
   });
 
+
+  it(`handles default indentation for lbp`, ()=> {
+    expect(
+      parse(strip_block`
+        'foobar'
+        'spam'
+      `)
+    ).toMatchSnapshot();
+  });
 });
 
 
@@ -49,21 +58,21 @@ describe('string - parsing failures', ()=> {
 
   it('throws when missing end', ()=> {
     expect(
-      ()=> parse_expr('`foo bar,')
+      ()=> parse_expr('"foo bar,')
     ).toThrow(strip_block`
       Unexpected end of code:
-      1| \`foo bar,
+      1| "foo bar,
                  ^`
     );
   });
 
   it('throws when not tagged with identifier', ()=> {
     expect(
-      ()=> parse_expr('12`bar spam`')
+      ()=> parse_expr(`12'bar spam'`)
     ).toThrow(strip_block`
-      Expected identifier for tagged string:
-      1| 12\`bar spam\`
-         ^`
+      Expected identifier before tagged string:
+      1| 12'bar spam'
+           ^`
     );
   });
 });
