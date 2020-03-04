@@ -37,23 +37,27 @@ describe('regex - parsing failures', ()=> {
 
   it('throws when missing end', ()=> {
     expect(
-      ()=> parse_expr(`rx/foo.bar`)
+      ()=> parse_expr(`rx/foo.bar`, 'test.fnk')
     ).toThrow(strip_block`
-      Unexpected end of code:
+      test.fnk:1:7
       1| rx/foo.bar
-                ^`
-    );
+                ^
+
+      Unexpected end of code.
+    `);
   });
 
 
   it('throws unssupported flags', ()=> {
     expect(
-      ()=> parse_expr(`rx/foo.bar/n`)
+      ()=> parse_expr(`rx/foo.bar/n`, 'test.fnk')
     ).toThrow(strip_block`
-      Unexpected end of code:
+      test.fnk:1:11
       1| rx/foo.bar/n
-                    ^`
-    );
+                    ^
+
+      Unexpected end of code.
+    `);
   });
 });
 

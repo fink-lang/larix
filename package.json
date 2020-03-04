@@ -30,7 +30,7 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@fink/prattler": "^1.0.0"
+    "@fink/prattler": "^1.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

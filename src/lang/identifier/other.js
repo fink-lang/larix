@@ -47,7 +47,7 @@ const number = (ctx)=> {
         value += curr_value(ctx);
       } else {
         throw token_error(
-          `Expected exponent:`,
+          `Expected exponent.`,
           ctx.curr_token, ctx
         );
       }

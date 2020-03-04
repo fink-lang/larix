@@ -36,22 +36,26 @@ describe('array [...]', ()=> {
 describe('array [...] - parsing failures', ()=> {
   it('throws when missing `]`', ()=> {
     expect(
-      ()=> parse_expr(`[`)
+      ()=> parse_expr(`[`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected ']' but found Symbol(end):
+      test.fnk:1:1
       1| [
-          ^`
-    );
+          ^
+
+      Expected ']' but found Symbol(end).
+    `);
   });
 
   it('throws when missing `,`', ()=> {
     expect(
-      ()=> parse_expr(`[1)]`)
+      ()=> parse_expr(`[1)]`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected ',' but found ')':
+      test.fnk:1:2
       1| [1)]
-           ^`
-    );
+           ^
+
+      Expected ',' but found ')'.
+    `);
   });
 });
 

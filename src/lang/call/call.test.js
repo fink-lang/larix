@@ -29,22 +29,26 @@ describe('call()', ()=> {
 describe('call() - parsing failures', ()=> {
   it('throws when missing `)`', ()=> {
     expect(
-      ()=> parse_expr(`foobar(`)
+      ()=> parse_expr(`foobar(`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected ')' but found Symbol(end):
+      test.fnk:1:7
       1| foobar(
-                ^`
-    );
+                ^
+
+      Expected ')' but found Symbol(end).
+    `);
   });
 
   it('throws when missing `,`', ()=> {
     expect(
-      ()=> parse_expr(`foobar(1:)`)
+      ()=> parse_expr(`foobar(1:)`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected ',' but found ':':
+      test.fnk:1:8
       1| foobar(1:)
-                 ^`
-    );
+                 ^
+
+      Expected ',' but found ':'.
+    `);
   });
 });
 
