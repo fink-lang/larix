@@ -53,7 +53,7 @@ export const string = (op)=> ({
     }
 
     throw token_error(
-      `Expected identifier before tagged string:`,
+      `Expected identifier before tagged string.`,
       ctx.next_token, ctx
     );
   },

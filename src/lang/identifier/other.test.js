@@ -57,12 +57,14 @@ describe('numbers', ()=> {
 
   it('throws when missing exponent', ()=> {
     expect(
-      ()=> parse_expr(`123.456e * 78`)
+      ()=> parse_expr(`123.456e * 78`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected exponent:
+      test.fnk:1:9
       1| 123.456e * 78
-                  ^`
-    );
+                  ^
+
+      Expected exponent.
+    `);
   });
 });
 

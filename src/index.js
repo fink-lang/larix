@@ -12,15 +12,15 @@ const init = (ctx)=> (
 );
 
 
-export const parse_expr = (code)=> {
-  const ctx = init({code});
+export const parse_expr = (code, filename)=> {
+  const ctx = init({code, filename});
   const [expr] = expression(ctx, 0);
   return expr;
 };
 
 
-export const parse = (code)=> {
-  const ctx = init({code});
+export const parse = (code, filename)=> {
+  const ctx = init({code, filename});
   const [ast] = module(ctx);
   return ast;
 };

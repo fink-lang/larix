@@ -21,14 +21,16 @@ describe('module parse errors', ()=> {
     expect(()=> parse(strip_block`
       match fooobar:
         match spam:
-        shrub
-   `)).toThrow(strip_block`
-      Expected indentation > 2:
+        shrub`, 'test.fnk')
+    ).toThrow(strip_block`
+      test.fnk:3:2
       1| match fooobar:
       2|   match spam:
       3|   shrub
            ^
-      4|`
+
+      Expected indentation > 2.
+      `
     );
   });
 

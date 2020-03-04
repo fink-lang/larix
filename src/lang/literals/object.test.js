@@ -77,22 +77,26 @@ describe('object {...}', ()=> {
 describe('object {...} - parsing failures', ()=> {
   it('throws when missing `}`', ()=> {
     expect(
-      ()=> parse_expr(`{`)
+      ()=> parse_expr(`{`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected '}' but found Symbol(end):
+      test.fnk:1:1
       1| {
-          ^`
-    );
+          ^
+
+      Expected '}' but found Symbol(end).
+    `);
   });
 
   it('throws when missing `,`', ()=> {
     expect(
-      ()=> parse_expr(`{foo) bar}`)
+      ()=> parse_expr(`{foo) bar}`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected ',' but found ')':
+      test.fnk:1:4
       1| {foo) bar}
-             ^`
-    );
+             ^
+
+      Expected ',' but found ')'.
+    `);
   });
 });
 

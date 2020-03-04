@@ -72,21 +72,14 @@ describe('JSX <Foobar>...</Foobar>', ()=> {
 describe('JSX parse errors', ()=> {
   it('throws with invalid attr value', ()=> {
     expect(()=> parse_expr(
-      '<Foobar spam=123 />'
+      '<Foobar spam=123 />', 'test.fnk'
     )).toThrow(strip_block`
-      Expected '{' but found '123':
-      1| <Foobar spam=123 />`
-    );
-  });
+      test.fnk:1:13
+      1| <Foobar spam=123 />
+                      ^
 
-
-  it('throws with invalid attr value', ()=> {
-    expect(()=> parse_expr(
-      '<Foobar spam=123 />'
-    )).toThrow(strip_block`
-      Expected '{' but found '123':
-      1| <Foobar spam=123 />`
-    );
+      Expected '{' but found '123'.
+    `);
   });
 });
 

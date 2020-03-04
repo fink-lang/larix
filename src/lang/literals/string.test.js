@@ -58,22 +58,26 @@ describe('string - parsing failures', ()=> {
 
   it('throws when missing end', ()=> {
     expect(
-      ()=> parse_expr('"foo bar,')
+      ()=> parse_expr('"foo bar,', 'test.fnk')
     ).toThrow(strip_block`
-      Unexpected end of code:
-      1| "foo bar,
-                 ^`
-    );
+      test.fnk:1:8
+      1| \"foo bar,
+                 ^
+
+      Unexpected end of code.
+    `);
   });
 
   it('throws when not tagged with identifier', ()=> {
     expect(
-      ()=> parse_expr(`12'bar spam'`)
+      ()=> parse_expr(`12'bar spam'`, 'test.fnk')
     ).toThrow(strip_block`
-      Expected identifier before tagged string:
+      test.fnk:1:2
       1| 12'bar spam'
-           ^`
-    );
+           ^
+
+      Expected identifier before tagged string.
+    `);
   });
 });
 

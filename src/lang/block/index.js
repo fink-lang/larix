@@ -18,7 +18,7 @@ export const get_indentations = (ctx)=> {
 
   if (next_line_ind > 0 && next_line_ind <= curr_ind) {
     throw token_error(
-      `Expected indentation > ${curr_ind}:`,
+      `Expected indentation > ${curr_ind}.`,
       ctx.next_token, ctx
     );
   }
