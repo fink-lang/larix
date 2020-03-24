@@ -1,8 +1,7 @@
 import {assert_advance, collect_text, curr_loc, next_loc} from '@fink/prattler';
 import {curr_is, next_is, next_is_end, ignored_text} from '@fink/prattler';
-import {curr_value} from '@fink/prattler';
+import {curr_value, expression} from '@fink/prattler';
 import {token_error} from '@fink/prattler/errors';
-
 
 import {symbol} from '../symbols';
 
@@ -10,16 +9,42 @@ import {get_next_line_indentation, indentation} from '../indentation';
 import {unindent_text} from '../../string-utils';
 
 
-export const get_text = (ctx, op)=> {
-  let [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op);
-  let new_text = null;
+const get_expr_part = (ctx)=> {
+  const expr_ctx = assert_advance(ctx, '{');
+  const [expr, next_ctx] = expression(expr_ctx, 0);
 
-  while (text.endsWith('\\')) {
-    [{text: new_text, loc: {end}}, next_ctx] = collect_text(next_ctx, op);
-    text = `${text}${op}${new_text}`;
+  const str_ctx = assert_advance(next_ctx, '}');
+  return [expr, str_ctx];
+};
+
+
+const get_str_part = (ctx, op)=> {
+  const [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '$');
+
+  if (text.endsWith('\\')) {
+    const [str_part, final_ctx] = get_str_part(next_ctx, op);
+
+    return [{
+      type: 'string:text',
+      value: `${text}${op}${str_part.value}`,
+      loc: {start, end: str_part.loc.end}
+    }, final_ctx];
   }
 
-  return [{text, loc: {start, end}}, next_ctx];
+  return [{type: 'string:text', value: text, loc: {start, end}}, next_ctx];
+};
+
+
+const get_parts = (ctx, op)=> {
+  const [str_part, next_ctx] = get_str_part(ctx, op);
+
+  if (curr_value(next_ctx) === '$') {
+    const [expr_part, parts_ctx] = get_expr_part(next_ctx);
+    const [parts, final_ctx] = get_parts(parts_ctx, op);
+    return [[str_part, expr_part, ...parts], final_ctx];
+  }
+
+  return [[str_part], next_ctx];
 };
 
 
@@ -27,13 +52,18 @@ const get_unindented_text = (ctx, op)=> {
   const {start} = curr_loc(ctx);
   const ind = get_next_line_indentation(ctx);
 
-  const [text, next_ctx] = get_text(ctx, op);
+  const [parts, next_ctx] = get_parts(ctx, op);
 
-  const outdented = unindent_text(text.text, ind);
+  const outdented = parts.map((part, idx)=> (
+    part.type === 'string:text'
+      ? {...part, value: unindent_text(part.value, ind, idx === 0)}
+      : part
+  ));
+
   const {end} = curr_loc(next_ctx);
 
   return [
-    {type: 'string', op, parts: [outdented], loc: {start, end}},
+    {type: 'string', op, parts: outdented, loc: {start, end}},
     next_ctx
   ];
 };
