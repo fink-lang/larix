@@ -43,6 +43,25 @@ describe('string `...`', ()=> {
   });
 
 
+  it('parses template string: `foo ${bar} spam`', ()=> {
+    expect(
+      parse_expr('`foo ${bar + spam} spam`')
+    ).toMatchSnapshot();
+  });
+
+  it('parses multiline template string: `foo ${...} spam`', ()=> {
+    expect(
+      parse_expr(strip_block`
+        '
+          foo
+            \${ bar + spam }
+          ni
+        '
+      `)
+    ).toMatchSnapshot();
+  });
+
+
   it(`handles default indentation for lbp`, ()=> {
     expect(
       parse(strip_block`
@@ -61,7 +80,7 @@ describe('string - parsing failures', ()=> {
       ()=> parse_expr('"foo bar,', 'test.fnk')
     ).toThrow(strip_block`
       test.fnk:1:8
-      1| \"foo bar,
+      1| "foo bar,
                  ^
 
       Unexpected end of code.

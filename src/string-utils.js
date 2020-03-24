@@ -1,10 +1,10 @@
 import {curr_loc, next_loc} from '@fink/prattler';
 
 
-export const unindent_text = (text, ind)=> (
+export const unindent_text = (text, ind, remove_first_empty_line=true)=> (
   text
     .split(/\n/g)
-    .slice(ind === 0 ? 0 : 1)
+    .slice(ind === 0 || !remove_first_empty_line ? 0 : 1)
     .map((line)=> line.slice(ind))
     .join('\n')
 );

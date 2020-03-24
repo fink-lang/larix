@@ -25,6 +25,18 @@ string \` (1:1-4:11)
   ni\`
 `;
 
+exports[`string \`...\` parses multiline template string: \`foo \${...} spam\` 1`] = `
+string ' (1:0-5:1)
+  \`foo
+    \`
+    arithm + (3:7-3:17)
+      ident (3:7-3:10) bar
+      ident (3:13-3:17) spam
+  \`
+  ni
+  \`
+`;
+
 exports[`string \`...\` parses single line string: \`foo bar\` 1`] = `
 string \` (1:0-1:9)
   \`foo bar\`
@@ -33,4 +45,13 @@ string \` (1:0-1:9)
 exports[`string \`...\` parses tagged string: foo\`bar spam\` 1`] = `
 string \` (1:0-1:13)
    foo\`bar spam\`
+`;
+
+exports[`string \`...\` parses template string: \`foo \${bar} spam\` 1`] = `
+string \` (1:0-1:24)
+  \`foo \`
+    arithm + (1:7-1:17)
+      ident (1:7-1:10) bar
+      ident (1:13-1:17) spam
+  \` spam\`
 `;

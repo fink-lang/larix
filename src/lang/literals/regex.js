@@ -1,11 +1,23 @@
-import {assert_advance, advance} from '@fink/prattler';
+import {assert_advance, advance, collect_text} from '@fink/prattler';
 import {next_is, next_is_end, next_matches, next_loc} from '@fink/prattler';
 import {curr_is, curr_value, curr_loc} from '@fink/prattler';
 
 import {unindent_text} from '../../string-utils';
 import {symbol} from '../symbols';
 import {get_next_line_indentation, curr_next_adjecent} from '../indentation';
-import {get_text} from './string';
+
+
+const get_text = (ctx, op)=> {
+  let [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '$');
+  let new_text = null;
+
+  while (text.endsWith('\\')) {
+    [{text: new_text, loc: {end}}, next_ctx] = collect_text(next_ctx, op, '$');
+    text = `${text}${op}${new_text}`;
+  }
+
+  return [{text, loc: {start, end}}, next_ctx];
+};
 
 
 const get_flags = (ctx)=> {
