@@ -54,11 +54,17 @@ const get_unindented_text = (ctx, op)=> {
 
   const [parts, next_ctx] = get_parts(ctx, op);
 
-  const outdented = parts.map((part, idx)=> (
-    part.type === 'string:text'
-      ? {...part, value: unindent_text(part.value, ind, idx === 0)}
-      : part
-  ));
+  const outdented = parts.map((part, idx)=> {
+    if (idx === 0 && part.value.startsWith('\n')) {
+      return {...part, value: unindent_text(part.value.slice(1 + ind), ind)};
+    }
+
+    if (part.type === 'string:text') {
+      return {...part, value: unindent_text(part.value, ind)};
+    }
+
+    return part;
+  });
 
   const {end} = curr_loc(next_ctx);
 

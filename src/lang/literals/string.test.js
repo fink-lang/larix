@@ -49,12 +49,24 @@ describe('string `...`', ()=> {
     ).toMatchSnapshot();
   });
 
-  it('parses multiline template string: `foo ${...} spam`', ()=> {
+  it('parses multiline template string: `foo ${...} ni`', ()=> {
     expect(
       parse_expr(strip_block`
         '
           foo
             \${ bar + spam }
+          ni
+        '
+      `)
+    ).toMatchSnapshot();
+  });
+
+  it('parses multiline template string: `foo ${...}:${...} ni`', ()=> {
+    expect(
+      parse_expr(strip_block`
+        '
+          \${foo}:\${bar}:\${spam}
+
           ni
         '
       `)

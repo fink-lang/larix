@@ -25,7 +25,7 @@ string \` (1:1-4:11)
   ni\`
 `;
 
-exports[`string \`...\` parses multiline template string: \`foo \${...} spam\` 1`] = `
+exports[`string \`...\` parses multiline template string: \`foo \${...} ni\` 1`] = `
 string ' (1:0-5:1)
   \`foo
     \`
@@ -33,6 +33,20 @@ string ' (1:0-5:1)
       ident (3:7-3:10) bar
       ident (3:13-3:17) spam
   \`
+  ni
+  \`
+`;
+
+exports[`string \`...\` parses multiline template string: \`foo \${...}:\${...} ni\` 1`] = `
+string ' (1:0-5:1)
+  \`\`
+    ident (2:4-2:7) foo
+  \`:\`
+    ident (2:11-2:14) bar
+  \`:\`
+    ident (2:18-2:22) spam
+  \`
+  
   ni
   \`
 `;
