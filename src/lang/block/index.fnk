@@ -30,7 +30,6 @@ single_expr_block = fn ctx, block_expr:
   [[expr], next_ctx]
 
 
-
 indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
   block_ctx = push_indentation(ctx, block_ind)
 
@@ -53,7 +52,6 @@ indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
   final_ctx = pop_indentation(next_ctx, end_ind)
 
   [exprs, final_ctx]
-
 
 
 get_block = fn ctx, type='block', block_expr=default_expr:
@@ -81,8 +79,5 @@ named_block = fn op, type='block', block_expr=default_expr:
 
       [{type, op, args, exprs, loc: {start, end: loc.end}}, next_ctx]
   }
-
-
-
 
 
