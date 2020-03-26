@@ -31,10 +31,11 @@ describe:: 'strings', fn:
     # TODO: should not need to escape `
     parse_expr('\` \\n \\t \\\\ \\\` \`') eq snapshot
     parse_expr(`' \\n \\t \\\\ \\\` '`) eq snapshot
-    parse_expr(`" \\n \\t \\\\ \\\` "`) eq snapshot
+    parse_expr(`" \\n \\t \\\\ \\\` \\\\"`) eq snapshot
 
 
   it:: 'parses tagged strings', fn:
+    # TODO: should not need to escape `
     parse_expr('foo\`bar spam\`') eq snapshot
     parse_expr(`foo'bar spam'`) eq snapshot
     parse_expr(`foo"bar spam"`) eq snapshot

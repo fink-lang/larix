@@ -18,7 +18,7 @@ describe:: 'regex rx/.../', fn:
 
 
   it:: 'parses escaped chars: rx/\\n\\t/', fn:
-    parse_expr(`rx/\\n \\\\ \\/ /`) eq snapshot
+    parse_expr(`rx/\\n \\\\ \\/ \\\\/`) eq snapshot
 
 
 describe:: 'regex - parsing failures', fn:

@@ -34,8 +34,8 @@ string ' (1:0-1:15)
 `;
 
 exports[`strings parses escape characters 3`] = `
-string " (1:0-1:15)
-  \` \\n \\t \\\\ \\\` \`
+string " (1:0-1:17)
+  \` \\n \\t \\\\ \\\` \\\\\`
 `;
 
 exports[`strings parses multi line strings 1`] = `

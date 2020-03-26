@@ -20,10 +20,14 @@ get_str_part = fn ctx, op:
   # TODO: should not need to escape `$` unless it is `${`
   [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '\$')
 
-  # TODO: check that the number of trailing \ is odd to detect an escape seq
-  match text.match(rx/\\$/):
-    null:
+  # TODO: previous larix version has a bug to terminate regex at $
+  [escaped] = text.match(rx/\\*\\$/) || ['']
+
+  match true:
+    escaped.length % 2 == 0:
       [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
+
+    # TODO: should check for ${ and continue too
     else:
       [str_part, final_ctx] = get_str_part(next_ctx, op)
 
