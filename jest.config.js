@@ -4,7 +4,6 @@ module.exports = {
   setupFiles: [],
   moduleFileExtensions: ['js', 'fnk'],
   transform: {
-    '^.+\\.js$': 'babel-jest',
     '^.+\\.fnk$': ['@fink/jest']
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
@@ -15,7 +14,6 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 
   testMatch: [
-    '<rootDir>/**/*.test.js',
     '<rootDir>/**/*.test.fnk'
   ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],

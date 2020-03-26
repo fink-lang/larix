@@ -1,10 +1,9 @@
-import {serialize} from './serialize';
+const {serialize} = require('./serialize');
 
 
-export const print = (ast)=> serialize(ast);
+const print = (ast)=> serialize(ast);
 
-
-export const test = (val)=> (
+const test = (val)=> (
   val
     // eslint-disable-next-line no-prototype-builtins
     && val.hasOwnProperty('type')
@@ -12,6 +11,7 @@ export const test = (val)=> (
     && val.hasOwnProperty('loc')
 );
 
+const jest_serializer = {print, test};
 
-export const jest_serializer = {print, test};
 
+module.exports = {print, test, jest_serializer};

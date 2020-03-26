@@ -127,7 +127,7 @@ const serialize_jsx = (node, serialize, indent)=> {
 };
 
 // eslint-disable-next-line complexity, max-statements
-export const serialize = (node, indent='')=> {
+const serialize = (node, indent='')=> {
   if (node === null) {
     return null;
   }
@@ -164,3 +164,4 @@ export const serialize = (node, indent='')=> {
   throw new Error(`cannot serialize ${head}`);
 };
 
+module.exports = {serialize}

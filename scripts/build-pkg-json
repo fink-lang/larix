@@ -1,0 +1,1 @@
+sed 's/larix-dev/larix/' package.json > build/pkg/package.json
