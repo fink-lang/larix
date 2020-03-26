@@ -1,0 +1,9 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+
+{prefix} = import '../generic/prefix'
+
+
+add_js_ops = fn ctx:
+  pipe ctx:
+    add_non_separating(prefix('new', 'new'))
+    add_non_separating(prefix('throw', 'throw'))

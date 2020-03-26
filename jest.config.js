@@ -2,15 +2,20 @@
 module.exports = {
   testEnvironment: 'node',
   setupFiles: [],
-  transform: {'^.+\\.js$': 'babel-jest'},
+  moduleFileExtensions: ['js', 'fnk'],
+  transform: {
+    '^.+\\.fnk$': ['@fink/jest']
+  },
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
-  snapshotSerializers: ['<rootDir>/src/testing/snapshot'],
-  snapshotResolver: '<rootDir>/src/testing/resolver',
+  snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot'],
+  snapshotResolver: '<rootDir>/build/test-helpers/resolver',
 
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 
-  testMatch: ['<rootDir>/**/*.test.js'],
+  testMatch: [
+    '<rootDir>/**/*.test.fnk'
+  ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
   watchPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
@@ -20,10 +25,12 @@ module.exports = {
   resetMocks: false,
 
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/**/*.js'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.fnk'
+  ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
-    '<rootDir>/src/testing/resolver.js'
+    '<rootDir>/src/testing/'
   ],
   coverageDirectory: './build/cov',
   coverageReporters: ['lcov'],

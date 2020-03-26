@@ -1,0 +1,16 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+
+{named_block} = import '../block'
+
+
+add_iterables = fn ctx:
+  pipe ctx:
+    add_non_separating(named_block('fold'))
+    add_non_separating(named_block('unfold'))
+
+    add_non_separating(named_block('map'))
+    add_non_separating(named_block('flat_map'))
+
+    add_non_separating(named_block('filter'))
+    add_non_separating(named_block('while'))
+    add_non_separating(named_block('find'))

@@ -1,0 +1,9 @@
+{describe, it, eq, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'spread', fn:
+
+  it:: 'parses single line: ...foobar', fn:
+    parse_expr(`...foobar`) eq snapshot

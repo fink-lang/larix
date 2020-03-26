@@ -1,0 +1,162 @@
+
+str_type_op = fn {type, op, loc: {start, end}}:
+  match true:
+    (op && op != type):
+      `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
+    else:
+      `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
+
+
+serialize_block = fn node, serialize, indent:
+  head = str_type_op(node)
+
+  match true:
+    (!!node.args):
+      args = node.args.map(fn expr: serialize(expr, `${indent}  `))
+      exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
+      arg_str = `${args.join('\n')}\n`
+
+      `${indent}${head}\n${arg_str}${indent}  :\n${exprs.join('\n')}`
+
+    else:
+      exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
+      `${indent}${head}\n${exprs.join('\n')}`
+
+
+
+serialize_call = fn node, serialize, indent:
+  head = str_type_op(node)
+
+  callee = serialize(node.callee, `${indent}  `)
+  args = node.args.map(fn expr: serialize(expr, `${indent}  `))
+  arg_str = match true:
+    args.length > 0: `${args.join('\n')}\n`
+    else: ''
+
+
+  `${indent}${head}\n${callee}\n${arg_str}`
+
+
+serialize_infix = fn node, serialize, indent:
+  head = str_type_op(node)
+
+  match true:
+    !!((node.left && node.right)):
+      left = serialize(node.left, `${indent}  `)
+      right = serialize(node.right, `${indent}  `)
+
+      `${indent}${head}\n${left}\n${right}`
+
+    (!!(node.key && node.value)):
+      left = serialize(node.key, `${indent}  `)
+      right = serialize(node.value, `${indent}  `)
+
+      `${indent}${head}\n${left}\n${right}`
+
+
+serialize_prefix = fn node, serialize, indent:
+  head = str_type_op(node)
+  right = serialize(node.right, `${indent}  `)
+  `${indent}${head}\n${right}`
+
+
+serialize_str = fn node, serialize, indent:
+  head = str_type_op(node)
+
+  tag = match true:
+    (!!node.tag): ` ${node.tag.value}`
+    else: ''
+
+  [lne, ...lns] = node.parts
+    .map(fn part:
+      match part.type:
+        'string:text': `\`${part.value}\``
+        else:
+          value = serialize(part, '  ${indent}')
+          `\n${value}\n`
+    )
+    .join('')
+    .split('\n')
+
+  str = [lne, ...lns.map(fn ln: `${indent}  ${ln}`)].join('\n')
+
+  `${indent}${head}\n${indent}  ${tag}${str}`
+
+
+serialize_regex = fn node, serialize, indent:
+  head = str_type_op(node)
+  `${indent}${head}\n${indent}  /${node.pattern}/${node.flags}`
+
+
+serialize_other = fn node, serialize, indent:
+  head = str_type_op(node)
+  `${indent}${head} ${node.value}`
+
+
+serialize_jsx = fn node, serialize, indent:
+  head = str_type_op(node)
+
+  result = match true:
+    (node.type == 'jsx-elem'):
+      props = node.props.map(fn expr: serialize(expr, `${indent}  `))
+      children = node.children.map(fn expr: serialize(expr, `${indent}  `))
+
+      props_str = match true:
+        props.length > 0: `\n${props.join('\n')}`
+        else: ''
+
+      children_str = match true:
+        children.length > 0: `\n${indent}  :\n${children.join('\n')}`
+        else: ''
+
+      `${indent}${head} ${node.name}${props_str}${children_str}`
+
+    (node.type == 'jsx-attr'):
+      value = serialize(node.value, `${indent}  `)
+      `${indent}${head} ${node.name}\n${indent}  ${value}`
+
+    (node.type == 'jsx-text'):
+      `${indent}${head}\n${indent}  ${JSON.stringify(node.value)}`
+
+    (node.type == 'jsx-string'):
+      `${indent}${head}\n${indent}  '${node.value}'`
+
+    (node.type == 'jsx-expr-container'):
+      expr = serialize(node.expr, `${indent}  `)
+      `${indent}${head}\n${expr}`
+
+  result
+
+serialize = fn node, indent='':
+  match true:
+    node == null:
+      null
+
+    node.type.startsWith('jsx-'):
+      serialize_jsx(node, serialize, indent)
+
+    node.type == 'regex':
+      serialize_regex(node, serialize, indent)
+
+    (!!((node.left && node.right) || (node.key && node.value))):
+      serialize_infix(node, serialize, indent)
+
+    (!!node.right):
+      serialize_prefix(node, serialize, indent)
+
+    (!!node.exprs):
+      serialize_block(node, serialize, indent)
+
+    (!!node.value):
+      serialize_other(node, serialize, indent)
+
+    (!!node.parts):
+      serialize_str(node, serialize, indent)
+
+    (!!node.callee):
+      serialize_call(node, serialize, indent)
+
+    else:
+      head = str_type_op(node)
+      throw new Error(`cannot serialize ${head}`)
+

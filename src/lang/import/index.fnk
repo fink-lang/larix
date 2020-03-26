@@ -1,0 +1,8 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+
+{prefix} = import '../generic/prefix'
+
+
+add_import = fn ctx:
+  pipe ctx:
+    add_non_separating(prefix('import', 'import'))

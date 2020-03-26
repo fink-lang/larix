@@ -1,0 +1,68 @@
+{
+  next_is, next_matches, expression, curr_loc, curr_value, advance
+} = import '@fink/prattler'
+
+{symbol} = import '../symbols'
+{seq} = import '../generic/sequence'
+
+
+value_expr = fn ctx, key:
+  match true:
+    next_is(ctx, ':'):  expression(ctx, 0)
+    else: [key, ctx]
+
+
+default_assignment = fn ctx, left:
+  expr_ctx = advance(ctx)
+
+  [right, next_ctx] = expression(expr_ctx, 0)
+  {loc: {end}} = right
+
+  [
+    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
+    next_ctx
+  ]
+
+
+key_expr = fn ctx:
+  match true:
+    # TODO: could we just get the next key expr and assert the allowed types
+    next_matches(ctx, rx/[`'"(]|\.\.\./):
+      expression(ctx, 0)
+    else:
+      key_ctx = advance(ctx)
+      loc = curr_loc(key_ctx)
+      key = {type: 'ident', value: curr_value(key_ctx), loc}
+
+      match true:
+        next_is(key_ctx, '='):
+          default_assignment(key_ctx, key)
+        else: [key, key_ctx]
+
+
+prop_expr = fn ctx:
+  [key_or_default, value_ctx] = key_expr(ctx)
+  [value, next_ctx] = value_expr(value_ctx, key_or_default)
+
+  key = match key_or_default.type:
+    'assign': key_or_default.left
+    else: key_or_default
+
+  {start} = key.loc
+  {end} = value.loc
+
+  # TODO: should `key, value` just be `left, right` to simplify matters
+  [{type: 'prop', key, value, loc: {start, end}}, next_ctx]
+
+
+object = fn op:
+  {
+    ...symbol(op),
+
+    nud: fn: fn ctx:
+      {start} = curr_loc(ctx)
+      [exprs, next_ctx] = seq(ctx, '}', prop_expr)
+      {end} = curr_loc(next_ctx)
+
+      [{type: 'object', exprs, loc: {start, end}}, next_ctx]
+  }

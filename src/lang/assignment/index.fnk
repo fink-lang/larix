@@ -1,0 +1,10 @@
+{add_non_binding, add_operator_like} = import '@fink/prattler/symbols'
+{infix_right} = import '../generic/infix'
+
+
+assign = fn op: infix_right(op, 'assign')
+
+
+add_assignment_operators = fn ctx:
+  pipe ctx:
+    add_operator_like(assign('='))

@@ -1,0 +1,16 @@
+{expression, curr_loc} = import '@fink/prattler'
+
+{symbol} = import '../symbols'
+
+
+prefix = fn op, type:
+  {
+    ...symbol(op),
+
+    nud: fn lbp: fn ctx:
+      {start} = curr_loc(ctx)
+      [right, next_ctx] = expression(ctx, lbp)
+      {end} = right.loc
+
+      [{type, op, right, loc: {start, end}}, next_ctx]
+  }

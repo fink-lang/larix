@@ -1,6 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`assignment parses single line: foo = bar 1`] = `
-await (1:0-1:12)
-  ident (1:6-1:12) foobar
-`;

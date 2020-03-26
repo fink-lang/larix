@@ -1,0 +1,22 @@
+{add_operator_like} = import '@fink/prattler/symbols'
+
+{symbol} = import '../symbols'
+{get_block} = import '../block'
+
+
+colon = fn op, type:
+  {
+    ...symbol(op),
+
+    lbp: fn: fn: 0,
+
+    nud: fn: fn ctx:
+      get_block(ctx, type)
+  }
+
+
+add_colon = fn ctx:
+  pipe ctx:
+    add_operator_like(colon(':', 'block'))
+
+

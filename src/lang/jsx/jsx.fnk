@@ -1,0 +1,137 @@
+{curr_is, curr_value, curr_loc} = import '@fink/prattler'
+{next_is, next_is_end, assert_next} = import '@fink/prattler'
+{assert_advance, advance, collect_text} = import '@fink/prattler'
+{token_error} = import '@fink/prattler/errors'
+
+{symbol} = import '../symbols'
+{get_block} = import '../block'
+
+
+jsx_expr_container = fn ctx:
+  [expr, end_ctx] = get_block(ctx)
+  next_ctx = assert_advance(end_ctx, '}')
+
+  [{type: 'jsx-expr-container', expr, loc: expr.loc}, next_ctx]
+
+
+jsx_txt = fn ctx:
+  [{text, loc}, next_ctx] = collect_text(ctx, '</', '<', '{')
+
+  [{type: 'jsx-text', value: text, loc}, next_ctx]
+
+
+get_children = fn ctx:
+  [txt, next_ctx] = jsx_txt(ctx)
+  txt_children = match txt:
+    {value: ''}: []
+    else: [txt]
+
+  match true:
+    curr_is(next_ctx, '<'):
+      [expr, children_ctx] = jsx_elem(next_ctx)
+      [children, end_ctx] = get_children(children_ctx)
+      [[...txt_children, expr, ...children], end_ctx]
+
+    curr_is(next_ctx, '{'):
+      [expr, children_ctx] = jsx_expr_container(next_ctx)
+      [children, end_ctx] = get_children(children_ctx)
+      [[...txt_children, expr, ...children], end_ctx]
+
+    else:
+      [txt_children, next_ctx]
+
+
+jsx_body = fn name, ctx:
+  [children, name_ctx] = get_children(ctx)
+  end_ctx = assert_advance(name_ctx, name)
+  [children, assert_advance(end_ctx, '>')]
+
+
+jsx_string_val = fn ctx:
+  [value, next_ctx] = collect_text(ctx, curr_value(ctx))
+
+  [{type: 'jsx-string', value: value.text, loc: value.loc}, next_ctx]
+
+
+jsx_attr_value = fn ctx:
+  match true:
+    next_is(ctx, '{'):
+      jsx_expr_container(advance(ctx))
+
+    (next_is(ctx, `"`) || next_is(ctx, `'`)):
+      jsx_string_val(advance(ctx))
+
+    else:
+      # TODO: multiple values not supported by assert
+      assert_next(ctx, '{', '"', "'")
+
+
+jsx_attr = fn ctx:
+  name = curr_value(ctx)
+  {start} = curr_loc(ctx)
+
+  [value, next_ctx] = match true:
+    next_is(ctx, '='):
+      jsx_attr_value(advance(ctx))
+    else :
+      [null, ctx]
+
+  {end} = curr_loc(next_ctx)
+  [{type: 'jsx-attr', name, value, loc: {start, end}}, next_ctx]
+
+
+jsx_props = fn ctx:
+  [props, next_ctx] = pipe ctx:
+    unfold prop_ctx:
+      [prop, next_ctx] = match true:
+        (next_is_end(prop_ctx, '/>') || next_is_end(prop_ctx, '>')):
+          [null, prop_ctx]
+        else:
+          jsx_attr(advance(prop_ctx))
+
+      ([prop, next_ctx], next_ctx)
+
+    while [prop]:
+      prop != null
+
+    fold [prop, next_ctx], [props]=[[]]:
+      [[...props, prop], next_ctx]
+
+  match props.length:
+    0: [props, ctx]
+    else: [props, next_ctx]
+
+
+body_or_end_elem = fn ctx, name:
+  match true:
+    next_is(ctx, '>'):
+      [children, next_ctx] = jsx_body(name, advance(ctx))
+      [false, children, next_ctx]
+    else:
+      [true, [], assert_advance(ctx, '/>')]
+
+
+jsx_elem = fn ctx:
+  {start} = curr_loc(ctx)
+
+  elem_ctx = advance(ctx)
+  name = curr_value(elem_ctx)
+
+  [props, body_ctx] = jsx_props(elem_ctx)
+
+  [self_closing, children, next_ctx] = body_or_end_elem(body_ctx, name)
+  {end} = curr_loc(next_ctx)
+
+  [
+    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}},
+    next_ctx
+  ]
+
+
+jsx = fn op:
+  {
+    ...symbol(op),
+
+    nud: fn: fn ctx: jsx_elem(ctx)
+  }
+

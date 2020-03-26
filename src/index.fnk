@@ -1,0 +1,24 @@
+{init_parser, start_parser, expression} = import '@fink/prattler'
+
+{init_language} = import './lang'
+{parse_module} = import './lang/module'
+
+
+init = fn ctx:
+  pipe ctx:
+    init_parser
+    init_language
+    start_parser
+
+
+parse_expr = fn code, filename:
+  ctx = init:: {code, filename}
+  [expr] = expression:: ctx, 0
+  expr
+
+
+parse = fn code, filename:
+  ctx = init:: {code, filename}
+  [ast] = parse_module(ctx)
+  ast
+

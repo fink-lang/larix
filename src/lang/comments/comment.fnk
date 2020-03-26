@@ -1,0 +1,15 @@
+{next_is, collect_text, expression} = import '@fink/prattler'
+
+{symbol} = import '../symbols'
+
+
+comment = fn op:
+  {
+    ...symbol(op),
+
+    nud: fn: fn ctx:
+      [text, expr_ctx] = collect_text(ctx, '\n')
+      [expr, next_ctx] = expression(expr_ctx, 0)
+
+      [{...expr, comment: text}, next_ctx]
+  }

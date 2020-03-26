@@ -1,0 +1,34 @@
+{advance, curr_loc, curr_value, next_matches, expression} = import '@fink/prattler'
+
+{add_operator_like} = import '@fink/prattler/symbols'
+{symbol} = import '../symbols'
+
+
+member_expr = fn ctx, lbp:
+  match true:
+    next_matches(ctx, rx/[`'"(]/):
+      expression(ctx, lbp)
+    else:
+      key_ctx = advance(ctx)
+      loc = curr_loc(key_ctx)
+
+      [{type: 'ident', value: curr_value(key_ctx), loc}, key_ctx]
+
+
+prop_access = fn op, type:
+  {
+    ...symbol(op),
+
+    led: fn lbp: fn ctx, left:
+      {loc: {start}} = left
+      [right, next_ctx] = member_expr(ctx, lbp)
+      {loc: {end}} = right
+
+      [{type, op, left, right, loc: {start, end}}, next_ctx]
+  }
+
+
+add_prop_access = fn ctx:
+  pipe ctx:
+    add_operator_like(prop_access('.', 'member'))
+

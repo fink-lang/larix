@@ -1,0 +1,8 @@
+{add_operator_like} = import '@fink/prattler/symbols'
+
+{prefix} = import '../generic/prefix'
+
+
+add_spread_operator = fn ctx:
+  pipe ctx:
+    add_operator_like(prefix('...', 'spread'))

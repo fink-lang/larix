@@ -1,0 +1,18 @@
+{describe, it, eq, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'logical', fn:
+
+  it:: 'parses single line: a && b || c', fn:
+    parse_expr(`a && b || c`) eq snapshot
+
+
+  it:: 'parses single line: a || b && c', fn:
+    parse_expr(`a || b && c`) eq snapshot
+
+
+  it:: 'parses single line: !a', fn:
+    parse_expr(`!a`) eq snapshot
+

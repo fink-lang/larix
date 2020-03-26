@@ -1,0 +1,17 @@
+{curr_loc} = import '@fink/prattler'
+
+{symbol} = import '../symbols'
+{seq} = import '../generic/sequence'
+
+
+array = fn op:
+  {
+    ...symbol(op),
+
+    nud: fn: fn ctx:
+      {start} = curr_loc(ctx)
+      [exprs, next_ctx] = seq(ctx, ']')
+      {end} = curr_loc(next_ctx)
+
+      [{type: 'array', exprs, loc: {start, end}}, next_ctx]
+  }

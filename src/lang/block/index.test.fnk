@@ -1,0 +1,14 @@
+{describe, it, eq, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'block assignment', fn:
+
+  it:: 'parses block:  foo = : bar ', fn:
+      parse_expr(`
+        foo = :
+          bar
+          spam
+      `) eq snapshot
+
