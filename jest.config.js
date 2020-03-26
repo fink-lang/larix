@@ -8,8 +8,8 @@ module.exports = {
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
-  snapshotSerializers: ['<rootDir>/src/testing/snapshot'],
-  snapshotResolver: '<rootDir>/src/testing/resolver',
+  snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot'],
+  snapshotResolver: '<rootDir>/build/test-helpers/resolver',
 
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 
@@ -26,12 +26,11 @@ module.exports = {
 
   collectCoverage: true,
   collectCoverageFrom: [
-    '<rootDir>/src/**/*.js',
     '<rootDir>/src/**/*.fnk'
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',
-    '<rootDir>/src/testing/resolver.js'
+    '<rootDir>/src/testing/'
   ],
   coverageDirectory: './build/cov',
   coverageReporters: ['lcov'],
