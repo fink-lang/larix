@@ -9,9 +9,12 @@
 
 get_text = fn ctx, op:
   [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op)
-  # TODO: check that the number of trailing \ is odd to detect an escape seq
-  match text.match(rx/\\$/):
-    null:
+
+  # TODO: previous larix version has a bug to terminate regex at $
+  [escaped] = text.match(rx/\\*\\$/) || ['']
+
+  match true:
+    escaped.length % 2 == 0:
       [{text, loc: {start, end}}, next_ctx]
     else:
       [{text: new_text, loc: {end}}, final_ctx] = get_text(next_ctx, op)
