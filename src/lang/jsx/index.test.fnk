@@ -1,0 +1,59 @@
+{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'JSX <Foobar>...</Foobar>', fn:
+
+  it:: 'parses self closing elem: <Foobar />', fn:
+    parse_expr(`<Foobar />`) eq snapshot
+
+
+  it:: 'parses self closing elem with short attr: <Foobar spam />', fn:
+    parse_expr(`<Foobar spam />`) eq snapshot
+
+
+  it:: 'parses self closing elem with str attr: <Foobar spam="ni" />', fn:
+    parse_expr(`<Foobar spam="ni" />`) eq snapshot
+
+
+  it:: 'parses self closing elem with str attr: <Foobar spam=\'ni\' />', fn:
+    parse_expr(`<Foobar spam='ni' />`) eq snapshot
+
+
+  it:: 'parses self closing elem with expr attr: <Foobar spam={ni} />', fn:
+    parse_expr(`<Foobar spam={ni} />`) eq snapshot
+
+
+  it:: 'parses empty elem: <Foobar></Foobar>', fn:
+    parse_expr(`<Foobar></Foobar>`) eq snapshot
+
+
+  it:: 'parses elem with children: <Foobar><Spam /></Foobar>', fn:
+    parse_expr(`
+      <Foobar ni>
+        <Spam />
+      </Foobar>
+    `) eq snapshot
+
+
+  it:: 'parses elem with expr in body: <Foobar> {...} </Foobar>', fn:
+    parse_expr(`
+      <Foobar>
+        {1 + 2}
+      </Foobar>
+    `) eq snapshot
+
+
+describe:: 'JSX parse errors', fn:
+  it:: 'throws with invalid attr value', fn:
+
+    (
+      fn: parse_expr:: '<Foobar spam=123 />', 'test.fnk'
+    ) to_throw `
+      test.fnk:1:13
+      1| <Foobar spam=123 />
+                      ^
+
+      Expected '{' but found '123'.
+    `

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`js-compat operators parses new 1`] = `
+assign = (1:0-1:30)
+  ident (1:0-1:7) new_foo
+  new (1:10-1:30)
+    call (1:14-1:30)
+      ident (1:14-1:20) Foobar
+      ident (1:21-1:25) spam
+      ident (1:27-1:29) ni
+
+`;
+
+exports[`js-compat operators parses throw 1`] = `
+assign = (1:0-1:38)
+  ident (1:0-1:9) throw_foo
+  logical || (1:12-1:38)
+    ident (1:12-1:15) foo
+    throw (1:19-1:38)
+      call (1:25-1:38)
+        ident (1:25-1:28) err
+        string ' (1:29-1:37)
+          \`foobar\`
+
+`;

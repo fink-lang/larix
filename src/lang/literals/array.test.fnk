@@ -1,0 +1,48 @@
+{decribe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'array [...]', fn:
+
+  it:: 'parses empty: []', fn:
+    parse_expr(`[]`) eq snapshot
+
+
+  it:: 'parses single elemement: [1]', fn:
+    parse_expr(`[1]`) eq snapshot
+
+
+  it:: 'parses multiple elements: [1, 2]', fn:
+    parse_expr(`[1, 2]`) eq snapshot
+
+
+  it:: 'parses leading commas: [,, foo]', fn:
+    parse_expr(`[,, foo]`) eq snapshot
+
+
+describe:: 'array [...] - parsing failures', fn:
+  it:: `throws when missing ']'`, fn:
+    (
+      fn: parse_expr(`[`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:1
+      1| [
+          ^
+
+      Expected ']' but found Symbol(end).
+    `
+
+
+  it:: `throws when missing ']'`, fn:
+    (
+      fn: parse_expr(`[1)]`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:2
+      1| [1)]
+           ^
+
+      Expected ']' but found ')'.
+    `
+
+

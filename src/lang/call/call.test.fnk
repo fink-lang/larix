@@ -1,0 +1,60 @@
+{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../..'
+
+
+describe:: 'call()', fn:
+
+  it:: 'parses empty: foobar()', fn:
+    parse_expr(`foobar()`) eq snapshot
+
+
+  it:: 'parses single arg: foobar(1)', fn:
+    parse_expr(`foobar(1)`) eq snapshot
+
+
+  it:: 'parses multiple args: foobar(1, 2)', fn:
+    parse_expr(`foobar(1, 2)`) eq snapshot
+
+
+describe:: 'call() - parsing failures', fn:
+
+  it:: `throws when missing ')'`, fn:
+    (
+      fn: parse_expr(`foobar(`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:7
+      1| foobar(
+                ^
+
+      Expected ')' but found Symbol(end).
+    `
+
+
+  it:: `throws when missing ')'`, fn:
+    (
+      fn: parse_expr(`foobar(1:)`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:8
+      1| foobar(1:)
+                 ^
+
+      Expected ')' but found ':'.
+    `
+
+
+describe:: 'call:: ...', fn:
+
+  it:: 'parses args: foobar:: spam, ni', fn:
+    parse_expr(`foobar:: spam, ni`) eq snapshot
+
+
+describe:: 'pipe foo: ...', fn:
+
+  it:: 'pipes', fn:
+    parse_expr(`
+      pipe foo:
+        bar(shrub)
+        ni
+    `) eq snapshot
+

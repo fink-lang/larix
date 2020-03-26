@@ -1,0 +1,23 @@
+{next_is_end, assert_advance, advance, expression, next_is} = import '@fink/prattler'
+
+
+default_seq_expr = fn ctx: expression(ctx, 0)
+
+
+seq = fn ctx, closing_symbol, seq_expr=default_seq_expr:
+  match true:
+    next_is_end(ctx, closing_symbol):
+      [[], assert_advance(ctx, closing_symbol)]
+
+    next_is(ctx, ','):
+      [exprs, next_ctx] = seq(advance(ctx), closing_symbol, seq_expr)
+      [[null, ...exprs], next_ctx]
+
+    else:
+      [expr, seq_ctx] = seq_expr(ctx)
+      match true:
+        next_is(seq_ctx, ','):
+          [exprs, next_ctx] = seq(advance(seq_ctx), closing_symbol, seq_expr)
+          [[expr, ...exprs], next_ctx]
+        else:
+          [[expr], assert_advance(seq_ctx, closing_symbol)]

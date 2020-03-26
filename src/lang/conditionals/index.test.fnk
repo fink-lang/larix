@@ -1,0 +1,24 @@
+{describe, it, eq, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'match ...:', fn:
+
+  it:: 'parses single line: match foo: bar', fn:
+    parse_expr(`
+      match item:
+        foo: bar
+        else: spam
+    `) eq snapshot
+
+
+  it:: 'parses complex: {foo}: bar', fn:
+    parse_expr(`
+      match item:
+        {foo, spam: {ni}}: bar
+        [foo, [1, 2]]: bar
+        else: spam
+    `) eq snapshot
+
+

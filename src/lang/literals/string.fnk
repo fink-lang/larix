@@ -1,0 +1,102 @@
+{assert_advance, collect_text, curr_loc, next_loc} = import '@fink/prattler'
+{curr_value, expression} = import '@fink/prattler'
+{token_error} = import '@fink/prattler/errors'
+
+{symbol} = import '../symbols'
+
+{get_next_line_indentation, indentation} = import '../indentation'
+{unindent_text} = import '../../string-utils'
+
+
+get_expr_part = fn ctx:
+  expr_ctx = assert_advance(ctx, '{')
+  [expr, next_ctx] = expression(expr_ctx, 0)
+
+  str_ctx = assert_advance(next_ctx, '}')
+  [expr, str_ctx]
+
+
+get_str_part = fn ctx, op:
+  # TODO: should not need to escape `$` unless it is `${`
+  [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '\$')
+
+  # TODO: check that the number of trailing \ is odd to detect an escape seq
+  match text.match(rx/\\$/):
+    null:
+      [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
+    else:
+      [str_part, final_ctx] = get_str_part(next_ctx, op)
+
+      [{
+        type: 'string:text',
+        value: `${text}${op}${str_part.value}`,
+        loc: {start, end: str_part.loc.end}
+      }, final_ctx]
+
+
+get_parts = fn ctx, op:
+  [str_part, next_ctx] = get_str_part(ctx, op)
+
+  match true:
+    # TODO: should not need to escape `$` unless it is `${`
+    curr_value(next_ctx) == '\$':
+      [expr_part, parts_ctx] = get_expr_part(next_ctx)
+      [parts, final_ctx] = get_parts(parts_ctx, op)
+      [[str_part, expr_part, ...parts], final_ctx]
+    else:
+      [[str_part], next_ctx]
+
+
+get_unindented_text = fn ctx, op:
+  {start} = curr_loc(ctx)
+  ind = get_next_line_indentation(ctx)
+
+  [[first, ...rest], next_ctx] = get_parts(ctx, op)
+
+  first_part = match true:
+    first.value.startsWith('\n'):
+      {...first, value: unindent_text(first.value.slice(1 + ind), ind)}
+    else:
+      first
+
+  [...parts] = pipe rest:
+    map part:
+      match true:
+        (part.type == 'string:text'):
+          {...part, value: unindent_text(part.value, ind)}
+
+        else:
+          part
+
+  {end} = curr_loc(next_ctx)
+
+  [{type: 'string', op, parts: [first_part, ...parts], loc: {start, end}}, next_ctx]
+
+
+string = fn op:
+  {
+    ...symbol(op),
+
+    lbp: fn lbp: fn ctx, left:
+      # default indentation behaviour
+      match true:
+        (next_loc(ctx).start.column <= indentation(ctx)): 0
+        (left.type == 'ident'): lbp
+        else:
+          throw token_error(
+            `Expected identifier before tagged string.`,
+            ctx.next_token, ctx
+          )
+    ,
+
+    led: fn: fn ctx, left:
+      {loc: {start}} = left
+
+      [{loc: {end}, ...str}, next_ctx] = get_unindented_text(ctx, op)
+
+      [{...str, tag: left, loc: {start, end}}, next_ctx]
+    ,
+
+    nud: fn: fn ctx:
+      get_unindented_text(ctx, op)
+  }

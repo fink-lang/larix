@@ -1,0 +1,16 @@
+{symbol: parser_symbol} = import '@fink/prattler/symbols'
+{next_loc} = import '@fink/prattler'
+{indentation} = import './indentation'
+
+
+symbol = fn id:
+  {
+    ...parser_symbol(id),
+
+    lbp: fn lbp: fn ctx:
+      {start: {column}} = next_loc(ctx)
+
+      match true:
+        column <= indentation(ctx): 0
+        else: lbp
+  }

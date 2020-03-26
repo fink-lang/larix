@@ -1,5 +1,5 @@
 {
-  "name": "@fink/larix",
+  "name": "@fink/larix-dev",
   "version": "0.0.0-semantically-released",
   "license": "MIT",
   "engines": {
@@ -36,6 +36,10 @@
     "@babel/cli": "^7.2.3",
     "@babel/plugin-proposal-pipeline-operator": "^7.3.2",
     "@babel/preset-env": "^7.9.0",
+    "@fink/cli": "^2.1.0",
+    "@fink/jest": "^1.1.0",
+    "@fink/larix": "^4.5.1",
+    "@fink/loxia": "^4.5.0",
     "@nearmap/eslint-config-base": "^1.1.0",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.0.3",

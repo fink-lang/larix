@@ -1,0 +1,29 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+{assert_advance, expression, curr_loc} = import '@fink/prattler'
+
+{get_block, named_block} = import '../block'
+
+
+test_expr = fn ctx:
+  [test, test_ctx] = expression(ctx, 0)
+  next_ctx = assert_advance(test_ctx, ':')
+  [test, next_ctx]
+
+
+test_result_expr = fn ctx:
+  [left, result_ctx] = test_expr(ctx)
+  [right, next_ctx] = get_block(result_ctx)
+  {start} = left.loc
+  {end} = right.loc
+
+  [
+    {type: 'cond:expr', left, right, loc: {start, end}},
+    next_ctx
+  ]
+
+
+add_conditionals = fn ctx:
+  pipe ctx:
+    add_non_separating(named_block('match', 'cond', test_result_expr))
+    add_non_separating(named_block('attempt', 'attempt'))
+

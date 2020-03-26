@@ -1,0 +1,47 @@
+{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'regex rx/.../', fn:
+
+  it:: 'parses empty: rx//', fn:
+    parse_expr(`rx//`) eq snapshot
+
+
+  it:: 'parses flags: rx//gimsuy', fn:
+    parse_expr(`rx//gimsuy`) eq snapshot
+
+
+  it:: 'parses regex: rx/.+foo/', fn:
+    parse_expr(`rx/.+foo/gimsuy`) eq snapshot
+
+
+  it:: 'parses escaped chars: rx/\\n\\t/', fn:
+    parse_expr(`rx/\\n \\\\ \\/ /`) eq snapshot
+
+
+describe:: 'regex - parsing failures', fn:
+
+  it:: 'throws when missing end', fn:
+    (
+      fn: parse_expr(`rx/foo.bar`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:7
+      1| rx/foo.bar
+                ^
+
+      Unexpected end of code.
+    `
+
+
+  it:: 'throws unssupported flags', fn:
+    (
+      fn: parse_expr(`rx/foo.bar/n`, 'test.fnk')
+    ) to_throw `
+      test.fnk:1:11
+      1| rx/foo.bar/n
+                    ^
+
+      Unexpected end of code.
+    `

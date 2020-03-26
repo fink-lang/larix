@@ -1,0 +1,9 @@
+{add_whitespace} = import '@fink/prattler/symbols'
+
+
+add_whitespace_tokens = fn ctx:
+  pipe ctx:
+    add_whitespace(' ')
+    add_whitespace('\t')
+    add_whitespace('\n')
+

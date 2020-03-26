@@ -1,0 +1,8 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+
+{named_block} = import '../block'
+
+
+add_func = fn ctx:
+  pipe ctx:
+    add_non_separating(named_block('fn'))

@@ -1,0 +1,33 @@
+{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+
+{parse, parse_expr} = import '../../'
+
+
+describe:: 'module', fn:
+
+  it:: 'parses module', fn:
+    parse(`
+      foo = bar
+      spam = ni
+    `) eq snapshot
+
+
+describe:: 'module parse errors', fn:
+
+  it:: 'throws with bad indentation', fn:
+    (
+      fn: parse(`
+        match fooobar:
+          match spam:
+          shrub`,
+        'test.fnk'
+      )
+    ) to_throw `
+      test.fnk:3:2
+      1| match fooobar:
+      2|   match spam:
+      3|   shrub
+           ^
+
+      Expected indentation > 2.
+      `

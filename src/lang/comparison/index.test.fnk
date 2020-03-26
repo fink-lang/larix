@@ -1,0 +1,30 @@
+{describe, it, eq, snapshot} = import '../../testing/jest'
+
+{parse_expr} = import '../../'
+
+
+describe:: 'comparison', fn:
+
+  it:: 'parses single line: a == b', fn:
+    parse_expr(`a == b`) eq snapshot
+
+
+  it:: 'parses single line: a != b', fn:
+    parse_expr(`a != b`) eq snapshot
+
+
+  it:: 'parses single line: a <= b', fn:
+    parse_expr(`a <= b`) eq snapshot
+
+
+  it:: 'parses single line: a >= b', fn:
+    parse_expr(`a >= b`) eq snapshot
+
+
+  it:: 'parses single line: a > b', fn:
+    parse_expr(`a > b`) eq snapshot
+
+
+  it:: 'parses single line: a < b', fn:
+    parse_expr(`a < b`) eq snapshot
+

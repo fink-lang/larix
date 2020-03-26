@@ -1,0 +1,43 @@
+{add_operator_like, add_non_binding} = import '@fink/prattler/symbols'
+
+{symbol} = import '../symbols'
+
+{array} = import './array'
+{object} = import './object'
+{string} = import './string'
+{regex} = import './regex'
+
+
+add_array_literal = fn ctx:
+  pipe ctx:
+    add_operator_like(array('['))
+    add_non_binding(symbol(','))
+    add_non_binding(symbol(']'))
+
+
+add_object_literal = fn ctx:
+  pipe ctx:
+    add_operator_like(object('{'))
+    add_non_binding(symbol(','))
+    add_non_binding(symbol('}'))
+
+
+add_string_literal = fn ctx:
+  pipe ctx:
+    # TODO: bug in lorix prevents the use of '`'
+    add_operator_like(string(`\``))
+    add_operator_like(string(`'`))
+    add_operator_like(string(`"`))
+
+
+add_regex_literal = fn ctx:
+  pipe ctx:
+    add_operator_like(regex('rx/'))
+
+
+add_literals = fn ctx:
+  pipe ctx:
+    add_array_literal
+    add_object_literal
+    add_string_literal
+    add_regex_literal

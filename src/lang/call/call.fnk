@@ -1,0 +1,54 @@
+{
+  curr_loc, expression, next_is_end, advance, curr_value,
+  next_loc, next_is
+} = import '@fink/prattler'
+
+{symbol} = import '../symbols'
+{seq} = import '../generic/sequence'
+{get_block} = import '../block'
+{next_is_unindented} = import '../indentation'
+
+
+call = fn op:
+  {
+    ...symbol(op),
+
+    led: fn: fn ctx, callee:
+      {start} = callee.loc
+      [args, next_ctx] = seq(ctx, ')')
+      {end} = curr_loc(next_ctx)
+
+      [{type: 'call', callee, args, loc: {start, end}}, next_ctx]
+  }
+
+
+params = fn ctx:
+  [expr, seq_ctx] = expression(ctx, 0)
+
+  match true:
+    next_is(seq_ctx, ','):
+      [exprs, next_ctx] = params(advance(seq_ctx, ','))
+      [[expr, ...exprs], next_ctx]
+    else:
+      [[expr], seq_ctx]
+
+
+call_no_parens = fn op:
+  {
+    ...symbol(op),
+
+    led: fn: fn ctx, callee:
+      {start} = callee.loc
+      [args, next_ctx] = params(ctx)
+
+      [
+        {
+          type: 'call',
+          callee,
+          args: [...args],
+          loc: {start, end: curr_loc(next_ctx).start}
+        },
+        next_ctx
+      ]
+  }
+

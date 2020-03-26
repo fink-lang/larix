@@ -1,0 +1,9 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+
+{other} = import './other'
+
+
+add_identifier = fn ctx:
+  pipe ctx:
+    add_non_separating(other())
+
