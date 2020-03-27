@@ -6,15 +6,13 @@
 describe:: 'strings', fn:
 
   it:: 'parses empty strings', fn:
-    # TODO: should not need to escape `
-    parse_expr('\`\`') eq snapshot
+    parse_expr('``') eq snapshot
     parse_expr('""') eq snapshot
     parse_expr(`''`) eq snapshot
 
 
   it:: 'parses single line strings', fn:
-    # TODO: should not need to escape `
-    parse_expr('\`foo bar\`') eq snapshot
+    parse_expr('`foo bar`') eq snapshot
     parse_expr('"foo bar"') eq snapshot
     parse_expr(`'foo bar'`) eq snapshot
 
@@ -28,22 +26,19 @@ describe:: 'strings', fn:
 
 
   it:: 'parses escape characters', fn:
-    # TODO: should not need to escape `
-    parse_expr('\` \\n \\t \\\\ \\\` \`') eq snapshot
-    parse_expr(`' \\n \\t \\\\ \\\` '`) eq snapshot
-    parse_expr(`" \\n \\t \\\\ \\\` \\\\"`) eq snapshot
+    parse_expr('` \\n \\t \\\\ \\` \\\\`') eq snapshot
+    parse_expr(`' \\n \\t \\\\ \\' \\\\'`) eq snapshot
+    parse_expr(`" \\n \\t \\\\ \\" \\\\"`) eq snapshot
 
 
   it:: 'parses tagged strings', fn:
-    # TODO: should not need to escape `
-    parse_expr('foo\`bar spam\`') eq snapshot
+    parse_expr('foo`bar spam`') eq snapshot
     parse_expr(`foo'bar spam'`) eq snapshot
     parse_expr(`foo"bar spam"`) eq snapshot
 
 
   it:: 'parses template strings with expressions', fn:
-    # TODO: should not need to escape `
-    parse_expr('\`foo \${bar + spam} spam\`') eq snapshot
+    parse_expr('`foo \${bar + spam} spam`') eq snapshot
     parse_expr(`'foo \${bar + spam} spam'`) eq snapshot
     parse_expr(`"foo \${bar + spam} spam"`) eq snapshot
 

@@ -20,8 +20,7 @@ get_str_part = fn ctx, op:
   # TODO: should not need to escape `$` unless it is `${`
   [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '\$')
 
-  # TODO: previous larix version has a bug to terminate regex at $
-  [escaped] = text.match(rx/\\*\\$/) || ['']
+  [escaped] = text.match(rx/\\*$/)
 
   match true:
     escaped.length % 2 == 0:

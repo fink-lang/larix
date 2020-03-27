@@ -24,18 +24,18 @@ string ' (1:0-1:2)
 `;
 
 exports[`strings parses escape characters 1`] = `
-string \` (1:0-1:15)
-  \` \\n \\t \\\\ \\\` \`
+string \` (1:0-1:17)
+  \` \\n \\t \\\\ \\\` \\\\\`
 `;
 
 exports[`strings parses escape characters 2`] = `
-string ' (1:0-1:15)
-  \` \\n \\t \\\\ \\\` \`
+string ' (1:0-1:17)
+  \` \\n \\t \\\\ \\' \\\\\`
 `;
 
 exports[`strings parses escape characters 3`] = `
 string " (1:0-1:17)
-  \` \\n \\t \\\\ \\\` \\\\\`
+  \` \\n \\t \\\\ \\" \\\\\`
 `;
 
 exports[`strings parses multi line strings 1`] = `

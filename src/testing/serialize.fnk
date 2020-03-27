@@ -70,7 +70,7 @@ serialize_str = fn node, serialize, indent:
   [lne, ...lns] = node.parts
     .map(fn part:
       match part.type:
-        'string:text': `\`${part.value}\``
+        'string:text': '`${part.value}`'
         else:
           value = serialize(part, '  ${indent}')
           `\n${value}\n`
