@@ -44,8 +44,7 @@ get_str_part = fn ctx, op:
 get_parts = fn ctx, op:
   [str_part, next_ctx] = get_str_part(ctx, op)
   match true:
-    # TODO: should not need to escape `$` unless it is `${`
-    curr_value(next_ctx) == '\$':
+    curr_value(next_ctx) == '$':
       [expr_part, parts_ctx] = get_expr_part(next_ctx)
       [parts, final_ctx] = get_parts(parts_ctx, op)
       [[str_part, expr_part, ...parts], final_ctx]
