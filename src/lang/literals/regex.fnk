@@ -8,7 +8,7 @@
 
 
 get_text = fn ctx, op:
-  [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op)
+  [{value: text, loc: {start, end}}, next_ctx] = collect_text(ctx, op)
 
   [escaped] = text.match(rx/\\*$/)
 

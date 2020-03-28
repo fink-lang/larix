@@ -1,4 +1,4 @@
-{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{describe, it, it_only, eq, to_throw, snapshot} = import '../../testing/jest'
 
 {parse_expr, parse} = import '../../'
 
@@ -26,9 +26,11 @@ describe:: 'strings', fn:
 
 
   it:: 'parses escape characters', fn:
-    parse_expr('` \\n \\t \\\\ \\` \\\\`') eq snapshot
-    parse_expr(`' \\n \\t \\\\ \\' \\\\'`) eq snapshot
-    parse_expr(`" \\n \\t \\\\ \\" \\\\"`) eq snapshot
+    # TODO: should not need to escape \$
+    # TODO: add test for \${foo}
+    parse_expr('` \$ \\n \\t \\` \\\\`') eq snapshot
+    parse_expr(`' \$ \\n \\t \\' \\\\'`) eq snapshot
+    parse_expr(`" \$ \\n \\t \\" \\\\"`) eq snapshot
 
 
   it:: 'parses tagged strings', fn:
@@ -53,6 +55,12 @@ describe:: 'strings', fn:
     `) eq snapshot
 
 
+  it:: 'parses nested template strings', fn:
+    parse_expr('
+      `\\n\${foo(bar, `  \${spam}`)}\\n`
+    ') eq snapshot
+
+
   it:: `handles default indentation for lbp`, fn:
     parse(`
       'foobar'
@@ -66,9 +74,9 @@ describe:: 'string - parsing failures', fn:
     (
       fn: parse_expr('"foo bar,', 'test.fnk')
     ) to_throw `
-      test.fnk:1:8
+      test.fnk:1:9
       1| "foo bar,
-                 ^
+                  ^
 
       Unexpected end of code.
     `
@@ -84,5 +92,3 @@ describe:: 'string - parsing failures', fn:
 
       Expected identifier before tagged string.
     `
-
-

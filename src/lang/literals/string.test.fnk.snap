@@ -24,18 +24,18 @@ string ' (1:0-1:2)
 `;
 
 exports[`strings parses escape characters 1`] = `
-string \` (1:0-1:17)
-  \` \\n \\t \\\\ \\\` \\\\\`
+string \` (1:0-1:16)
+  \` $ \\n \\t \\\` \\\\\`
 `;
 
 exports[`strings parses escape characters 2`] = `
-string ' (1:0-1:17)
-  \` \\n \\t \\\\ \\' \\\\\`
+string ' (1:0-1:16)
+  \` $ \\n \\t \\' \\\\\`
 `;
 
 exports[`strings parses escape characters 3`] = `
-string " (1:0-1:17)
-  \` \\n \\t \\\\ \\" \\\\\`
+string " (1:0-1:16)
+  \` $ \\n \\t \\" \\\\\`
 `;
 
 exports[`strings parses multi line strings 1`] = `
@@ -59,6 +59,20 @@ string ' (1:0-5:1)
   
   ni
   \`
+`;
+
+exports[`strings parses nested template strings 1`] = `
+string \` (1:0-1:30)
+  \`\\n\`
+    call (1:5-1:26)
+      ident (1:5-1:8) foo
+      ident (1:9-1:12) bar
+      string \` (1:14-1:25)
+        \`  \`
+              ident (1:19-1:23) spam
+        \`\`
+  
+  \`\\n\`
 `;
 
 exports[`strings parses single line strings 1`] = `
