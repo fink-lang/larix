@@ -15,7 +15,7 @@ describe:: 'comments', fn:
   it:: 'parses doc-comment', fn:
     parse_expr(`
       ---
-      foobar
+      foobar spam ham
       ---
       spam = ni
     `) eq snapshot
