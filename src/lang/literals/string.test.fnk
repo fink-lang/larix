@@ -31,6 +31,7 @@ describe:: 'strings', fn:
     parse_expr('` \$ \\n \\t \\` \\\\`') eq snapshot
     parse_expr(`' \$ \\n \\t \\' \\\\'`) eq snapshot
     parse_expr(`" \$ \\n \\t \\" \\\\"`) eq snapshot
+    parse_expr(`'foo \\\${bar + spam}'`) eq snapshot
 
 
   it:: 'parses tagged strings', fn:
