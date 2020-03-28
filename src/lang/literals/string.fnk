@@ -22,7 +22,6 @@ get_str_part = fn ctx, op:
     '`': collect_text(ctx, rx/`|\${/)
     else: collect_text(ctx, rx/'|\${/)
 
-
   # TODO: can we do the escapeing check in the regex above?
   [escaped] = text.match(rx/\\*$/)
 
@@ -31,18 +30,19 @@ get_str_part = fn ctx, op:
       [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
 
     else:
+      # TODO: stop_value should come from prattler
+      stop_value = curr_value(next_ctx)
       [str_part, final_ctx] = get_str_part(next_ctx, op)
 
       [{
         type: 'string:text',
-        value: `${text}${op}${str_part.value}`,
+        value: `${text}${stop_value}${str_part.value}`,
         loc: {start, end: str_part.loc.end}
       }, final_ctx]
 
 
 get_parts = fn ctx, op:
   [str_part, next_ctx] = get_str_part(ctx, op)
-
   match true:
     # TODO: should not need to escape `$` unless it is `${`
     curr_value(next_ctx) == '\$':
