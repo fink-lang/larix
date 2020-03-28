@@ -17,17 +17,19 @@ get_expr_part = fn ctx:
 
 
 get_str_part = fn ctx, op:
-  # TODO: should not need to escape `$` unless it is `${`
-  [{text, loc: {start, end}}, next_ctx] = collect_text(ctx, op, '\$')
+  [{value: text, loc: {start, end}}, next_ctx] = match op:
+    '"': collect_text(ctx, rx/"|\${/)
+    '`': collect_text(ctx, rx/`|\${/)
+    else: collect_text(ctx, rx/'|\${/)
 
-  # TODO: previous larix version has a bug to terminate regex at $
-  [escaped] = text.match(rx/\\*\\$/) || ['']
+
+  # TODO: can we do the escapeing check in the regex above?
+  [escaped] = text.match(rx/\\*$/)
 
   match true:
     escaped.length % 2 == 0:
       [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
 
-    # TODO: should check for ${ and continue too
     else:
       [str_part, final_ctx] = get_str_part(next_ctx, op)
 
@@ -63,18 +65,19 @@ get_unindented_text = fn ctx, op:
     else:
       first
 
-  [...parts] = pipe rest:
+  [...rest_parts] = pipe rest:
     map part:
-      match true:
-        (part.type == 'string:text'):
+      match part:
+        {type: 'string:text'}:
           {...part, value: unindent_text(part.value, ind)}
 
         else:
           part
 
+  parts = [first_part, ...rest_parts]
   {end} = curr_loc(next_ctx)
 
-  [{type: 'string', op, parts: [first_part, ...parts], loc: {start, end}}, next_ctx]
+  [{type: 'string', op, parts, loc: {start, end}}, next_ctx]
 
 
 string = fn op:

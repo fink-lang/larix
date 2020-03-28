@@ -15,7 +15,7 @@ jsx_expr_container = fn ctx:
 
 
 jsx_txt = fn ctx:
-  [{text, loc}, next_ctx] = collect_text(ctx, '</', '<', '{')
+  [{value: text, loc}, next_ctx] = collect_text(ctx, rx/'<\/|<|{/)
 
   [{type: 'jsx-text', value: text, loc}, next_ctx]
 
@@ -48,9 +48,9 @@ jsx_body = fn name, ctx:
 
 
 jsx_string_val = fn ctx:
-  [value, next_ctx] = collect_text(ctx, curr_value(ctx))
+  [{value, loc}, next_ctx] = collect_text(ctx, curr_value(ctx))
 
-  [{type: 'jsx-string', value: value.text, loc: value.loc}, next_ctx]
+  [{type: 'jsx-string', value, loc}, next_ctx]
 
 
 jsx_attr_value = fn ctx:

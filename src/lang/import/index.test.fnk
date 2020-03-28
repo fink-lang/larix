@@ -2,7 +2,7 @@
 
 {parse_expr} = import '../..'
 
-# TODO: should not need to escape `
-describe:: 'import \`foobar\`', fn:
+
+describe:: 'import `foobar`', fn:
   it:: 'parses import', fn:
-    parse_expr('import \`./foobar\`') eq snapshot
+    parse_expr('import `./foobar`') eq snapshot

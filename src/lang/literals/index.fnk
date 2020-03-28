@@ -24,8 +24,7 @@ add_object_literal = fn ctx:
 
 add_string_literal = fn ctx:
   pipe ctx:
-    # TODO: bug in lorix prevents the use of '`'
-    add_operator_like(string(`\``))
+    add_operator_like(string('`'))
     add_operator_like(string(`'`))
     add_operator_like(string(`"`))
 
