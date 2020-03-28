@@ -1,14 +1,21 @@
 
-str_type_op = fn {type, op, loc: {start, end}}:
-  match true:
+str_type_op = fn {type, op, comment=null, loc: {start, end}}, indent:
+
+  head = match true:
     (op && op != type):
       `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
     else:
       `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
 
+  match comment:
+    null: head
+    else:
+      lines = comment.value.split:: '\n'
+      prefixed = lines.map(fn line: `${indent}# ${line}`)
+      '${prefixed.join('\n')}\n${head}'
 
 serialize_block = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
 
   match true:
     (!!node.args):
@@ -25,7 +32,7 @@ serialize_block = fn node, serialize, indent:
 
 
 serialize_call = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
 
   callee = serialize(node.callee, `${indent}  `)
   args = node.args.map(fn expr: serialize(expr, `${indent}  `))
@@ -38,7 +45,7 @@ serialize_call = fn node, serialize, indent:
 
 
 serialize_infix = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
 
   match true:
     !!((node.left && node.right)):
@@ -55,13 +62,13 @@ serialize_infix = fn node, serialize, indent:
 
 
 serialize_prefix = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
   right = serialize(node.right, `${indent}  `)
   `${indent}${head}\n${right}`
 
 
 serialize_str = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
 
   tag = match true:
     (!!node.tag): ` ${node.tag.value}`
@@ -84,17 +91,17 @@ serialize_str = fn node, serialize, indent:
 
 
 serialize_regex = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
   `${indent}${head}\n${indent}  /${node.pattern}/${node.flags}`
 
 
 serialize_other = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
   `${indent}${head} ${node.value}`
 
 
 serialize_jsx = fn node, serialize, indent:
-  head = str_type_op(node)
+  head = str_type_op(node, indent)
 
   result = match true:
     (node.type == 'jsx-elem'):
@@ -157,6 +164,6 @@ serialize = fn node, indent='':
       serialize_call(node, serialize, indent)
 
     else:
-      head = str_type_op(node)
+      head = str_type_op(node, indent)
       throw new Error(`cannot serialize ${head}`)
 
