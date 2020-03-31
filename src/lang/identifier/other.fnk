@@ -31,7 +31,7 @@ number = fn ctx:
       float_ctx = advance(advance(ctx))
       float_value = `${int_value}.${curr_value(float_ctx)}`
 
-      [foo, bar] = match true:
+      match true:
         float_value.endsWith('e'):
           e_ctx = advance(float_ctx)
           e_value = `${float_value}${curr_value(e_ctx)}`
@@ -49,7 +49,6 @@ number = fn ctx:
         else:
           [float_value, float_ctx]
 
-      [foo, bar]
     else:
       [int_value, ctx]
 
