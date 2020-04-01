@@ -14,6 +14,7 @@ str_type_op = fn {type, op, comment=null, loc: {start, end}}, indent:
       prefixed = lines.map(fn line: `${indent}# ${line}`)
       '${prefixed.join('\n')}\n${head}'
 
+
 serialize_block = fn node, serialize, indent:
   head = str_type_op(node, indent)
 
@@ -103,7 +104,7 @@ serialize_other = fn node, serialize, indent:
 serialize_jsx = fn node, serialize, indent:
   head = str_type_op(node, indent)
 
-  result = match true:
+  match true:
     (node.type == 'jsx-elem'):
       props = node.props.map(fn expr: serialize(expr, `${indent}  `))
       children = node.children.map(fn expr: serialize(expr, `${indent}  `))
@@ -132,7 +133,6 @@ serialize_jsx = fn node, serialize, indent:
       expr = serialize(node.expr, `${indent}  `)
       `${indent}${head}\n${expr}`
 
-  result
 
 serialize = fn node, indent='':
   match true:

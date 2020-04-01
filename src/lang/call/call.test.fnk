@@ -27,8 +27,7 @@ describe:: 'call() - parsing failures', fn:
       1| foobar(
                 ^
 
-      Expected ')' but found Symbol(end).
-    `
+      Expected ')' but found Symbol(end).`
 
 
   it:: `throws when missing ')'`, fn:
@@ -39,14 +38,31 @@ describe:: 'call() - parsing failures', fn:
       1| foobar(1:)
                  ^
 
-      Expected ')' but found ':'.
-    `
+      Expected ')' but found ':'.`
 
 
 describe:: 'call:: ...', fn:
 
-  it:: 'parses args: foobar:: spam, ni', fn:
+  it:: 'parses single line', fn:
     parse_expr(`foobar:: spam, ni`) eq snapshot
+
+
+  it:: 'parses multiline', fn:
+    parse_expr(`
+      foo::
+        fn bar:
+          spam
+        ni
+        shrub
+    `) eq snapshot
+
+  it:: 'parses multiline with comma (TODO)', fn:
+    parse_expr(`
+      foo::
+        bar,
+        ni,
+        shrub
+    `) eq snapshot
 
 
 describe:: 'pipe foo: ...', fn:
