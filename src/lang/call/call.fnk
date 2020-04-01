@@ -1,25 +1,22 @@
 {
-  curr_loc, expression, next_is_end, advance, curr_value,
-  next_loc, next_is
+  curr_loc, expression, next_is_end, advance, curr_value, next_loc, next_is
 } = import '@fink/prattler'
 
 {symbol} = import '../symbols'
 {seq} = import '../generic/sequence'
 {get_block} = import '../block'
-{next_is_unindented} = import '../indentation'
+{curr_next_adjecent} = import '../indentation'
 
 
 call = fn op:
-  {
-    ...symbol(op),
+  led = fn: fn ctx, callee:
+    {start} = callee.loc
+    [args, next_ctx] = seq(ctx, ')')
+    {end} = curr_loc(next_ctx)
 
-    led: fn: fn ctx, callee:
-      {start} = callee.loc
-      [args, next_ctx] = seq(ctx, ')')
-      {end} = curr_loc(next_ctx)
+    [{type: 'call', callee, args, loc: {start, end}}, next_ctx]
 
-      [{type: 'call', callee, args, loc: {start, end}}, next_ctx]
-  }
+  {...symbol(op), led}
 
 
 params = fn ctx:
@@ -34,21 +31,26 @@ params = fn ctx:
 
 
 call_no_parens = fn op:
-  {
-    ...symbol(op),
+  led = fn: fn ctx, callee:
+    {start} = callee.loc
 
-    led: fn: fn ctx, callee:
-      {start} = callee.loc
-      [args, next_ctx] = params(ctx)
+    [args, next_ctx] = match true:
+      curr_loc(ctx).end.line == next_loc(ctx).start.line:
+        params(ctx)
+      else:
+        [{exprs}, next_ctx] = get_block(ctx)
+        # TODO: remove backward compatibility
+        [...args] = pipe exprs:
+          filter expr: expr.value != ','
 
-      [
-        {
-          type: 'call',
-          callee,
-          args: [...args],
-          loc: {start, end: curr_loc(next_ctx).start}
-        },
-        next_ctx
-      ]
-  }
+        [args, next_ctx]
+
+    {start: end} = curr_loc(next_ctx)
+
+    node = {type: 'call', callee, args, loc: {start, end}}
+
+    [node, next_ctx]
+
+  {...symbol(op), led}
+
 
