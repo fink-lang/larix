@@ -4,7 +4,7 @@
 
 {symbol} = import '../symbols'
 
-{get_next_line_indentation, indentation} = import '../indentation'
+{indentation} = import '../indentation'
 {unindent_text} = import '../../string-utils'
 
 
@@ -54,28 +54,28 @@ get_parts = fn ctx, op:
 
 get_unindented_text = fn ctx, op:
   {start} = curr_loc(ctx)
-  ind = get_next_line_indentation(ctx)
 
   [[first, ...rest], next_ctx] = get_parts(ctx, op)
 
-  first_part = match true:
+  ind = match true:
     first.value.startsWith('\n'):
-      {...first, value: unindent_text(first.value.slice(1 + ind), ind)}
-    else:
-      first
+      [, spaces] = first.value.match(rx/^\n+(\s+)/)
+      spaces.length
+    else: 0
 
-  [...rest_parts] = pipe rest:
+  first_part = match ind:
+    0: first
+    else: {...first, value: first.value.slice(1 + ind)}
+
+  [...parts] = pipe [first_part, ...rest]:
     map part:
       match part:
         {type: 'string:text'}:
           {...part, value: unindent_text(part.value, ind)}
-
         else:
           part
 
-  parts = [first_part, ...rest_parts]
   {end} = curr_loc(next_ctx)
-
   [{type: 'string', op, parts, loc: {start, end}}, next_ctx]
 
 

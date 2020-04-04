@@ -15,6 +15,12 @@ regex (1:0-1:10)
   //gimsuy
 `;
 
+exports[`regex rx/.../ parses multiline 1`] = `
+regex (1:0-3:1)
+  /foo.+bar
+/
+`;
+
 exports[`regex rx/.../ parses regex: rx/.+foo/ 1`] = `
 regex (1:0-1:15)
   /.+foo/gimsuy

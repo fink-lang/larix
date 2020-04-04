@@ -9,6 +9,14 @@ describe:: 'regex rx/.../', fn:
     parse_expr(`rx//`) eq snapshot
 
 
+  it:: 'parses multiline', fn:
+    parse_expr(`
+      rx/
+        foo.+bar
+      /
+    `) eq snapshot
+
+
   it:: 'parses flags: rx//gimsuy', fn:
     parse_expr(`rx//gimsuy`) eq snapshot
 
