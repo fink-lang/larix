@@ -20,6 +20,7 @@
 {add_whitespace_tokens} = import './whitespace'
 {add_colon} = import './colon'
 {add_js_ops} = import './js-compat'
+{add_partial} = import './partial'
 
 
 init_language = fn ctx:
@@ -38,6 +39,7 @@ init_language = fn ctx:
     add_colon
 
     add_identifier
+    add_partial
 
     add_logical_operators
     add_comparison_operators
