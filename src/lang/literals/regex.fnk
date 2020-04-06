@@ -36,10 +36,16 @@ regex = fn op:
 
     nud: fn: fn ctx:
       {start} = curr_loc(ctx)
-      ind = get_next_line_indentation(ctx)
 
       [text, flags_ctx] = get_text(ctx, '/')
-      pattern = unindent_text(text.text, ind)
+      pattern = match true:
+        text.text.startsWith('\n'):
+          [, spaces] = text.text.match(rx/^\n+(\s+)/)
+          ind = spaces.length
+          unindent_text(text.text.slice(1 + ind), ind)
+        else:
+          text.text
+
       [flags, end_ctx] = get_flags(flags_ctx)
 
       {end} = curr_loc(end_ctx)
