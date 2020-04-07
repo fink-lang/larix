@@ -1,9 +1,23 @@
 {add_non_separating} = import '@fink/prattler/symbols'
+{expression, curr_loc} = import '@fink/prattler'
 
-{prefix} = import '../generic/prefix'
+{symbol} = import '../symbols'
+
+
+js_op = fn op, type:
+  {
+    ...symbol(op),
+
+    nud: fn lbp: fn ctx:
+      {start} = curr_loc:: ctx
+      [right, next_ctx] = expression:: ctx, 0
+      {end} = right.loc
+
+      [{type, op, right, loc: {start, end}}, next_ctx]
+  }
 
 
 add_js_ops = fn ctx:
   pipe ctx:
-    add_non_separating(prefix('new', 'new'))
-    add_non_separating(prefix('throw', 'throw'))
+    add_non_separating:: js_op:: 'new', 'new'
+    add_non_separating:: js_op:: 'throw', 'throw'

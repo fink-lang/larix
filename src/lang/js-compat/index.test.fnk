@@ -7,8 +7,10 @@ describe:: 'js-compat operators', fn:
 
   it:: 'parses new', fn:
     parse_expr('new_foo = new Foobar(spam, ni)') eq snapshot
+    parse_expr('new_foo = new Foobar:: spam, ni') eq snapshot
 
 
   it:: 'parses throw', fn:
     parse_expr(`throw_foo = foo || throw err('foobar')`) eq snapshot
+    parse_expr(`throw_foo = foo || throw err:: 'foobar'`) eq snapshot
 
