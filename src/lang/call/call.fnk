@@ -34,20 +34,20 @@ call_no_parens = fn op:
   led = fn: fn ctx, callee:
     {start} = callee.loc
 
-    [args, next_ctx] = match true:
+    [args, next_ctx, comments] = match true:
       curr_loc(ctx).end.line == next_loc(ctx).start.line:
         params(ctx)
       else:
-        [{exprs}, next_ctx] = get_block(ctx)
+        [{exprs, comments}, next_ctx] = get_block(ctx)
         # TODO: remove backward compatibility
         [...args] = pipe exprs:
           filter expr: expr.value != ','
 
-        [args, next_ctx]
+        [args, next_ctx, comments]
 
     {start: end} = curr_loc(next_ctx)
 
-    node = {type: 'call', callee, args, loc: {start, end}}
+    node = {type: 'call', callee, args, comments, loc: {start, end}}
 
     [node, next_ctx]
 

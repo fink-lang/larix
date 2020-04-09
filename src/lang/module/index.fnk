@@ -6,7 +6,7 @@
 parse_module = fn ctx:
   {start} = curr_loc(ctx)
 
-  [exprs, next_ctx] = pipe [[], ctx]:
+  [exprs, next_ctx, comments] = pipe [[], ctx]:
     unfold [exprs, body_ctx]:
       match true:
         next_is_end(body_ctx):
@@ -18,11 +18,15 @@ parse_module = fn ctx:
       expr != null
 
     fold [expr, next_ctx], [exprs]=[[]]:
-      [[...exprs, expr], next_ctx]
-
+      match expr:
+        {type: 'comment'}:
+          {exprs: trailing} = expr
+          [exprs, next_ctx, {trailing}]
+        else:
+          [[...exprs, expr], next_ctx, {}]
 
   {end} = curr_loc(next_ctx)
   final_ctx = assert_advance(next_ctx, end_token)
 
-  [{type: 'module', exprs, loc: {start, end}}, final_ctx]
+  [{type: 'module', exprs, comments, loc: {start, end}}, final_ctx]
 

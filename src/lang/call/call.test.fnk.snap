@@ -22,7 +22,7 @@ call (1:0-1:9)
 `;
 
 exports[`call:: ... parses multiline 1`] = `
-call (1:0-5:2)
+call (1:0-6:20)
   ident (1:0-1:3) foo
   block fn (2:2-3:8)
     ident (2:5-2:8) bar
@@ -30,7 +30,7 @@ call (1:0-5:2)
     ident (3:4-3:8) spam
   ident (4:2-4:4) ni
   ident (5:2-5:7) shrub
-
+  # trailing comment
 `;
 
 exports[`call:: ... parses multiline with comma (TODO) 1`] = `

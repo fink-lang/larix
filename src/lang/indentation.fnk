@@ -44,4 +44,4 @@ curr_next_adjecent = fn ctx:
 
 
 init_indentation = fn ctx:
-  {...ctx, indent: [1]}
+  {...ctx, indent: [0]}

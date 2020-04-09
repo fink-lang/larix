@@ -18,7 +18,11 @@ describe:: 'func: fn ...: ...', fn:
 
   it:: 'parses multi line: fn foo, bar=1: foo', fn:
     parse_expr(`
+      ---
+      doc comment
+      ---
       fn foo, bar=1:
         foo
         bar
+        # trailing func comment
     `) eq snapshot

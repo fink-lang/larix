@@ -2,16 +2,16 @@
 
 exports[`comments parses doc-comment 1`] = `
 module (1:0-4:9)
-  #
-  #foobar spam ham
-  #
+  --- 
+  --- foobar spam ham
+  --- 
   assign = (4:0-4:9)
     ident (4:0-4:4) spam
     ident (4:7-4:9) ni
 `;
 
 exports[`comments parses line comments 1`] = `
-module (1:0-6:10)
+module (1:0-12:2)
   # leading expression
   # multi line
   assign = (3:0-3:9)
@@ -21,4 +21,12 @@ module (1:0-6:10)
   assign = (6:0-6:10)
     ident (6:0-6:5) shrub
     ident (6:8-6:10) ni
+  assign = (8:0-11:0)
+    ident (8:0-8:3) foo
+    block fn (8:6-11:0)
+
+      :
+      ident (9:2-9:7) shrub
+      # trailing func
+  ident (12:0-12:2) ni
 `;
