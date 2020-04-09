@@ -1,15 +1,61 @@
-{next_is, collect_text, expression} = import '@fink/prattler'
+{
+  next_is_end, curr_loc, next_loc, collect_text, advance, expression
+} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
 
 
+collect_comment = fn ctx, op:
+  {start: {column: curr_col, line: curr_line}} = curr_loc:: ctx
+
+  [text, next_ctx] = collect_text:: ctx, '\n'
+
+  {start: {column: next_col, line: next_line}} = next_loc:: next_ctx
+  {value: next_val} = next_ctx.next_token
+
+  match {next_col, next_line, next_val}:
+    {next_col: curr_col, next_line: curr_line + 1, next_val: op}:
+      [next_text, foo_ctx] = collect_comment:: advance(next_ctx), op
+      loc = {start: text.loc.start, end: next_text.loc.end}
+      [{...text, value: '${text.value}\n${next_text.value}', loc}, foo_ctx]
+    else:
+      [text, next_ctx]
+
+
 comment = fn op:
+
+  # TODO: trailing comments cause issues with precedence
+  # lbp: fn lbp: fn ctx, left:
+  #     {loc: {end}} = left
+  #     {start} = next_loc:: ctx
+
+  #     match start.line == end.line :
+  #       true: 1
+  #       else: 0
+  #   ,
+  # led: fn lbp: fn ctx, {comments, ...left}:
+  #   [text, next_ctx] = collect_text:: ctx, '\n'
+
+  #   comment = {...text, trailing: true}
+  #   [{...left, comments: {...comments, trailing: comment}}, next_ctx]
+  # ,
+
   {
     ...symbol(op),
 
     nud: fn: fn ctx:
-      [text, expr_ctx] = collect_text(ctx, '\n')
-      [expr, next_ctx] = expression(expr_ctx, 0)
+      [text, expr_ctx] = collect_comment:: ctx, op
 
-      [{...expr, comment: text}, next_ctx]
+      match expr_ctx:
+        next_is_end:: ?:
+          {loc, value} = text
+          [{type: 'comment', op, value, loc}, expr_ctx]
+
+        {next_token: {value: '#'}}:
+          {loc, value} = text
+          [{type: 'comment', op, value, loc}, expr_ctx]
+
+        else:
+          [expr, next_ctx] = expression:: expr_ctx, 0
+          [{...expr, comment: text}, next_ctx]
   }

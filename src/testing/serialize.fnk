@@ -1,6 +1,11 @@
 
-str_type_op = fn {type, op, comment=null, loc: {start, end}}, indent:
+get_comment = fn prefix, {value}:
+  lines = value.split:: '\n'
+  prefixed = lines.map(fn line: `${prefix}${line}`)
+  '${prefixed.join('\n')}'
 
+
+str_type_op = fn {type, op, comment, loc: {start, end}}, indent:
   head = match true:
     (op && op != type):
       `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
@@ -8,11 +13,11 @@ str_type_op = fn {type, op, comment=null, loc: {start, end}}, indent:
       `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
 
   match comment:
-    null: head
+    {}:
+      comment_text = get_comment:: '${indent}#', comment
+      '${comment_text}\n${indent}${head}'
     else:
-      lines = comment.value.split:: '\n'
-      prefixed = lines.map(fn line: `${indent}# ${line}`)
-      '${prefixed.join('\n')}\n${head}'
+      '${indent}${head}'
 
 
 serialize_block = fn node, serialize, indent:
@@ -24,12 +29,11 @@ serialize_block = fn node, serialize, indent:
       exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
       arg_str = `${args.join('\n')}\n`
 
-      `${indent}${head}\n${arg_str}${indent}  :\n${exprs.join('\n')}`
+      `${head}\n${arg_str}${indent}  :\n${exprs.join('\n')}`
 
     else:
       exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
-      `${indent}${head}\n${exprs.join('\n')}`
-
+      `${head}\n${exprs.join('\n')}`
 
 
 serialize_call = fn node, serialize, indent:
@@ -41,8 +45,7 @@ serialize_call = fn node, serialize, indent:
     args.length > 0: `${args.join('\n')}\n`
     else: ''
 
-
-  `${indent}${head}\n${callee}\n${arg_str}`
+  `${head}\n${callee}\n${arg_str}`
 
 
 serialize_infix = fn node, serialize, indent:
@@ -53,19 +56,19 @@ serialize_infix = fn node, serialize, indent:
       left = serialize(node.left, `${indent}  `)
       right = serialize(node.right, `${indent}  `)
 
-      `${indent}${head}\n${left}\n${right}`
+      `${head}\n${left}\n${right}`
 
     (!!(node.key && node.value)):
       left = serialize(node.key, `${indent}  `)
       right = serialize(node.value, `${indent}  `)
 
-      `${indent}${head}\n${left}\n${right}`
+      `${head}\n${left}\n${right}`
 
 
 serialize_prefix = fn node, serialize, indent:
   head = str_type_op(node, indent)
   right = serialize(node.right, `${indent}  `)
-  `${indent}${head}\n${right}`
+  `${head}\n${right}`
 
 
 serialize_str = fn node, serialize, indent:
@@ -80,7 +83,7 @@ serialize_str = fn node, serialize, indent:
       match part.type:
         'string:text': '`${part.value}`'
         else:
-          value = serialize(part, '  ${indent}')
+          value = serialize(part, '${indent}  ')
           `\n${value}\n`
     )
     .join('')
@@ -88,17 +91,17 @@ serialize_str = fn node, serialize, indent:
 
   str = [lne, ...lns.map(fn ln: `${indent}  ${ln}`)].join('\n')
 
-  `${indent}${head}\n${indent}  ${tag}${str}`
+  `${head}\n${indent}  ${tag}${str}`
 
 
 serialize_regex = fn node, serialize, indent:
   head = str_type_op(node, indent)
-  `${indent}${head}\n${indent}  /${node.pattern}/${node.flags}`
+  `${head}\n${indent}  /${node.pattern}/${node.flags}`
 
 
 serialize_other = fn node, serialize, indent:
   head = str_type_op(node, indent)
-  `${indent}${head} ${node.value}`
+  `${head} ${node.value}`
 
 
 serialize_jsx = fn node, serialize, indent:
@@ -117,21 +120,21 @@ serialize_jsx = fn node, serialize, indent:
         children.length > 0: `\n${indent}  :\n${children.join('\n')}`
         else: ''
 
-      `${indent}${head} ${node.name}${props_str}${children_str}`
+      `${head} ${node.name}${props_str}${children_str}`
 
     (node.type == 'jsx-attr'):
       value = serialize(node.value, `${indent}  `)
-      `${indent}${head} ${node.name}\n${indent}  ${value}`
+      `${head} ${node.name}\n${indent}  ${value}`
 
     (node.type == 'jsx-text'):
-      `${indent}${head}\n${indent}  ${JSON.stringify(node.value)}`
+      `${head}\n${indent}  ${JSON.stringify(node.value)}`
 
     (node.type == 'jsx-string'):
-      `${indent}${head}\n${indent}  '${node.value}'`
+      `${head}\n${indent}  '${node.value}'`
 
     (node.type == 'jsx-expr-container'):
       expr = serialize(node.expr, `${indent}  `)
-      `${indent}${head}\n${expr}`
+      `${head}\n${expr}`
 
 
 serialize = fn node, indent='':

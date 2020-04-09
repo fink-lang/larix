@@ -45,7 +45,6 @@ number = fn ctx:
                 `Expected exponent.`,
                 e_ctx.curr_token, e_ctx
               )
-              null
         else:
           [float_value, float_ctx]
 

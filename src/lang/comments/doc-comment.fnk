@@ -8,8 +8,8 @@ doc_comment = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      [body, expr_ctx] = collect_text(ctx, '---')
+      [text, expr_ctx] = collect_text(ctx, '---')
       [expr, next_ctx] = expression(expr_ctx, 0)
 
-      [{...expr, comment: body}, next_ctx]
+      [{...expr, comment: text}, next_ctx]
   }

@@ -1,17 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`comments parses doc-comment 1`] = `
-# 
-# foobar spam ham
-# 
-assign = (4:0-4:9)
-  ident (4:0-4:4) spam
-  ident (4:7-4:9) ni
+module (1:0-4:9)
+  #
+  #foobar spam ham
+  #
+  assign = (4:0-4:9)
+    ident (4:0-4:4) spam
+    ident (4:7-4:9) ni
 `;
 
-exports[`comments parses line comment 1`] = `
-#  foobar
-assign = (2:0-2:9)
-  ident (2:0-2:4) spam
-  ident (2:7-2:9) ni
+exports[`comments parses line comments 1`] = `
+module (1:0-6:10)
+  # leading expression
+  # multi line
+  assign = (3:0-3:9)
+    ident (3:0-3:4) spam
+    ident (3:7-3:9) ni
+  # single line
+  assign = (6:0-6:10)
+    ident (6:0-6:5) shrub
+    ident (6:8-6:10) ni
 `;
