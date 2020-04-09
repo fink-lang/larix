@@ -2,9 +2,9 @@
 
 exports[`comments parses doc-comment 1`] = `
 module (1:0-4:9)
-  #
-  #foobar spam ham
-  #
+  --- 
+  --- foobar spam ham
+  --- 
   assign = (4:0-4:9)
     ident (4:0-4:4) spam
     ident (4:7-4:9) ni

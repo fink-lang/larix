@@ -20,8 +20,8 @@ parse_module = fn ctx:
     fold [expr, next_ctx], [exprs]=[[]]:
       match expr:
         {type: 'comment'}:
-          {value, loc} = expr
-          [exprs, next_ctx, {trailing: {value, loc}}]
+          {exprs: trailing} = expr
+          [exprs, next_ctx, {trailing}]
         else:
           [[...exprs, expr], next_ctx, {}]
 

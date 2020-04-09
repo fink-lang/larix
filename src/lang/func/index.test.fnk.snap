@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`func: fn ...: ... parses multi line: fn foo, bar=1: foo 1`] = `
-#
-#doc comment
-#
+--- 
+--- doc comment
+--- 
 block fn (4:0-8:0)
   ident (4:3-4:6) foo
   assign = (4:8-4:13)

@@ -49,8 +49,8 @@ indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
     fold [expr, next_ctx], [exprs]=[[]]:
       match expr:
         {type: 'comment'}:
-          {value, loc} = expr
-          [exprs, next_ctx, {trailing: {value, loc}}]
+          {exprs: trailing} = expr
+          [exprs, next_ctx, {trailing}]
         else:
           [[...exprs, expr], next_ctx, {}]
 
