@@ -1,14 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`func: fn ...: ... parses multi line: fn foo, bar=1: foo 1`] = `
-block fn (1:0-3:5)
-  ident (1:3-1:6) foo
-  assign = (1:8-1:13)
-    ident (1:8-1:11) bar
-    number (1:12-1:13) 1
+#
+#doc comment
+#
+block fn (4:0-8:0)
+  ident (4:3-4:6) foo
+  assign = (4:8-4:13)
+    ident (4:8-4:11) bar
+    number (4:12-4:13) 1
   :
-  ident (2:2-2:5) foo
-  ident (3:2-3:5) bar
+  ident (5:2-5:5) foo
+  ident (6:2-6:5) bar
+  # trailing func comment
 `;
 
 exports[`func: fn ...: ... parses no arg: fn: foo 1`] = `

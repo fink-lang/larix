@@ -54,6 +54,7 @@ describe:: 'call:: ...', fn:
           spam
         ni
         shrub
+        # trailing comment
     `) eq snapshot
 
   it:: 'parses multiline with comma (TODO)', fn:

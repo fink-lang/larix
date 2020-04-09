@@ -27,13 +27,13 @@ get_indentations = fn ctx:
 
 single_expr_block = fn ctx, block_expr:
   [expr, next_ctx] = block_expr(ctx)
-  [[expr], next_ctx]
+  [[expr], next_ctx, {}]
 
 
 indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
   block_ctx = push_indentation(ctx, block_ind)
 
-  [exprs, next_ctx] = pipe block_ctx:
+  [exprs, next_ctx, comments] = pipe block_ctx:
     unfold curr_ctx:
       [expr, next_ctx] = match true:
         next_is_unindented(curr_ctx):
@@ -47,11 +47,16 @@ indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
       expr != null
 
     fold [expr, next_ctx], [exprs]=[[]]:
-      [[...exprs, expr], next_ctx]
+      match expr:
+        {type: 'comment'}:
+          {value, loc} = expr
+          [exprs, next_ctx, {trailing: {value, loc}}]
+        else:
+          [[...exprs, expr], next_ctx, {}]
 
   final_ctx = pop_indentation(next_ctx, end_ind)
 
-  [exprs, final_ctx]
+  [exprs, final_ctx, comments]
 
 
 get_block = fn ctx, type='block', block_expr=default_expr:
@@ -59,13 +64,14 @@ get_block = fn ctx, type='block', block_expr=default_expr:
 
   [end_ind, block_ind] = get_indentations(ctx)
 
-  [exprs, next_ctx] = match true:
-    block_ind > 0: indented_expr_block(ctx, block_expr, end_ind, block_ind)
-    else: single_expr_block(ctx, block_expr)
+  [exprs, next_ctx, comments] = match true:
+    block_ind > 0:
+      indented_expr_block(ctx, block_expr, end_ind, block_ind)
+    else:
+      single_expr_block(ctx, block_expr)
 
   {end} = curr_loc(next_ctx)
-
-  [{type, exprs, loc: {start, end}}, next_ctx]
+  [{type, exprs, comments, loc: {start, end}}, next_ctx]
 
 
 named_block = fn op, type='block', block_expr=default_expr:
@@ -75,9 +81,9 @@ named_block = fn op, type='block', block_expr=default_expr:
     nud: fn: fn ctx:
       {start} = curr_loc(ctx)
       [args, body_ctx] = seq(ctx, ':')
-      [{exprs, loc}, next_ctx] = get_block(body_ctx, type, block_expr)
+      [{exprs, comments, loc}, next_ctx] = get_block(body_ctx, type, block_expr)
 
-      [{type, op, args, exprs, loc: {start, end: loc.end}}, next_ctx]
+      [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
   }
 
 

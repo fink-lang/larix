@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`filter item: ... parses 1`] = `
-block filter (1:0-2:15)
+block filter (1:0-4:0)
   ident (1:7-1:11) item
   :
   comp == (2:2-2:15)
@@ -9,10 +9,11 @@ block filter (1:0-2:15)
       ident (2:2-2:6) item
       number (2:9-2:10) 2
     number (2:14-2:15) 0
+  # trailing comment
 `;
 
 exports[`find item: ... parses 1`] = `
-block find (1:0-2:15)
+block find (1:0-4:0)
   ident (1:5-1:9) item
   :
   comp == (2:2-2:15)
@@ -20,6 +21,7 @@ block find (1:0-2:15)
       ident (2:2-2:6) item
       number (2:9-2:10) 2
     number (2:14-2:15) 0
+  # trailing comment
 `;
 
 exports[`flat_map item: ... parses 1`] = `
@@ -34,7 +36,7 @@ block flat_map (1:0-2:18)
 `;
 
 exports[`fold item, accu: ... parses 1`] = `
-block fold (1:0-2:13)
+block fold (1:0-4:0)
   ident (1:5-1:9) item
   assign = (1:11-1:17)
     ident (1:11-1:15) accu
@@ -43,15 +45,17 @@ block fold (1:0-2:13)
   arithm + (2:2-2:13)
     ident (2:2-2:6) item
     ident (2:9-2:13) accu
+  # trailing comment
 `;
 
 exports[`map item: ... parses 1`] = `
-block map (1:0-2:10)
+block map (1:0-4:0)
   ident (1:4-1:8) item
   :
   arithm * (2:2-2:10)
     ident (2:2-2:6) item
     number (2:9-2:10) 2
+  # trailing comment
 `;
 
 exports[`unfold item, accu: ... parses 1`] = `
@@ -84,14 +88,15 @@ block unfold (1:0-2:14)
 `;
 
 exports[`unfold item, accu: ... parses no args 1`] = `
-block unfold (1:0-2:5)
+block unfold (1:0-4:0)
 
   :
   ident (2:2-2:5) foo
+  # trailing comment
 `;
 
 exports[`while item: ... parses 1`] = `
-block while (1:0-2:15)
+block while (1:0-4:0)
   ident (1:6-1:10) item
   :
   comp == (2:2-2:15)
@@ -99,4 +104,5 @@ block while (1:0-2:15)
       ident (2:2-2:6) item
       number (2:9-2:10) 2
     number (2:14-2:15) 0
+  # trailing comment
 `;

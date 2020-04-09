@@ -36,7 +36,13 @@ call (1:0-1:10)
 
 `;
 
-exports[`partial parses member 1`] = `partial (1:0-1:1) ?`;
+exports[`partial parses member 1`] = `
+call (1:0-1:7)
+  member . (1:0-1:5)
+    partial (1:0-1:1) ?
+    ident (1:2-1:5) bar
+
+`;
 
 exports[`partial parses str 1`] = `
 string ' (1:0-1:14)

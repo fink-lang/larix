@@ -13,6 +13,12 @@ describe:: 'comments', fn:
 
       # single line
       shrub = ni
+
+      foo = fn:
+        shrub
+        # trailing func
+
+      ni
     `) eq snapshot
 
 

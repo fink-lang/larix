@@ -5,16 +5,16 @@ get_comment = fn prefix, {value}:
   '${prefixed.join('\n')}'
 
 
-str_type_op = fn {type, op, comment, loc: {start, end}}, indent:
+str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   head = match true:
     (op && op != type):
       `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
     else:
       `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
 
-  match comment:
-    {}:
-      comment_text = get_comment:: '${indent}#', comment
+  match comments:
+    {leading: {}}:
+      comment_text = get_comment:: '${indent}#', comments.leading
       '${comment_text}\n${indent}${head}'
     else:
       '${indent}${head}'
@@ -22,18 +22,24 @@ str_type_op = fn {type, op, comment, loc: {start, end}}, indent:
 
 serialize_block = fn node, serialize, indent:
   head = str_type_op(node, indent)
+  exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
 
-  match true:
+  body = match true:
     (!!node.args):
       args = node.args.map(fn expr: serialize(expr, `${indent}  `))
-      exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
       arg_str = `${args.join('\n')}\n`
-
       `${head}\n${arg_str}${indent}  :\n${exprs.join('\n')}`
 
     else:
       exprs = node.exprs.map(fn expr: serialize(expr, `${indent}  `))
       `${head}\n${exprs.join('\n')}`
+
+  match node:
+    {comments: {trailing: {}}}:
+      comment_text = get_comment:: '${indent}  #', node.comments.trailing
+      '${body}\n${comment_text}'
+    else:
+      body
 
 
 serialize_call = fn node, serialize, indent:
@@ -45,7 +51,12 @@ serialize_call = fn node, serialize, indent:
     args.length > 0: `${args.join('\n')}\n`
     else: ''
 
-  `${head}\n${callee}\n${arg_str}`
+  match node:
+    {comments: {trailing: {}}}:
+      comment_text = get_comment:: '${indent}  #', node.comments.trailing
+      '${head}\n${callee}\n${arg_str}${comment_text}'
+    else:
+      `${head}\n${callee}\n${arg_str}`
 
 
 serialize_infix = fn node, serialize, indent:

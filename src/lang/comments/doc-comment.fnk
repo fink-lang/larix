@@ -9,7 +9,7 @@ doc_comment = fn op:
 
     nud: fn: fn ctx:
       [text, expr_ctx] = collect_text(ctx, '---')
-      [expr, next_ctx] = expression(expr_ctx, 0)
-
-      [{...expr, comment: text}, next_ctx]
+      [{comments, ...expr}, next_ctx] = expression(expr_ctx, 0)
+      # TODO: 'comment' is for backwards compat v4.x
+      [{...expr, comment: text, comments: {...comments, leading: text}}, next_ctx]
   }
