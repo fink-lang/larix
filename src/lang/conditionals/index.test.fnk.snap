@@ -1,47 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`match ...: parses complex: {foo}: bar 1`] = `
-cond match (1:0-4:12)
+cond match (1:0-13:8)
   ident (1:6-1:10) item
   :
-  cond:expr (2:2-2:24)
-    object (2:2-2:19)
-      prop (2:3-2:6)
-        ident (2:3-2:6) foo
-        ident (2:3-2:6) foo
-      prop (2:8-2:18)
-        ident (2:8-2:12) spam
-        block (2:12-2:18)
-          object (2:14-2:18)
-            prop (2:15-2:17)
-              ident (2:15-2:17) ni
-              ident (2:15-2:17) ni
-    block (2:19-2:24)
-      ident (2:21-2:24) bar
-  cond:expr (3:2-3:20)
-    array (3:2-3:15)
-      ident (3:3-3:6) foo
-      array (3:8-3:14)
-        number (3:9-3:10) 1
-        number (3:12-3:13) 2
-    block (3:15-3:20)
-      ident (3:17-3:20) bar
-  cond:expr (4:2-4:12)
-    ident (4:2-4:6) else
-    block (4:6-4:12)
-      ident (4:8-4:12) spam
+  cond:expr (3:2-3:24)
+    # nested object pattern
+    object (3:2-3:19)
+      prop (3:3-3:6)
+        ident (3:3-3:6) foo
+        ident (3:3-3:6) foo
+      prop (3:8-3:18)
+        ident (3:8-3:12) spam
+        block (3:12-3:18)
+          object (3:14-3:18)
+            prop (3:15-3:17)
+              ident (3:15-3:17) ni
+              ident (3:15-3:17) ni
+    block (3:19-3:24)
+      ident (3:21-3:24) bar
+  cond:expr (6:2-6:20)
+    # nested iterables
+    array (6:2-6:15)
+      ident (6:3-6:6) foo
+      array (6:8-6:14)
+        number (6:9-6:10) 1
+        number (6:12-6:13) 2
+    block (6:15-6:20)
+      ident (6:17-6:20) bar
+  cond:expr (9:2-9:41)
+    # mixed nested:
+    array (9:2-9:37)
+      ident (9:3-9:6) foo
+      object (9:8-9:36)
+        prop (9:9-9:17)
+          ident (9:9-9:12) bar
+          block (9:12-9:17)
+            number (9:14-9:17) 123
+        prop (9:19-9:35)
+          ident (9:19-9:23) spam
+          block (9:23-9:35)
+            array (9:25-9:35)
+              number (9:26-9:29) 456
+              number (9:31-9:34) 789
+    block (9:37-9:41)
+      ident (9:39-9:41) ni
+  cond:expr (11:2-13:8)
+    ident (11:2-11:6) else
+    block (11:6-13:8)
+      # fallback for no match
+      ident (13:4-13:8) spam
 `;
 
 exports[`match ...: parses single line: match foo: bar 1`] = `
-cond match (1:0-3:12)
+cond match (1:0-5:12)
   ident (1:6-1:10) item
   :
-  cond:expr (2:2-2:10)
-    ident (2:2-2:5) foo
-    block (2:5-2:10)
-      ident (2:7-2:10) bar
-  cond:expr (3:2-3:12)
-    ident (3:2-3:6) else
-    block (3:6-3:12)
-      ident (3:8-3:12) spam
+  cond:expr (2:2-2:22)
+    ident (2:2-2:14) test_pattern
+    block (2:14-2:22)
+      ident (2:16-2:22) result
+  cond:expr (5:2-5:12)
+    # fallback if no match
+    ident (5:2-5:6) else
+    block (5:6-5:12)
+      ident (5:8-5:12) spam
 `;

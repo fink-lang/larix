@@ -7,8 +7,13 @@ describe:: 'module', fn:
 
   it:: 'parses module', fn:
     parse(`
+      # leading module comment
+
+      # expr comment
       foo = bar
       spam = ni
+
+      # trailing module comment
     `) eq snapshot
 
 

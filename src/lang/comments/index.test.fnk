@@ -1,19 +1,23 @@
 {describe, it, eq, snapshot} = import '../../testing/jest'
 
-{parse_expr} = import '../../'
+{parse} = import '../../'
 
 
 describe:: 'comments', fn:
 
-  it:: 'parses line comment', fn:
-    parse_expr(`
-      # foobar
+  it:: 'parses line comments', fn:
+    parse(`
+      # leading expression
+      # multi line
       spam = ni
+
+      # single line
+      shrub = ni
     `) eq snapshot
 
 
   it:: 'parses doc-comment', fn:
-    parse_expr(`
+    parse(`
       ---
       foobar spam ham
       ---
