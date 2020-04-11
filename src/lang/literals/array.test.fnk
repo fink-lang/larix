@@ -20,6 +20,11 @@ describe:: 'array [...]', fn:
   it:: 'parses leading commas: [,, foo]', fn:
     parse_expr(`[,, foo]`) eq snapshot
 
+  it:: 'parses trailing commas: [...foo,,]', fn:
+    parse_expr(`[...foo, ]`) eq snapshot
+    parse_expr(`[...foo, , ]`) eq snapshot
+    parse_expr(`[, ...foo, ]`) eq snapshot
+
 
 describe:: 'array [...] - parsing failures', fn:
   it:: `throws when missing ']'`, fn:
