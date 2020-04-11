@@ -1,8 +1,26 @@
 {add_operator_like} = import '@fink/prattler/symbols'
+{next_is, curr_loc, expression} = import '@fink/prattler'
 
-{prefix} = import '../generic/prefix'
+{symbol} = import '../symbols'
+
+
+spread = fn op, type:
+  {
+    ...symbol(op),
+
+    nud: fn lbp: fn ctx:
+      {start} = curr_loc(ctx)
+
+      [right, next_ctx] = match ctx:
+        next_is:: ?, ',': [null, ctx]
+        else: expression(ctx, lbp)
+
+      {end} = curr_loc(next_ctx)
+
+      [{type, op, right, loc: {start, end}}, next_ctx]
+  }
 
 
 add_spread_operator = fn ctx:
   pipe ctx:
-    add_operator_like(prefix('...', 'spread'))
+    add_operator_like:: spread:: '...', 'spread'

@@ -7,3 +7,6 @@ describe:: 'spread', fn:
 
   it:: 'parses single line: ...foobar', fn:
     parse_expr(`...foobar`) eq snapshot
+
+  it:: 'parses standalone', fn:
+    parse_expr(`[a, ..., b]`) eq snapshot

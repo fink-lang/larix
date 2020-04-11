@@ -58,25 +58,7 @@ block map (1:0-4:0)
   # trailing comment
 `;
 
-exports[`unfold item, accu: ... parses 1`] = `
-block unfold (1:0-2:26)
-  assign = (1:7-1:17)
-    ident (1:7-1:11) curr
-    ident (1:12-1:17) start
-  assign = (1:19-1:25)
-    ident (1:19-1:23) accu
-    number (1:24-1:25) 0
-  :
-  group (2:2-2:26)
-    arithm + (2:3-2:15)
-      ident (2:3-2:8) start
-      ident (2:11-2:15) accu
-    arithm + (2:17-2:25)
-      ident (2:17-2:21) accu
-      number (2:24-2:25) 1
-`;
-
-exports[`unfold item, accu: ... parses no accu 1`] = `
+exports[`unfold accu: ... parses 1`] = `
 block unfold (1:0-2:14)
   assign = (1:7-1:17)
     ident (1:7-1:11) curr
@@ -87,12 +69,27 @@ block unfold (1:0-2:14)
     ident (2:10-2:14) accu
 `;
 
-exports[`unfold item, accu: ... parses no args 1`] = `
+exports[`unfold accu: ... parses no args 1`] = `
 block unfold (1:0-4:0)
 
   :
   ident (2:2-2:5) foo
   # trailing comment
+`;
+
+exports[`unfold accu: ... parses with item, accu result 1`] = `
+block unfold (1:0-2:22)
+  assign = (1:7-1:13)
+    ident (1:7-1:11) prev
+    number (1:12-1:13) 0
+  :
+  group (2:2-2:22)
+    arithm * (2:3-2:11)
+      ident (2:3-2:7) prev
+      number (2:10-2:11) 2
+    arithm + (2:13-2:21)
+      ident (2:13-2:17) prev
+      number (2:20-2:21) 1
 `;
 
 exports[`while item: ... parses 1`] = `

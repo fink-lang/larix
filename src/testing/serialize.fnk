@@ -156,32 +156,36 @@ serialize_jsx = fn node, serialize, indent:
 
 
 serialize = fn node, indent='':
-  match true:
-    node == null:
-      null
+  match node:
+    null: `${indent}null`
 
-    node.type.startsWith('jsx-'):
+    {type: ?.startsWith('jsx-')}:
       serialize_jsx(node, serialize, indent)
 
-    node.type == 'regex':
+    {type: 'regex'}:
       serialize_regex(node, serialize, indent)
 
-    (!!((node.left && node.right) || (node.key && node.value))):
-      serialize_infix(node, serialize, indent)
-
-    (!!node.right):
+    {type: 'spread'}:
       serialize_prefix(node, serialize, indent)
 
-    (!!node.exprs):
+    {left: {}, right: {}}:
+      serialize_infix(node, serialize, indent)
+    {key: {}, value: {}}:
+      serialize_infix(node, serialize, indent)
+
+    {right: {}}:
+      serialize_prefix(node, serialize, indent)
+
+    {exprs: {}}:
       serialize_block(node, serialize, indent)
 
-    (!!node.value):
+    {value: {}}:
       serialize_other(node, serialize, indent)
 
-    (!!node.parts):
+    {parts: []}:
       serialize_str(node, serialize, indent)
 
-    (!!node.callee):
+    {callee: {}}:
       serialize_call(node, serialize, indent)
 
     else:

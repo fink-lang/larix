@@ -13,21 +13,19 @@ describe:: 'fold item, accu: ...', fn:
     `) eq snapshot
 
 
-describe:: 'unfold item, accu: ...', fn:
+describe:: 'unfold accu: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      unfold curr=start, accu=0:
-        (start + accu, accu + 1)
-    `) eq snapshot
-
-
-  it:: 'parses no accu', fn:
     parse_expr(`
       unfold curr=start:
         start + accu
     `) eq snapshot
 
+  it:: 'parses with item, accu result', fn:
+    parse_expr(`
+      unfold prev=0:
+        (prev * 2, prev + 1)
+    `) eq snapshot
 
   it:: 'parses no args', fn:
     parse_expr(`

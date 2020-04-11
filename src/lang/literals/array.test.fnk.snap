@@ -7,8 +7,8 @@ array (1:0-1:2)
 
 exports[`array [...] parses leading commas: [,, foo] 1`] = `
 array (1:0-1:8)
-
-
+  null
+  null
   ident (1:4-1:7) foo
 `;
 
@@ -21,4 +21,27 @@ array (1:0-1:6)
 exports[`array [...] parses single elemement: [1] 1`] = `
 array (1:0-1:3)
   number (1:1-1:2) 1
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 1`] = `
+array (1:0-1:10)
+  spread ... (1:1-1:7)
+    ident (1:4-1:7) foo
+  null
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 2`] = `
+array (1:0-1:12)
+  spread ... (1:1-1:7)
+    ident (1:4-1:7) foo
+  null
+  null
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 3`] = `
+array (1:0-1:12)
+  null
+  spread ... (1:3-1:9)
+    ident (1:6-1:9) foo
+  null
 `;

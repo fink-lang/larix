@@ -3,7 +3,7 @@
 exports[`JSX <Foobar>...</Foobar> parses elem with children: <Foobar><Spam /></Foobar> 1`] = `
 jsx-elem (1:0-3:9) Foobar
   jsx-attr (1:8-1:10) ni
-    null
+        null
   :
   jsx-text (1:11-2:2)
     "\\n  "
@@ -39,7 +39,7 @@ jsx-elem (1:0-1:20) Foobar
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with short attr: <Foobar spam /> 1`] = `
 jsx-elem (1:0-1:15) Foobar
   jsx-attr (1:8-1:12) spam
-    null
+        null
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with str attr: <Foobar spam="ni" /> 1`] = `
