@@ -1,4 +1,4 @@
-{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,71 +6,93 @@
 describe:: 'object {...}', fn:
 
   it:: 'parses empty: {}', fn:
-    parse_expr(`{}`) eq snapshot
+    expect::
+      parse_expr:: `{}`
+      to_match_snapshot
 
 
   it:: 'parses single shorthand prop: {foo}', fn:
-    parse_expr(`{foo}`) eq snapshot
+    expect::
+      parse_expr:: `{foo}`
+      to_match_snapshot
 
 
   it:: 'parses multiple shorthand exprs: {foo, bar}', fn:
-    parse_expr(`{foo, bar}`) eq snapshot
+    expect::
+      parse_expr:: `{foo, bar}`
+      to_match_snapshot
 
 
   it:: 'parses multiple shorthand exprs: {foo, bar}', fn:
-    parse_expr(`{foo, bar: 123, shrub: 'ni'}`) eq snapshot
+    expect::
+      parse_expr:: `{foo, bar: 123, shrub: 'ni'}`
+      to_match_snapshot
 
 
   it:: 'parses single prop: {foo: spam}', fn:
-    parse_expr(`{foo: spam}`) eq snapshot
+    expect::
+      parse_expr:: `{foo: spam}`
+      to_match_snapshot
 
 
   it:: 'parses spread prop: {foo, ...bar}', fn:
-    parse_expr(`{foo, ...bar}`) eq snapshot
+    expect::
+      parse_expr:: `{foo, ...bar}`
+      to_match_snapshot
 
 
   it:: `parses single str prop: {'foo': spam}`, fn:
-    parse_expr(`{'foo': spam}`) eq snapshot
+    expect::
+      parse_expr:: `{'foo': spam}`
+      to_match_snapshot
 
 
   it:: 'parses default assignment prop: {foo=123}', fn:
-    parse_expr(`{foo=123}`) eq snapshot
+    expect::
+      parse_expr:: `{foo=123}`
+      to_match_snapshot
 
 
-  it:: `parses calculated prop: {(Symbol('foo')): 123, ...}`, fn:
-    parse_expr(`{foo, (Symbol('bar')): 123, spam}`) eq snapshot
+  it:: `parses calculated prop: {(...): 123, ...}`, fn:
+    expect::
+      parse_expr:: `{foo, (bar+ni): 123, spam}`
+      to_match_snapshot
 
 
   it:: 'parses single prop with block value: {foo: spam ...}', fn:
-    parse_expr(`
-      {
-        foo:
-          spam
-          ni
-      }
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        {
+          foo:
+            spam
+            ni
+        }
+      `
+      to_match_snapshot
 
 
 
 describe:: 'object {...} - parsing failures', fn:
   it:: `throws when missing '}'`, fn:
-    (
-      fn: parse_expr(`{`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:1
-      1| {
-          ^
+    expect::
+      fn: parse_expr:: `{`, 'test.fnk'
 
-      Expected '}' but found Symbol(end).
-    `
+      to_throw:: `
+        test.fnk:1:1
+        1| {
+            ^
+
+        Expected '}' but found Symbol(end).
+      `
 
   it:: `throws when missing '}'`, fn:
-    (
-      fn: parse_expr(`{foo) bar}`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:4
-      1| {foo) bar}
-             ^
+    expect::
+      fn: parse_expr:: `{foo) bar}`, 'test.fnk'
 
-      Expected '}' but found ')'.
-    `
+      to_throw:: `
+        test.fnk:1:4
+        1| {foo) bar}
+               ^
+
+        Expected '}' but found ')'.
+      `

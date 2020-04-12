@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,80 +6,98 @@
 describe:: 'fold item, accu: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      fold item, accu=0:
-        item + accu
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        fold item, accu=0:
+          item + accu
+          # trailing comment
+      `
+      to_match_snapshot
 
 
 describe:: 'unfold accu: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      unfold curr=start:
-        start + accu
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        unfold curr=start:
+          start + accu
+      `
+      to_match_snapshot
 
   it:: 'parses with item, accu result', fn:
-    parse_expr(`
-      unfold prev=0:
-        (prev * 2, prev + 1)
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        unfold prev=0:
+          (prev * 2, prev + 1)
+      `
+      to_match_snapshot
 
   it:: 'parses no args', fn:
-    parse_expr(`
-      unfold:
-        foo
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        unfold:
+          foo
+          # trailing comment
+      `
+      to_match_snapshot
 
 
 describe:: 'map item: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      map item:
-        item * 2
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        map item:
+          item * 2
+          # trailing comment
+      `
+      to_match_snapshot
 
 
 describe:: 'flat_map item: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      flat_map item:
-        [item, item * 2]
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        flat_map item:
+          [item, item * 2]
+      `
+      to_match_snapshot
 
 
 describe:: 'filter item: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      filter item:
-        item % 2 == 0
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        filter item:
+          item % 2 == 0
+          # trailing comment
+      `
+      to_match_snapshot
 
 
 describe:: 'while item: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      while item:
-        item % 2 == 0
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        while item:
+          item % 2 == 0
+          # trailing comment
+      `
+      to_match_snapshot
 
 
 describe:: 'find item: ...', fn:
 
   it:: 'parses', fn:
-    parse_expr(`
-      find item:
-        item % 2 == 0
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr:: `
+        find item:
+          item % 2 == 0
+          # trailing comment
+      `
+      to_match_snapshot
 

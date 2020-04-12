@@ -9,11 +9,11 @@ partial = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      loc = curr_loc(ctx)
+      loc = curr_loc:: ctx
       [{type: 'partial', value: '?', loc}, ctx]
   }
 
 
 add_partial = fn ctx:
   pipe ctx:
-    add_non_separating(partial('?'))
+    add_non_separating:: partial:: '?'

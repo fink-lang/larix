@@ -1,4 +1,4 @@
-{decribe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{decribe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,20 +6,35 @@
 describe:: 'partial', fn:
 
   it:: 'parses call', fn:
-    parse_expr(`foo(?)`) eq snapshot
-    parse_expr(`foo.bar(?)`) eq snapshot
+    expect::
+      parse_expr:: `foo:: ?`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `foo.bar:: ?`
+      to_match_snapshot
 
 
   it:: 'parses member', fn:
-    parse_expr(`?.bar()`) eq snapshot
+    expect::
+      parse_expr:: `?.bar()`
+      to_match_snapshot
 
 
   it:: 'parses binary', fn:
-    parse_expr(`? > 1`) eq snapshot
-    parse_expr(`1 < ?`) eq snapshot
-    parse_expr(`1 + ? * 3`) eq snapshot
+    expect::
+      parse_expr:: `? > 1`
+      to_match_snapshot
+    expect::
+      parse_expr:: `1 < ?`
+      to_match_snapshot
+    expect::
+      parse_expr:: `1 + ? * 3`
+      to_match_snapshot
 
 
   it:: 'parses str', fn:
-    parse_expr(`'foo \${?} bar'`) eq snapshot
+    expect::
+      parse_expr:: `'foo \${?} bar'`
+      to_match_snapshot
 

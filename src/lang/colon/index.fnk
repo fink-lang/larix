@@ -11,12 +11,12 @@ colon = fn op, type:
     lbp: fn: fn: 0,
 
     nud: fn: fn ctx:
-      get_block(ctx, type)
+      get_block:: ctx, type
   }
 
 
 add_colon = fn ctx:
   pipe ctx:
-    add_operator_like(colon(':', 'block'))
+    add_operator_like:: colon:: ':', 'block'
 
 

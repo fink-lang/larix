@@ -10,28 +10,28 @@
 
 add_array_literal = fn ctx:
   pipe ctx:
-    add_operator_like(array('['))
-    add_non_binding(symbol(','))
-    add_non_binding(symbol(']'))
+    add_operator_like:: array:: '['
+    add_non_binding:: symbol:: ','
+    add_non_binding:: symbol:: ']'
 
 
 add_object_literal = fn ctx:
   pipe ctx:
-    add_operator_like(object('{'))
-    add_non_binding(symbol(','))
-    add_non_binding(symbol('}'))
+    add_operator_like:: object:: '{'
+    add_non_binding:: symbol:: ','
+    add_non_binding:: symbol:: '}'
 
 
 add_string_literal = fn ctx:
   pipe ctx:
-    add_operator_like(string('`'))
-    add_operator_like(string(`'`))
-    add_operator_like(string(`"`))
+    add_operator_like:: string:: '`'
+    add_operator_like:: string:: `'`
+    add_operator_like:: string:: `"`
 
 
 add_regex_literal = fn ctx:
   pipe ctx:
-    add_operator_like(regex('rx/'))
+    add_operator_like:: regex:: 'rx/'
 
 
 add_literals = fn ctx:

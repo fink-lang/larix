@@ -6,6 +6,6 @@
 
 add_jsx = fn ctx:
   pipe ctx:
-    add_operator_like(jsx('<'))
-    add_non_binding(symbol('/>'))
-    add_non_binding(symbol('</'))
+    add_operator_like:: jsx:: '<'
+    add_non_binding:: symbol:: '/>'
+    add_non_binding:: symbol:: '</'

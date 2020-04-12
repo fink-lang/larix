@@ -6,13 +6,13 @@
 
 member_expr = fn ctx, lbp:
   match true:
-    next_matches(ctx, rx/[`'"(]/):
-      expression(ctx, lbp)
+    next_matches:: ctx, rx/[`'"(]/:
+      expression:: ctx, lbp
     else:
-      key_ctx = advance(ctx)
-      loc = curr_loc(key_ctx)
-
-      [{type: 'ident', value: curr_value(key_ctx), loc}, key_ctx]
+      key_ctx = advance:: ctx
+      loc = curr_loc:: key_ctx
+      value = curr_value:: key_ctx
+      [{type: 'ident', value, loc}, key_ctx]
 
 
 prop_access = fn op, type:
@@ -21,7 +21,7 @@ prop_access = fn op, type:
 
     led: fn lbp: fn ctx, left:
       {loc: {start}} = left
-      [right, next_ctx] = member_expr(ctx, lbp)
+      [right, next_ctx] = member_expr:: ctx, lbp
       {loc: {end}} = right
 
       [{type, op, left, right, loc: {start, end}}, next_ctx]
@@ -30,5 +30,5 @@ prop_access = fn op, type:
 
 add_prop_access = fn ctx:
   pipe ctx:
-    add_operator_like(prop_access('.', 'member'))
+    add_operator_like:: prop_access:: '.', 'member'
 

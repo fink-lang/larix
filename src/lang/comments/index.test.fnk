@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse} = import '../../'
 
@@ -6,27 +6,31 @@
 describe:: 'comments', fn:
 
   it:: 'parses line comments', fn:
-    parse(`
-      # leading expression
-      # multi line
-      spam = ni
+    expect::
+      parse:: `
+        # leading expression
+        # multi line
+        spam = ni
 
-      # single line
-      shrub = ni
+        # single line
+        shrub = ni
 
-      foo = fn:
-        shrub
-        # trailing func
+        foo = fn:
+          shrub
+          # trailing func
 
-      ni
-    `) eq snapshot
+        ni
+      `
+      to_match_snapshot
 
 
   it:: 'parses doc-comment', fn:
-    parse(`
-      ---
-      foobar spam ham
-      ---
-      spam = ni
-    `) eq snapshot
+    expect::
+      parse:: `
+        ---
+        foobar spam ham
+        ---
+        spam = ni
+      `
+      to_match_snapshot
 

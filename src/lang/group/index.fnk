@@ -11,9 +11,9 @@ group = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      {start} = curr_loc(ctx)
-      [exprs, next_ctx] = seq(ctx, ')')
-      {end} = curr_loc(next_ctx)
+      {start} = curr_loc:: ctx
+      [exprs, next_ctx] = seq:: ctx, ')'
+      {end} = curr_loc:: next_ctx
 
       [{type: 'group', exprs, loc: {start, end}}, next_ctx]
   }
@@ -21,6 +21,6 @@ group = fn op:
 
 add_group = fn ctx:
   pipe ctx:
-    add_operator_like(group('('))
-    add_non_binding(symbol(','))
-    add_non_binding(symbol(')'))
+    add_operator_like:: group:: '('
+    add_non_binding:: symbol:: ','
+    add_non_binding:: symbol:: ')'

@@ -1,12 +1,14 @@
 {serialize} = import './serialize'
 
 
-print = fn ast: serialize(ast)
+print = fn ast:
+  serialize:: ast
+
 
 test = fn val:
-  val
-    && val.hasOwnProperty('type')
-    && val.hasOwnProperty('loc')
+  has_type = val.hasOwnProperty:: 'type'
+  has_op = val.hasOwnProperty:: 'loc'
+  val && has_type && has_op
 
 
 jest_serializer = {print, test}
