@@ -1,4 +1,4 @@
-{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr} = import '../..'
 
@@ -6,72 +6,86 @@
 describe:: 'call()', fn:
 
   it:: 'parses empty: foobar()', fn:
-    parse_expr(`foobar()`) eq snapshot
+    expect::
+      parse_expr(`foobar()`)
+      to_match_snapshot
 
 
   it:: 'parses single arg: foobar(1)', fn:
-    parse_expr(`foobar(1)`) eq snapshot
+    expect::
+      parse_expr(`foobar(1)`)
+      to_match_snapshot
 
 
   it:: 'parses multiple args: foobar(1, 2)', fn:
-    parse_expr(`foobar(1, 2)`) eq snapshot
+    expect::
+      parse_expr(`foobar(1, 2)`)
+      to_match_snapshot
 
 
 describe:: 'call() - parsing failures', fn:
 
   it:: `throws when missing ')'`, fn:
-    (
+    expect::
       fn: parse_expr(`foobar(`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:7
-      1| foobar(
-                ^
+      to_throw:: `
+        test.fnk:1:7
+        1| foobar(
+                  ^
 
-      Expected ')' but found Symbol(end).`
+        Expected ')' but found Symbol(end).`
 
 
   it:: `throws when missing ')'`, fn:
-    (
+    expect::
       fn: parse_expr(`foobar(1:)`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:8
-      1| foobar(1:)
-                 ^
+      to_throw:: `
+        test.fnk:1:8
+        1| foobar(1:)
+                   ^
 
-      Expected ')' but found ':'.`
+        Expected ')' but found ':'.`
 
 
 describe:: 'call:: ...', fn:
 
   it:: 'parses single line', fn:
-    parse_expr(`foobar:: spam, ni`) eq snapshot
+    expect::
+      parse_expr(`foobar:: spam, ni`)
+      to_match_snapshot
 
 
   it:: 'parses multiline', fn:
-    parse_expr(`
-      foo::
-        fn bar:
-          spam
-        ni
-        shrub
-        # trailing comment
-    `) eq snapshot
+    expect::
+      parse_expr(`
+        foo::
+          fn bar:
+            spam
+          ni
+          shrub
+          # trailing comment
+      `)
+      to_match_snapshot
 
   it:: 'parses multiline with comma (TODO)', fn:
-    parse_expr(`
-      foo::
-        bar,
-        ni,
-        shrub
-    `) eq snapshot
+    expect::
+      parse_expr(`
+        foo::
+          bar,
+          ni,
+          shrub
+      `)
+      to_match_snapshot
 
 
 describe:: 'pipe foo: ...', fn:
 
   it:: 'pipes', fn:
-    parse_expr(`
-      pipe foo:
-        bar(shrub)
-        ni
-    `) eq snapshot
+    expect::
+      parse_expr(`
+        pipe foo:
+          bar(shrub)
+          ni
+      `)
+      to_match_snapshot
 

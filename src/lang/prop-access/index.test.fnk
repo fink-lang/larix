@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,13 +6,19 @@
 describe:: 'prop access', fn:
 
   it:: 'parses single line: foo.bar', fn:
-    parse_expr(`foo.bar`) eq snapshot
+    expect::
+      parse_expr(`foo.bar`)
+      to_match_snapshot
 
 
   it:: `parses member expr: foo.'bar spam'`, fn:
-    parse_expr(`foo.'bar spam'`) eq snapshot
+    expect::
+      parse_expr(`foo.'bar spam'`)
+      to_match_snapshot
 
 
   it:: 'parses member expr: foo.(Symbol.iterator)', fn:
-    parse_expr('foo.(Symbol.iterator)') eq snapshot
+    expect::
+      parse_expr('foo.(Symbol.iterator)')
+      to_match_snapshot
 

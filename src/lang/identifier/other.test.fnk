@@ -1,55 +1,71 @@
-{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr, parse} = import '../../'
 
 
 describe:: 'other symbols', fn:
   it:: 'parses a word', fn:
-    parse_expr(`  foobar  `) eq snapshot
+    expect::
+      parse_expr(`  foobar  `)
+      to_match_snapshot
 
 
   it:: 'parses a non-word', fn:
-    parse_expr(`  π  `) eq snapshot
+    expect::
+      parse_expr(`  π  `)
+      to_match_snapshot
 
 
 describe:: 'numbers', fn:
   it:: 'parses int 12345', fn:
-    parse_expr(` 12345  `) eq snapshot
+    expect::
+      parse_expr(` 12345  `)
+      to_match_snapshot
 
 
   it:: 'parses hex, oct, bin', fn:
-    parse(`
-      0x123456789abcdef0
-      0x123456789abcde
-      0o12345670
-      0b101010
-    `) eq snapshot
+    expect::
+      parse(`
+        0x123456789abcdef0
+        0x123456789abcde
+        0o12345670
+        0b101010
+      `)
+      to_match_snapshot
 
 
   it:: 'parses float 123.456', fn:
-    parse_expr(`  123.456  `) eq snapshot
+    expect::
+      parse_expr(`  123.456  `)
+      to_match_snapshot
 
 
   it:: 'parses float 123.456e10', fn:
-    parse(`
-      123.456e78
-      123.456e+78
-      123.456e-78
-    `) eq snapshot
+    expect::
+      parse(`
+        123.456e78
+        123.456e+78
+        123.456e-78
+      `)
+      to_match_snapshot
+
 
   it:: 'throws when missing exponent', fn:
-    (
+    expect::
       fn: parse_expr(`123.456e * 78`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:9
-      1| 123.456e * 78
-                  ^
 
-      Expected exponent.
-    `
+      to_throw:: `
+        test.fnk:1:9
+        1| 123.456e * 78
+                    ^
+
+        Expected exponent.
+      `
 
 
 describe:: 'symbols as infix operators', fn:
   it:: 'parses with left to right precendence', fn:
-    parse_expr(`123 add 4 add 5`) eq snapshot
+    expect::
+      parse_expr(`123 add 4 add 5`)
+      to_match_snapshot
 

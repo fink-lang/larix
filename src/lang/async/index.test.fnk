@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -7,5 +7,7 @@ describe:: 'async', fn:
 
   it:: 'parses async: await foobar', fn:
 
-    parse_expr(`await foobar`) eq snapshot
+    expect::
+      parse_expr(`await foobar`)
+      to_match_snapshot
 

@@ -1,4 +1,4 @@
-{describe, it, eq, to_throw, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,50 +6,62 @@
 describe:: 'regex rx/.../', fn:
 
   it:: 'parses empty: rx//', fn:
-    parse_expr(`rx//`) eq snapshot
+    expect::
+      parse_expr(`rx//`)
+      to_match_snapshot
 
 
   it:: 'parses multiline', fn:
-    parse_expr(`
-      rx/
-        foo.+bar
-      /
-    `) eq snapshot
+    expect::
+      parse_expr(`
+        rx/
+          foo.+bar
+        /
+      `)
+      to_match_snapshot
 
 
   it:: 'parses flags: rx//gimsuy', fn:
-    parse_expr(`rx//gimsuy`) eq snapshot
+    expect::
+      parse_expr(`rx//gimsuy`)
+      to_match_snapshot
 
 
   it:: 'parses regex: rx/.+foo/', fn:
-    parse_expr(`rx/.+foo/gimsuy`) eq snapshot
+    expect::
+      parse_expr(`rx/.+foo/gimsuy`)
+      to_match_snapshot
 
 
   it:: 'parses escaped chars: rx/\\n\\t/', fn:
-    parse_expr(`rx/\\n \\\\ \\/ \\\\/`) eq snapshot
+    expect::
+      parse_expr(`rx/\\n \\\\ \\/ \\\\/`)
+      to_match_snapshot
 
 
 describe:: 'regex - parsing failures', fn:
 
   it:: 'throws when missing end', fn:
-    (
+    expect::
       fn: parse_expr(`rx/foo.bar`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:10
-      1| rx/foo.bar
-                   ^
 
-      Unexpected end of code.
-    `
+      to_throw:: `
+        test.fnk:1:10
+        1| rx/foo.bar
+                     ^
+
+        Unexpected end of code.
+      `
 
 
   it:: 'throws unssupported flags', fn:
-    (
+    expect::
       fn: parse_expr(`rx/foo.bar/n`, 'test.fnk')
-    ) to_throw `
-      test.fnk:1:12
-      1| rx/foo.bar/n
-                     ^
 
-      Unexpected end of code.
-    `
+      to_throw:: `
+        test.fnk:1:12
+        1| rx/foo.bar/n
+                       ^
+
+        Unexpected end of code.
+      `

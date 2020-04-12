@@ -1,27 +1,25 @@
-anything = Symbol(`anything`)
-
-snapshot = Symbol(`snapshot`)
-
 
 describe = fn descr, tests:
-  global.describe(descr, tests)
-
-
-it = fn descr, test:
-  global.it(descr, test)
+  global.describe:: descr, tests
   undefined
 
 
-eq = fn result, expected:
-  match expected:
-    snapshot: expect(result).toMatchSnapshot()
-    else: expect(result).toEqual(expected)
+it = fn descr, test:
+  global.it:: descr, test
+  undefined
 
 
-is = fn result, expected:
-  expect(result).toBe(expected)
+to_equal = fn expected: fn expect_actual:
+  expect_actual.toEqual:: expected
 
 
-to_throw = fn func, err:
-  expect(func).toThrow(err)
+to_match_snapshot = fn expect_actual:
+  expect_actual.toMatchSnapshot()
 
+
+to_throw = fn expected: fn expect_actual:
+  expect_actual.toThrow:: expected
+
+
+expect = fn actual, expectation:
+  expectation:: global.expect:: actual

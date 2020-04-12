@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse} = import '../../'
 
@@ -6,32 +6,36 @@
 describe:: 'match ...:', fn:
 
   it:: 'parses single line: match foo: bar', fn:
-    parse(`
-      match item:
-        test_pattern: result
+    expect::
+      parse(`
+        match item:
+          test_pattern: result
 
-        # fallback if no match
-        else: spam
-        # trailing comment
-      foobar
-    `) eq snapshot
+          # fallback if no match
+          else: spam
+          # trailing comment
+        foobar
+      `)
+      to_match_snapshot
 
 
   it:: 'parses complex: {foo}: bar', fn:
-    parse(`
-      match item:
-        # nested object pattern
-        {foo, spam: {ni}}: bar
+    expect::
+      parse(`
+        match item:
+          # nested object pattern
+          {foo, spam: {ni}}: bar
 
-        # nested iterables
-        [foo, [1, 2]]: bar
+          # nested iterables
+          [foo, [1, 2]]: bar
 
-        # mixed nested:
-        [foo, {bar: 123, spam: [456, 789]}]: ni
+          # mixed nested:
+          [foo, {bar: 123, spam: [456, 789]}]: ni
 
-        else:
-          # fallback for no match
-          spam
-    `) eq snapshot
+          else:
+            # fallback for no match
+            spam
+      `)
+      to_match_snapshot
 
 

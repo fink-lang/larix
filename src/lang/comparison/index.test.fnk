@@ -1,4 +1,4 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
@@ -6,25 +6,37 @@
 describe:: 'comparison', fn:
 
   it:: 'parses single line: a == b', fn:
-    parse_expr(`a == b`) eq snapshot
+    expect::
+      parse_expr(`a == b`)
+      to_match_snapshot
 
 
   it:: 'parses single line: a != b', fn:
-    parse_expr(`a != b`) eq snapshot
+    expect::
+      parse_expr(`a != b`)
+      to_match_snapshot
 
 
   it:: 'parses single line: a <= b', fn:
-    parse_expr(`a <= b`) eq snapshot
+    expect::
+      parse_expr(`a <= b`)
+      to_match_snapshot
 
 
   it:: 'parses single line: a >= b', fn:
-    parse_expr(`a >= b`) eq snapshot
+    expect::
+      parse_expr(`a >= b`)
+      to_match_snapshot
 
 
   it:: 'parses single line: a > b', fn:
-    parse_expr(`a > b`) eq snapshot
+    expect::
+      parse_expr(`a > b`)
+      to_match_snapshot
 
 
   it:: 'parses single line: a < b', fn:
-    parse_expr(`a < b`) eq snapshot
+    expect::
+      parse_expr(`a < b`)
+      to_match_snapshot
 

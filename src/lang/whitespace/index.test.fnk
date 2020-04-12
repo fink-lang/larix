@@ -1,4 +1,4 @@
-{describe, it, eq, is, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_equal} = import '../../testing/jest'
 
 {init_parser, start_parser, next_is_end, next_loc} = import '@fink/prattler'
 
@@ -13,11 +13,15 @@ describe:: 'whitespace', fn:
       start_parser
 
   it:: 'ignores whitespace', fn:
-    ctx = init_test_parser(` \t\n`)
+    ctx = init_test_parser:: ` \t\n`
 
-    next_is_end(ctx) is true
+    expect::
+      next_is_end:: ctx
+      to_equal:: true
 
-    next_loc(ctx) eq {
-      start: {pos: 3, line: 2, column: 0},
-      end: {pos: 3, line: 2, column: 0}
-    }
+    expect::
+      next_loc:: ctx
+      to_equal:: {
+        start: {pos: 3, line: 2, column: 0},
+        end: {pos: 3, line: 2, column: 0}
+      }

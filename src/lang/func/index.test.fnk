@@ -1,28 +1,36 @@
-{describe, it, eq, snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
 
 {parse_expr} = import '../..'
 
 
 describe:: 'func: fn ...: ...', fn:
   it:: 'parses no arg: fn: foo', fn:
-    parse_expr(`fn: foo`) eq snapshot
+    expect::
+      parse_expr(`fn: foo`)
+      to_match_snapshot
 
 
   it:: 'parses single arg: fn foo: bar', fn:
-    parse_expr(`fn foo: bar`) eq snapshot
+    expect::
+      parse_expr(`fn foo: bar`)
+      to_match_snapshot
 
 
   it:: 'parses single line: fn foo, bar: foo', fn:
-    parse_expr(`fn foo, bar: foo`) eq snapshot
+    expect::
+      parse_expr(`fn foo, bar: foo`)
+      to_match_snapshot
 
 
   it:: 'parses multi line: fn foo, bar=1: foo', fn:
-    parse_expr(`
-      ---
-      doc comment
-      ---
-      fn foo, bar=1:
-        foo
-        bar
-        # trailing func comment
-    `) eq snapshot
+    expect::
+      parse_expr(`
+        ---
+        doc comment
+        ---
+        fn foo, bar=1:
+          foo
+          bar
+          # trailing func comment
+      `)
+      to_match_snapshot
