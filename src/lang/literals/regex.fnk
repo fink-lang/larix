@@ -8,23 +8,25 @@
 
 
 get_text = fn ctx, op:
-  [{value: text, loc: {start, end}}, next_ctx] = collect_text(ctx, op)
+  [{value: text, loc: {start, end}}, next_ctx] = collect_text:: ctx, op
 
-  [escaped] = text.match(rx/\\*$/)
+  [escaped] = text.match:: rx/\\*$/
 
   match true:
     escaped.length % 2 == 0:
       [{text, loc: {start, end}}, next_ctx]
     else:
-      [{text: new_text, loc: {end}}, final_ctx] = get_text(next_ctx, op)
+      [{text: new_text, loc: {end}}, final_ctx] = get_text:: next_ctx, op
       [{text: `${text}${op}${new_text}`, loc: {start, end}}, final_ctx]
 
 
 get_flags = fn ctx:
+  could_be_tag = curr_next_adjecent:: ctx
+
   match true:
-    (curr_next_adjecent(ctx) && next_matches(ctx, rx/[gimsuy]/)):
-      next_ctx = advance(ctx)
-      flags = curr_value(next_ctx)
+    could_be_tag && next_matches:: ctx, rx/[gimsuy]/:
+      next_ctx = advance:: ctx
+      flags = curr_value:: next_ctx
       [flags, next_ctx]
     else:
       ['', ctx]
@@ -35,20 +37,23 @@ regex = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      {start} = curr_loc(ctx)
+      {start} = curr_loc:: ctx
 
-      [text, flags_ctx] = get_text(ctx, '/')
-      pattern = match true:
-        text.text.startsWith('\n'):
-          [, spaces] = text.text.match(rx/^\n+(\s+)/)
+      [{text}, flags_ctx] = get_text:: ctx, '/'
+
+      pattern = match text:
+        ?.startsWith:: '\n':
+          [, spaces] = text.match:: rx/^\n+(\s+)/
           ind = spaces.length
-          unindent_text(text.text.slice(1 + ind), ind)
+          unindent_text::
+            text.slice:: 1 + ind
+            ind
         else:
-          text.text
+          text
 
-      [flags, end_ctx] = get_flags(flags_ctx)
+      [flags, end_ctx] = get_flags:: flags_ctx
 
-      {end} = curr_loc(end_ctx)
+      {end} = curr_loc:: end_ctx
       [{type: 'regex', pattern, flags, loc: {start, end}}, end_ctx]
   }
 

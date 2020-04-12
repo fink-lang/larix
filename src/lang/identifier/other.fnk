@@ -7,51 +7,52 @@
 
 infix_led = fn lbp: fn ctx, left:
   type = 'infix'
-  op = curr_value(ctx)
+  op = curr_value:: ctx
 
   {loc: {start}} = left
   # precedence left to right (lbp + 1) or right to left (lbp - 1)
-  [right, next_ctx] = expression(ctx, lbp + 1)
+  [right, next_ctx] = expression:: ctx, lbp + 1
   {loc: {end}} = right
 
   [{type, op, left, right, loc: {start, end}}, next_ctx]
 
 
 looks_like_num = fn ctx:
-  value = curr_value(ctx)
-  value.match(rx/^[0-9]+.*/) != null
+  value = curr_value:: ctx
+  null != value.match:: rx/^[0-9]+.*/
 
 
 number = fn ctx:
-  int_value = curr_value(ctx)
-  {start} = curr_loc(ctx)
+  int_value = curr_value:: ctx
+  {start} = curr_loc:: ctx
 
   [value, next_ctx] = match true:
-    next_is(ctx, '.'):
-      float_ctx = advance(advance(ctx))
-      float_value = `${int_value}.${curr_value(float_ctx)}`
+    next_is:: ctx, '.':
+      float_ctx = advance:: advance:: ctx
+      float_value = `${int_value}.${curr_value:: float_ctx}`
 
       match true:
-        float_value.endsWith('e'):
-          e_ctx = advance(float_ctx)
-          e_value = `${float_value}${curr_value(e_ctx)}`
-
+        float_value.endsWith:: 'e':
+          e_ctx = advance:: float_ctx
+          e_value = `${float_value}${curr_value:: e_ctx}`
+          curr_val = curr_value:: e_ctx
           match true:
-            (curr_value(e_ctx) == '+' || curr_value(e_ctx) == '-'):
-              n_ctx = advance(e_ctx)
-              [`${e_value}${curr_value(n_ctx)}`, n_ctx]
+            curr_val == '+' || curr_val == '-':
+              n_ctx = advance:: e_ctx
+              [`${e_value}${curr_value:: n_ctx}`, n_ctx]
             else:
-              throw token_error(
-                `Expected exponent.`,
-                e_ctx.curr_token, e_ctx
-              )
+              throw token_error::
+                `Expected exponent.`
+                e_ctx.curr_token
+                e_ctx
+
         else:
           [float_value, float_ctx]
 
     else:
       [int_value, ctx]
 
-  {end} = curr_loc(next_ctx)
+  {end} = curr_loc:: next_ctx
   [{type: 'number', value, loc: {start, end}}, next_ctx]
 
 
@@ -60,13 +61,13 @@ other = fn:
     ...symbol(other_token),
 
     nud: fn: fn ctx:
-      value = curr_value(ctx)
-      loc = curr_loc(ctx)
+      value = curr_value:: ctx
+      loc = curr_loc:: ctx
 
       match true:
-        looks_like_num(ctx): number(ctx)
+        looks_like_num:: ctx: number:: ctx
         else: [{type: 'ident', value, loc}, ctx]
     ,
 
-    led: fn lbp: infix_led(lbp-1)
+    led: fn lbp: infix_led:: lbp-1
   }

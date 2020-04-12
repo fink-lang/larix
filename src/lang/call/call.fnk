@@ -11,8 +11,8 @@
 call = fn op:
   led = fn: fn ctx, callee:
     {start} = callee.loc
-    [args, next_ctx] = seq(ctx, ')')
-    {end} = curr_loc(next_ctx)
+    [args, next_ctx] = seq:: ctx, ')'
+    {end} = curr_loc:: next_ctx
 
     [{type: 'call', callee, args, loc: {start, end}}, next_ctx]
 
@@ -20,11 +20,11 @@ call = fn op:
 
 
 params = fn ctx:
-  [expr, seq_ctx] = expression(ctx, 0)
+  [expr, seq_ctx] = expression:: ctx, 0
 
   match true:
-    next_is(seq_ctx, ','):
-      [exprs, next_ctx] = params(advance(seq_ctx, ','))
+    next_is:: seq_ctx, ',':
+      [exprs, next_ctx] = params:: advance:: seq_ctx, ','
       [[expr, ...exprs], next_ctx]
     else:
       [[expr], seq_ctx]
@@ -34,18 +34,21 @@ call_no_parens = fn op:
   led = fn: fn ctx, callee:
     {start} = callee.loc
 
-    [args, next_ctx, comments] = match true:
-      curr_loc(ctx).end.line == next_loc(ctx).start.line:
-        params(ctx)
+    {end: {line: curr_end_line}} = curr_loc:: ctx
+    {start: {line: next_start_line}} = next_loc:: ctx
+
+    [args, next_ctx, comments] = match next_start_line:
+      curr_end_line:
+        params:: ctx
       else:
-        [{exprs, comments}, next_ctx] = get_block(ctx)
+        [{exprs, comments}, next_ctx] = get_block:: ctx
         # TODO: remove backward compatibility
         [...args] = pipe exprs:
           filter expr: expr.value != ','
 
         [args, next_ctx, comments]
 
-    {start: end} = curr_loc(next_ctx)
+    {start: end} = curr_loc:: next_ctx
 
     node = {type: 'call', callee, args, comments, loc: {start, end}}
 

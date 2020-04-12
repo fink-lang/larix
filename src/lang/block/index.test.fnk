@@ -7,10 +7,10 @@ describe:: 'block assignment', fn:
 
   it:: 'parses block:  foo = : bar ', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         foo = :
           bar
           spam
-      `)
+      `
       to_match_snapshot
 

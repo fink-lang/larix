@@ -6,5 +6,5 @@
 describe:: 'import `foobar`', fn:
   it:: 'parses import', fn:
     expect::
-      parse_expr('import `./foobar`')
+      parse_expr:: 'import `./foobar`'
       to_match_snapshot

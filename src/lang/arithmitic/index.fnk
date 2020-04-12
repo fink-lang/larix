@@ -4,19 +4,19 @@
 {prefix} = import '../generic/prefix'
 
 
-arithm = fn op: infix(op, 'arithm')
-arithm_right = fn op: infix_right(op, 'arithm_right')
-arithm_prefix = fn op: prefix(op, 'arithm_prefix')
+arithm = fn op: infix:: op, 'arithm'
+arithm_right = fn op: infix_right:: op, 'arithm_right'
+arithm_prefix = fn op: prefix:: op, 'arithm_prefix'
 
 
 add_arithmetic_operators = fn ctx:
   pipe ctx:
-    add_operator_like(arithm('+'))
-    add_operator_like(arithm('-'))
+    add_operator_like:: arithm:: '+'
+    add_operator_like:: arithm:: '-'
 
-    add_operator_like(arithm('*'))
-    add_operator_like(arithm('/'))
-    add_operator_like(arithm('%'))
-    add_operator_like(arithm_right('^'))
+    add_operator_like:: arithm:: '*'
+    add_operator_like:: arithm:: '/'
+    add_operator_like:: arithm:: '%'
+    add_operator_like:: arithm_right:: '^'
 
-    add_operator_like(arithm_prefix('-'))
+    add_operator_like:: arithm_prefix:: '-'

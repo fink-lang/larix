@@ -6,53 +6,53 @@
 describe:: 'other symbols', fn:
   it:: 'parses a word', fn:
     expect::
-      parse_expr(`  foobar  `)
+      parse_expr:: `  foobar  `
       to_match_snapshot
 
 
   it:: 'parses a non-word', fn:
     expect::
-      parse_expr(`  π  `)
+      parse_expr:: `  π  `
       to_match_snapshot
 
 
 describe:: 'numbers', fn:
   it:: 'parses int 12345', fn:
     expect::
-      parse_expr(` 12345  `)
+      parse_expr:: ` 12345  `
       to_match_snapshot
 
 
   it:: 'parses hex, oct, bin', fn:
     expect::
-      parse(`
+      parse:: `
         0x123456789abcdef0
         0x123456789abcde
         0o12345670
         0b101010
-      `)
+      `
       to_match_snapshot
 
 
   it:: 'parses float 123.456', fn:
     expect::
-      parse_expr(`  123.456  `)
+      parse_expr:: `  123.456  `
       to_match_snapshot
 
 
   it:: 'parses float 123.456e10', fn:
     expect::
-      parse(`
+      parse:: `
         123.456e78
         123.456e+78
         123.456e-78
-      `)
+      `
       to_match_snapshot
 
 
   it:: 'throws when missing exponent', fn:
     expect::
-      fn: parse_expr(`123.456e * 78`, 'test.fnk')
+      fn: parse_expr:: `123.456e * 78`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:9
@@ -66,6 +66,6 @@ describe:: 'numbers', fn:
 describe:: 'symbols as infix operators', fn:
   it:: 'parses with left to right precendence', fn:
     expect::
-      parse_expr(`123 add 4 add 5`)
+      parse_expr:: `123 add 4 add 5`
       to_match_snapshot
 

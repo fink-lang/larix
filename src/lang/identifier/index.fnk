@@ -5,5 +5,5 @@
 
 add_identifier = fn ctx:
   pipe ctx:
-    add_non_separating(other())
+    add_non_separating:: other()
 

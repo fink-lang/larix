@@ -7,7 +7,7 @@ describe:: 'module', fn:
 
   it:: 'parses module', fn:
     expect::
-      parse(`
+      parse:: `
         # leading module comment
 
         # expr comment
@@ -15,7 +15,7 @@ describe:: 'module', fn:
         spam = ni
 
         # trailing module comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -23,12 +23,11 @@ describe:: 'module parse errors', fn:
 
   it:: 'throws with bad indentation', fn:
     expect::
-      fn: parse(`
+      fn: parse:: `
         match fooobar:
           match spam:
           shrub`,
         'test.fnk'
-      )
 
       to_throw:: `
         test.fnk:3:2

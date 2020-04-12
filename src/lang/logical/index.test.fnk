@@ -7,18 +7,18 @@ describe:: 'logical', fn:
 
   it:: 'parses single line: a && b || c', fn:
     expect::
-      parse_expr(`a && b || c`)
+      parse_expr:: `a && b || c`
       to_match_snapshot
 
 
   it:: 'parses single line: a || b && c', fn:
     expect::
-      parse_expr(`a || b && c`)
+      parse_expr:: `a || b && c`
       to_match_snapshot
 
 
   it:: 'parses single line: !a', fn:
     expect::
-      parse_expr(`!a`)
+      parse_expr:: `!a`
       to_match_snapshot
 

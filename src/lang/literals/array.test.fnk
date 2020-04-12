@@ -7,43 +7,43 @@ describe:: 'array [...]', fn:
 
   it:: 'parses empty: []', fn:
     expect::
-      parse_expr(`[]`)
+      parse_expr:: `[]`
       to_match_snapshot
 
 
   it:: 'parses single elemement: [1]', fn:
     expect::
-      parse_expr(`[1]`)
+      parse_expr:: `[1]`
       to_match_snapshot
 
 
   it:: 'parses multiple elements: [1, 2]', fn:
     expect::
-      parse_expr(`[1, 2]`)
+      parse_expr:: `[1, 2]`
       to_match_snapshot
 
 
   it:: 'parses leading commas: [,, foo]', fn:
     expect::
-      parse_expr(`[,, foo]`)
+      parse_expr:: `[,, foo]`
       to_match_snapshot
 
   it:: 'parses trailing commas: [...foo,,]', fn:
     expect::
-      parse_expr(`[...foo, ]`)
+      parse_expr:: `[...foo, ]`
       to_match_snapshot
     expect::
-      parse_expr(`[...foo, , ]`)
+      parse_expr:: `[...foo, , ]`
       to_match_snapshot
     expect::
-      parse_expr(`[, ...foo, ]`)
+      parse_expr:: `[, ...foo, ]`
       to_match_snapshot
 
 
 describe:: 'array [...] - parsing failures', fn:
   it:: `throws when missing ']'`, fn:
     expect::
-      fn: parse_expr(`[`, 'test.fnk')
+      fn: parse_expr:: `[`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:1
@@ -56,7 +56,7 @@ describe:: 'array [...] - parsing failures', fn:
 
   it:: `throws when missing ']'`, fn:
     expect::
-      fn: parse_expr(`[1)]`, 'test.fnk')
+      fn: parse_expr:: `[1)]`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:2

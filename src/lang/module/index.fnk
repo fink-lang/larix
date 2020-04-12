@@ -4,15 +4,15 @@
 
 
 parse_module = fn ctx:
-  {start} = curr_loc(ctx)
+  {start} = curr_loc:: ctx
 
   [exprs, next_ctx, comments] = pipe [[], ctx]:
     unfold [exprs, body_ctx]:
       match true:
-        next_is_end(body_ctx):
+        next_is_end:: body_ctx:
           [null, body_ctx]
         else:
-          expression(body_ctx, 0)
+          expression:: body_ctx, 0
 
     while [expr]:
       expr != null
@@ -25,8 +25,8 @@ parse_module = fn ctx:
         else:
           [[...exprs, expr], next_ctx, {}]
 
-  {end} = curr_loc(next_ctx)
-  final_ctx = assert_advance(next_ctx, end_token)
+  {end} = curr_loc:: next_ctx
+  final_ctx = assert_advance:: next_ctx, end_token
 
   [{type: 'module', exprs, comments, loc: {start, end}}, final_ctx]
 

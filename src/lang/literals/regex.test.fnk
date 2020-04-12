@@ -7,35 +7,35 @@ describe:: 'regex rx/.../', fn:
 
   it:: 'parses empty: rx//', fn:
     expect::
-      parse_expr(`rx//`)
+      parse_expr:: `rx//`
       to_match_snapshot
 
 
   it:: 'parses multiline', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         rx/
           foo.+bar
         /
-      `)
+      `
       to_match_snapshot
 
 
   it:: 'parses flags: rx//gimsuy', fn:
     expect::
-      parse_expr(`rx//gimsuy`)
+      parse_expr:: `rx//gimsuy`
       to_match_snapshot
 
 
   it:: 'parses regex: rx/.+foo/', fn:
     expect::
-      parse_expr(`rx/.+foo/gimsuy`)
+      parse_expr:: `rx/.+foo/gimsuy`
       to_match_snapshot
 
 
   it:: 'parses escaped chars: rx/\\n\\t/', fn:
     expect::
-      parse_expr(`rx/\\n \\\\ \\/ \\\\/`)
+      parse_expr:: `rx/\\n \\\\ \\/ \\\\/`
       to_match_snapshot
 
 
@@ -43,7 +43,7 @@ describe:: 'regex - parsing failures', fn:
 
   it:: 'throws when missing end', fn:
     expect::
-      fn: parse_expr(`rx/foo.bar`, 'test.fnk')
+      fn: parse_expr:: `rx/foo.bar`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:10
@@ -56,7 +56,7 @@ describe:: 'regex - parsing failures', fn:
 
   it:: 'throws unssupported flags', fn:
     expect::
-      fn: parse_expr(`rx/foo.bar/n`, 'test.fnk')
+      fn: parse_expr:: `rx/foo.bar/n`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:12

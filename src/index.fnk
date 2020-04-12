@@ -19,6 +19,6 @@ parse_expr = fn code, filename:
 
 parse = fn code, filename:
   ctx = init:: {code, filename}
-  [ast] = parse_module(ctx)
+  [ast] = parse_module:: ctx
   ast
 

@@ -8,38 +8,38 @@
 {seq} = import '../generic/sequence'
 
 
-default_expr = fn ctx: expression(ctx, 0)
+default_expr = fn ctx: expression:: ctx, 0
 
 
 get_indentations = fn ctx:
-  curr_ind = indentation(ctx)
-  next_line_ind = get_next_line_indentation(ctx)
+  curr_ind = indentation:: ctx
+  next_line_ind = get_next_line_indentation:: ctx
 
   match true:
     (next_line_ind > 0 && next_line_ind <= curr_ind):
-      throw token_error(
-        `Expected indentation > ${curr_ind}.`,
-        ctx.next_token, ctx
-      )
+      throw token_error::
+        `Expected indentation > ${curr_ind}.`
+        ctx.next_token
+        ctx
     else:
       [curr_ind, next_line_ind]
 
 
 single_expr_block = fn ctx, block_expr:
-  [expr, next_ctx] = block_expr(ctx)
+  [expr, next_ctx] = block_expr:: ctx
   [[expr], next_ctx, {}]
 
 
 indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
-  block_ctx = push_indentation(ctx, block_ind)
+  block_ctx = push_indentation:: ctx, block_ind
 
   [exprs, next_ctx, comments] = pipe block_ctx:
     unfold curr_ctx:
       [expr, next_ctx] = match true:
-        next_is_unindented(curr_ctx):
+        next_is_unindented:: curr_ctx:
           [null, curr_ctx]
         else:
-          block_expr(curr_ctx)
+          block_expr:: curr_ctx
 
       ([expr, next_ctx], next_ctx)
 
@@ -54,23 +54,23 @@ indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
         else:
           [[...exprs, expr], next_ctx, {}]
 
-  final_ctx = pop_indentation(next_ctx, end_ind)
+  final_ctx = pop_indentation:: next_ctx, end_ind
 
   [exprs, final_ctx, comments]
 
 
 get_block = fn ctx, type='block', block_expr=default_expr:
-  {start} = curr_loc(ctx)
+  {start} = curr_loc:: ctx
 
-  [end_ind, block_ind] = get_indentations(ctx)
+  [end_ind, block_ind] = get_indentations:: ctx
 
   [exprs, next_ctx, comments] = match true:
     block_ind > 0:
-      indented_expr_block(ctx, block_expr, end_ind, block_ind)
+      indented_expr_block:: ctx, block_expr, end_ind, block_ind
     else:
-      single_expr_block(ctx, block_expr)
+      single_expr_block:: ctx, block_expr
 
-  {end} = curr_loc(next_ctx)
+  {end} = curr_loc:: next_ctx
   [{type, exprs, comments, loc: {start, end}}, next_ctx]
 
 
@@ -79,9 +79,9 @@ named_block = fn op, type='block', block_expr=default_expr:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      {start} = curr_loc(ctx)
-      [args, body_ctx] = seq(ctx, ':')
-      [{exprs, comments, loc}, next_ctx] = get_block(body_ctx, type, block_expr)
+      {start} = curr_loc:: ctx
+      [args, body_ctx] = seq:: ctx, ':'
+      [{exprs, comments, loc}, next_ctx] = get_block:: body_ctx, type, block_expr
 
       [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
   }

@@ -5,4 +5,4 @@
 
 add_func = fn ctx:
   pipe ctx:
-    add_non_separating(named_block('fn'))
+    add_non_separating:: named_block:: 'fn'

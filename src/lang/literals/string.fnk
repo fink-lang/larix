@@ -9,21 +9,21 @@
 
 
 get_expr_part = fn ctx:
-  expr_ctx = assert_advance(ctx, '{')
-  [expr, next_ctx] = expression(expr_ctx, 0)
+  expr_ctx = assert_advance:: ctx, '{'
+  [expr, next_ctx] = expression:: expr_ctx, 0
 
-  str_ctx = assert_advance(next_ctx, '}')
+  str_ctx = assert_advance:: next_ctx, '}'
   [expr, str_ctx]
 
 
 get_str_part = fn ctx, op:
   [{value: text, loc: {start, end}}, next_ctx] = match op:
-    '"': collect_text(ctx, rx/"|\${/)
-    '`': collect_text(ctx, rx/`|\${/)
-    else: collect_text(ctx, rx/'|\${/)
+    '"': collect_text:: ctx, rx/"|\${/
+    '`': collect_text:: ctx, rx/`|\${/
+    else: collect_text:: ctx, rx/'|\${/
 
   # TODO: can we do the escapeing check in the regex above?
-  [escaped] = text.match(rx/\\*$/)
+  [escaped] = text.match:: rx/\\*$/
 
   match true:
     escaped.length % 2 == 0:
@@ -31,8 +31,8 @@ get_str_part = fn ctx, op:
 
     else:
       # TODO: stop_value should come from prattler
-      stop_value = curr_value(next_ctx)
-      [str_part, final_ctx] = get_str_part(next_ctx, op)
+      stop_value = curr_value:: next_ctx
+      [str_part, final_ctx] = get_str_part:: next_ctx, op
 
       [{
         type: 'string:text',
@@ -42,67 +42,65 @@ get_str_part = fn ctx, op:
 
 
 get_parts = fn ctx, op:
-  [str_part, next_ctx] = get_str_part(ctx, op)
-  match true:
-    curr_value(next_ctx) == '$':
-      [expr_part, parts_ctx] = get_expr_part(next_ctx)
-      [parts, final_ctx] = get_parts(parts_ctx, op)
+  [str_part, next_ctx] = get_str_part:: ctx, op
+  match curr_value:: next_ctx:
+    '$':
+      [expr_part, parts_ctx] = get_expr_part:: next_ctx
+      [parts, final_ctx] = get_parts:: parts_ctx, op
       [[str_part, expr_part, ...parts], final_ctx]
     else:
       [[str_part], next_ctx]
 
 
 get_unindented_text = fn ctx, op:
-  {start} = curr_loc(ctx)
+  {start} = curr_loc:: ctx
 
-  [[first, ...rest], next_ctx] = get_parts(ctx, op)
+  [[first, ...rest], next_ctx] = get_parts:: ctx, op
 
   ind = match true:
-    first.value.startsWith('\n'):
-      [, spaces] = first.value.match(rx/^\n+(\s+)/)
+    first.value.startsWith:: '\n':
+      [, spaces] = first.value.match:: rx/^\n+(\s+)/
       spaces.length
     else: 0
 
   first_part = match ind:
     0: first
-    else: {...first, value: first.value.slice(1 + ind)}
+    else: {...first, value: first.value.slice:: 1 + ind}
 
   [...parts] = pipe [first_part, ...rest]:
     map part:
       match part:
         {type: 'string:text'}:
-          {...part, value: unindent_text(part.value, ind)}
+          {...part, value: unindent_text:: part.value, ind}
         else:
           part
 
-  {end} = curr_loc(next_ctx)
+  {end} = curr_loc:: next_ctx
   [{type: 'string', op, parts, loc: {start, end}}, next_ctx]
 
 
 string = fn op:
-  {
-    ...symbol(op),
+  lbp = fn lbp: fn ctx, left:
+    # default indentation behaviour
+    {start: {column: next_start_col}} = next_loc:: ctx
 
-    lbp: fn lbp: fn ctx, left:
-      # default indentation behaviour
-      match true:
-        (next_loc(ctx).start.column <= indentation(ctx)): 0
-        (left.type == 'ident'): lbp
-        else:
-          throw token_error(
-            `Expected identifier before tagged string.`,
-            ctx.next_token, ctx
-          )
-    ,
+    match true:
+      next_start_col <= indentation:: ctx: 0
+      left.type == 'ident': lbp
+      else:
+        throw token_error::
+          `Expected identifier before tagged string.`,
+          ctx.next_token,
+          ctx
 
-    led: fn: fn ctx, left:
-      {loc: {start}} = left
+  led = fn: fn ctx, left:
+    {loc: {start}} = left
 
-      [{loc: {end}, ...str}, next_ctx] = get_unindented_text(ctx, op)
+    [{loc: {end}, ...str}, next_ctx] = get_unindented_text:: ctx, op
 
-      [{...str, tag: left, loc: {start, end}}, next_ctx]
-    ,
+    [{...str, tag: left, loc: {start, end}}, next_ctx]
 
-    nud: fn: fn ctx:
-      get_unindented_text(ctx, op)
-  }
+  nud = fn: fn ctx:
+    get_unindented_text:: ctx, op
+
+  {...symbol(op), lbp, led, nud}

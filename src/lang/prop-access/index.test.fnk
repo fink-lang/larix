@@ -7,18 +7,18 @@ describe:: 'prop access', fn:
 
   it:: 'parses single line: foo.bar', fn:
     expect::
-      parse_expr(`foo.bar`)
+      parse_expr:: `foo.bar`
       to_match_snapshot
 
 
   it:: `parses member expr: foo.'bar spam'`, fn:
     expect::
-      parse_expr(`foo.'bar spam'`)
+      parse_expr:: `foo.'bar spam'`
       to_match_snapshot
 
 
   it:: 'parses member expr: foo.(Symbol.iterator)', fn:
     expect::
-      parse_expr('foo.(Symbol.iterator)')
+      parse_expr:: 'foo.(Symbol.iterator)'
       to_match_snapshot
 

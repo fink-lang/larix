@@ -2,8 +2,8 @@
 
 
 get_next_line_indentation = fn ctx:
-  curr = curr_loc(ctx)
-  next = next_loc(ctx)
+  curr = curr_loc:: ctx
+  next = next_loc:: ctx
 
   match true:
     curr.end.line < next.start.line:  next.start.column
@@ -17,9 +17,9 @@ indentation = fn {indent}:
 
 pop_indentation = fn ctx, ind:
   match true:
-    indentation(ctx) > ind:
+    ind < indentation:: ctx:
       [, ...indent] = ctx.indent
-      pop_indentation({...ctx, indent}, ind)
+      pop_indentation:: {...ctx, indent}, ind
     else:
       ctx
 
@@ -30,12 +30,13 @@ push_indentation = fn ctx, ind:
 
 next_is_unindented = fn ctx:
   # TODO: test that next token is aligned with any of the indentations
-  next_loc(ctx).start.column < indentation(ctx)
+  {start: {column}} = next_loc:: ctx
+  column < indentation:: ctx
 
 
 curr_next_adjecent = fn ctx:
-  curr = curr_loc(ctx)
-  next = next_loc(ctx)
+  curr = curr_loc:: ctx
+  next = next_loc:: ctx
 
   (
     curr.end.line == next.start.line

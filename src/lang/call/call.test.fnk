@@ -7,19 +7,19 @@ describe:: 'call()', fn:
 
   it:: 'parses empty: foobar()', fn:
     expect::
-      parse_expr(`foobar()`)
+      parse_expr:: `foobar()`
       to_match_snapshot
 
 
   it:: 'parses single arg: foobar(1)', fn:
     expect::
-      parse_expr(`foobar(1)`)
+      parse_expr:: `foobar(1)`
       to_match_snapshot
 
 
   it:: 'parses multiple args: foobar(1, 2)', fn:
     expect::
-      parse_expr(`foobar(1, 2)`)
+      parse_expr:: `foobar(1, 2)`
       to_match_snapshot
 
 
@@ -27,7 +27,7 @@ describe:: 'call() - parsing failures', fn:
 
   it:: `throws when missing ')'`, fn:
     expect::
-      fn: parse_expr(`foobar(`, 'test.fnk')
+      fn: parse_expr:: `foobar(`, 'test.fnk'
       to_throw:: `
         test.fnk:1:7
         1| foobar(
@@ -38,7 +38,7 @@ describe:: 'call() - parsing failures', fn:
 
   it:: `throws when missing ')'`, fn:
     expect::
-      fn: parse_expr(`foobar(1:)`, 'test.fnk')
+      fn: parse_expr:: `foobar(1:)`, 'test.fnk'
       to_throw:: `
         test.fnk:1:8
         1| foobar(1:)
@@ -51,30 +51,30 @@ describe:: 'call:: ...', fn:
 
   it:: 'parses single line', fn:
     expect::
-      parse_expr(`foobar:: spam, ni`)
+      parse_expr:: `foobar:: spam, ni`
       to_match_snapshot
 
 
   it:: 'parses multiline', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         foo::
           fn bar:
             spam
           ni
           shrub
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
   it:: 'parses multiline with comma (TODO)', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         foo::
           bar,
           ni,
           shrub
-      `)
+      `
       to_match_snapshot
 
 
@@ -82,10 +82,10 @@ describe:: 'pipe foo: ...', fn:
 
   it:: 'pipes', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         pipe foo:
-          bar(shrub)
+          bar:: shrub
           ni
-      `)
+      `
       to_match_snapshot
 

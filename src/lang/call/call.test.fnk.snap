@@ -54,9 +54,9 @@ exports[`pipe foo: ... pipes 1`] = `
 block pipe (1:0-3:4)
   ident (1:5-1:8) foo
   :
-  call (2:2-2:12)
+  call (2:2-2:8)
     ident (2:2-2:5) bar
-    ident (2:6-2:11) shrub
+    ident (2:8-2:13) shrub
 
   ident (3:2-3:4) ni
 `;

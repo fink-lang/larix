@@ -9,13 +9,13 @@ spread = fn op, type:
     ...symbol(op),
 
     nud: fn lbp: fn ctx:
-      {start} = curr_loc(ctx)
+      {start} = curr_loc:: ctx
 
       [right, next_ctx] = match ctx:
         next_is:: ?, ',': [null, ctx]
-        else: expression(ctx, lbp)
+        else: expression:: ctx, lbp
 
-      {end} = curr_loc(next_ctx)
+      {end} = curr_loc:: next_ctx
 
       [{type, op, right, loc: {start, end}}, next_ctx]
   }

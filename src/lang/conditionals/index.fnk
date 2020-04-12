@@ -5,14 +5,14 @@
 
 
 test_result_expr = fn ctx:
-  [left, test_ctx] = expression(ctx, 0)
+  [left, test_ctx] = expression:: ctx, 0
 
   match left:
     {type: 'comment'}:
       [left, test_ctx]
     else:
-      result_ctx = assert_advance(test_ctx, ':')
-      [right, next_ctx] = get_block(result_ctx)
+      result_ctx = assert_advance:: test_ctx, ':'
+      [right, next_ctx] = get_block:: result_ctx
       {start} = left.loc
       {end} = right.loc
 
@@ -21,6 +21,6 @@ test_result_expr = fn ctx:
 
 add_conditionals = fn ctx:
   pipe ctx:
-    add_non_separating(named_block('match', 'cond', test_result_expr))
-    add_non_separating(named_block('attempt', 'attempt'))
+    add_non_separating:: named_block:: 'match', 'cond', test_result_expr
+    add_non_separating:: named_block:: 'attempt', 'attempt'
 

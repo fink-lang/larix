@@ -2,14 +2,14 @@
 {infix} = import '../generic/infix'
 
 
-comp = fn op: infix(op, 'comp')
+comp = fn op: infix:: op, 'comp'
 
 
 add_comparison_operators = fn ctx:
   pipe ctx:
-    add_operator_like(comp('=='))
-    add_operator_like(comp('!='))
-    add_operator_like(comp('>='))
-    add_operator_like(comp('<='))
-    add_operator_like(comp('>'))
-    add_operator_like(comp('<'))
+    add_operator_like:: comp:: '=='
+    add_operator_like:: comp:: '!='
+    add_operator_like:: comp:: '>='
+    add_operator_like:: comp:: '<='
+    add_operator_like:: comp:: '>'
+    add_operator_like:: comp:: '<'

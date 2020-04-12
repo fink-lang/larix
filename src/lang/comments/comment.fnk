@@ -13,7 +13,9 @@ collect_comments = fn ctx, op:
 
   match next_ctx:
     {next_token: {value: '#'}}:
-      [comments, final_ctx] = collect_comments:: advance(next_ctx), op
+      [comments, final_ctx] = collect_comments::
+        advance:: next_ctx
+        op
       [[comment, ...comments], final_ctx]
     else:
       [[comment], next_ctx]

@@ -7,11 +7,11 @@ describe:: 'fold item, accu: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         fold item, accu=0:
           item + accu
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -19,27 +19,27 @@ describe:: 'unfold accu: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         unfold curr=start:
           start + accu
-      `)
+      `
       to_match_snapshot
 
   it:: 'parses with item, accu result', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         unfold prev=0:
           (prev * 2, prev + 1)
-      `)
+      `
       to_match_snapshot
 
   it:: 'parses no args', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         unfold:
           foo
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -47,11 +47,11 @@ describe:: 'map item: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         map item:
           item * 2
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -59,10 +59,10 @@ describe:: 'flat_map item: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         flat_map item:
           [item, item * 2]
-      `)
+      `
       to_match_snapshot
 
 
@@ -70,11 +70,11 @@ describe:: 'filter item: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         filter item:
           item % 2 == 0
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -82,11 +82,11 @@ describe:: 'while item: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         while item:
           item % 2 == 0
           # trailing comment
-      `)
+      `
       to_match_snapshot
 
 
@@ -94,10 +94,10 @@ describe:: 'find item: ...', fn:
 
   it:: 'parses', fn:
     expect::
-      parse_expr(`
+      parse_expr:: `
         find item:
           item % 2 == 0
           # trailing comment
-      `)
+      `
       to_match_snapshot
 

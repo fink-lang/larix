@@ -7,36 +7,36 @@ describe:: 'arithmitic', fn:
 
   it:: 'parses single line: a + b * c', fn:
     expect::
-      parse_expr(`a + b * c`)
+      parse_expr:: `a + b * c`
       to_match_snapshot
 
 
   it:: 'parses single line: a * b + c', fn:
     expect::
-      parse_expr(`a * b + c`)
+      parse_expr:: `a * b + c`
       to_match_snapshot
 
 
   it:: 'parses single line: a % b / c', fn:
     expect::
-      parse_expr(`a % b / c`)
+      parse_expr:: `a % b / c`
       to_match_snapshot
 
 
   it:: 'parses single line: a ^ b * c', fn:
     expect::
-      parse_expr(`a ^ b * c`)
+      parse_expr:: `a ^ b * c`
       to_match_snapshot
 
 
   it:: 'parses single line: a * -b', fn:
     expect::
-      parse_expr(`a * -b`)
+      parse_expr:: `a * -b`
       to_match_snapshot
 
 
   it:: 'parses grouped: (a - b) * c', fn:
     expect::
-      parse_expr(`(a - b) * c`)
+      parse_expr:: `(a - b) * c`
       to_match_snapshot
 

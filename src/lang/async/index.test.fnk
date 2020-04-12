@@ -8,6 +8,6 @@ describe:: 'async', fn:
   it:: 'parses async: await foobar', fn:
 
     expect::
-      parse_expr(`await foobar`)
+      parse_expr:: `await foobar`
       to_match_snapshot
 
