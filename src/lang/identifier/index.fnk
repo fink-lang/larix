@@ -1,9 +1,8 @@
-{add_non_separating} = import '@fink/prattler/symbols'
-
-{other} = import './other'
+{curr_value, curr_loc} = import '@fink/prattler'
 
 
-add_identifier = fn ctx:
-  pipe ctx:
-    add_non_separating:: other()
+identifier = fn ctx:
+  value = curr_value:: ctx
+  loc = curr_loc:: ctx
 
+  [{type: 'ident', value, loc}, ctx]

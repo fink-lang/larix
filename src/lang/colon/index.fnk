@@ -1,4 +1,4 @@
-{add_operator_like} = import '@fink/prattler/symbols'
+{add_operator} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
 {get_block} = import '../block'
@@ -17,6 +17,6 @@ colon = fn op, type:
 
 add_colon = fn ctx:
   pipe ctx:
-    add_operator_like:: colon:: ':', 'block'
+    add_operator:: colon:: ':', 'block'
 
 

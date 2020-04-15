@@ -10,7 +10,6 @@
 {add_call_operators} = import './call'
 {add_func} = import './func'
 {add_group} = import './group'
-{add_identifier} = import './identifier'
 {add_assignment_operators} = import './assignment'
 {add_iterables} = import './iterable'
 {add_spread_operator} = import './spread'
@@ -21,6 +20,7 @@
 {add_colon} = import './colon'
 {add_js_ops} = import './js-compat'
 {add_partial} = import './partial'
+{add_other} = import './other'
 
 
 init_language = fn ctx:
@@ -38,7 +38,7 @@ init_language = fn ctx:
     add_assignment_operators
     add_colon
 
-    add_identifier
+    add_other
     add_partial
 
     add_logical_operators

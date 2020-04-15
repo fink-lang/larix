@@ -42,11 +42,7 @@ call_no_parens = fn op:
         params:: ctx
       else:
         [{exprs, comments}, next_ctx] = get_block:: ctx
-        # TODO: remove backward compatibility
-        [...args] = pipe exprs:
-          filter expr: expr.value != ','
-
-        [args, next_ctx, comments]
+        [exprs, next_ctx, comments]
 
     {start: end} = curr_loc:: next_ctx
 

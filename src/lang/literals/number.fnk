@@ -1,25 +1,6 @@
-{curr_value, curr_loc, expression, next_is, advance} = import '@fink/prattler'
+{curr_value, curr_loc, next_is, advance} = import '@fink/prattler'
+{add_non_separating} = import '@fink/prattler/symbols'
 {token_error} = import '@fink/prattler/errors'
-{other_token} = import '@fink/prattler/symbols'
-
-{symbol} = import '../symbols'
-
-
-infix_led = fn lbp: fn ctx, left:
-  type = 'infix'
-  op = curr_value:: ctx
-
-  {loc: {start}} = left
-  # precedence left to right (lbp + 1) or right to left (lbp - 1)
-  [right, next_ctx] = expression:: ctx, lbp + 1
-  {loc: {end}} = right
-
-  [{type, op, left, right, loc: {start, end}}, next_ctx]
-
-
-looks_like_num = fn ctx:
-  value = curr_value:: ctx
-  null != value.match:: rx/^[0-9]+.*/
 
 
 number = fn ctx:
@@ -54,20 +35,3 @@ number = fn ctx:
 
   {end} = curr_loc:: next_ctx
   [{type: 'number', value, loc: {start, end}}, next_ctx]
-
-
-other = fn:
-  {
-    ...symbol(other_token),
-
-    nud: fn: fn ctx:
-      value = curr_value:: ctx
-      loc = curr_loc:: ctx
-
-      match true:
-        looks_like_num:: ctx: number:: ctx
-        else: [{type: 'ident', value, loc}, ctx]
-    ,
-
-    led: fn lbp: infix_led:: lbp-1
-  }

@@ -1,15 +1,15 @@
-{add_operator_like} = import '@fink/prattler/symbols'
+{add_operator} = import '@fink/prattler/symbols'
 {infix} = import '../generic/infix'
 
 
 comp = fn op: infix:: op, 'comp'
 
-
+# TODO: support combining e.g. 0 < foo < 10
 add_comparison_operators = fn ctx:
   pipe ctx:
-    add_operator_like:: comp:: '=='
-    add_operator_like:: comp:: '!='
-    add_operator_like:: comp:: '>='
-    add_operator_like:: comp:: '<='
-    add_operator_like:: comp:: '>'
-    add_operator_like:: comp:: '<'
+    add_operator:: comp:: '=='
+    add_operator:: comp:: '!='
+    add_operator:: comp:: '>='
+    add_operator:: comp:: '<='
+    add_operator:: comp:: '>'
+    add_operator:: comp:: '<'

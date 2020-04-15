@@ -33,7 +33,7 @@ describe:: 'call() - parsing failures', fn:
         1| foobar(
                   ^
 
-        Expected ')' but found Symbol(end).`
+        Expected one of [ ')' ] but found Symbol(end).`
 
 
   it:: `throws when missing ')'`, fn:
@@ -44,7 +44,7 @@ describe:: 'call() - parsing failures', fn:
         1| foobar(1:)
                    ^
 
-        Expected ')' but found ':'.`
+        Expected one of [ ')' ] but found ':'.`
 
 
 describe:: 'call:: ...', fn:
@@ -64,16 +64,6 @@ describe:: 'call:: ...', fn:
           ni
           shrub
           # trailing comment
-      `
-      to_match_snapshot
-
-  it:: 'parses multiline with comma (TODO)', fn:
-    expect::
-      parse_expr:: `
-        foo::
-          bar,
-          ni,
-          shrub
       `
       to_match_snapshot
 

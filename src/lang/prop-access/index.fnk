@@ -1,6 +1,6 @@
 {advance, curr_loc, curr_value, next_matches, expression} = import '@fink/prattler'
 
-{add_operator_like} = import '@fink/prattler/symbols'
+{add_operator} = import '@fink/prattler/symbols'
 {symbol} = import '../symbols'
 
 
@@ -30,5 +30,5 @@ prop_access = fn op, type:
 
 add_prop_access = fn ctx:
   pipe ctx:
-    add_operator_like:: prop_access:: '.', 'member'
+    add_operator:: prop_access:: '.', 'member'
 

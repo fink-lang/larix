@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`other symbols parses a non-word 1`] = `ident (1:2-1:3) π`;
+
+exports[`other symbols parses a word 1`] = `ident (1:2-1:8) foobar`;

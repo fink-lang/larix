@@ -1,4 +1,4 @@
-{add_operator_like, add_non_binding} = import '@fink/prattler/symbols'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 {next_is, curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
@@ -21,6 +21,6 @@ group = fn op:
 
 add_group = fn ctx:
   pipe ctx:
-    add_operator_like:: group:: '('
-    add_non_binding:: symbol:: ','
-    add_non_binding:: symbol:: ')'
+    add_operator:: group:: '('
+    add_separator:: symbol:: ','
+    add_separator:: symbol:: ')'
