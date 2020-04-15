@@ -59,9 +59,9 @@ describe:: 'regex - parsing failures', fn:
       fn: parse_expr:: `rx/foo.bar/n`, 'test.fnk'
 
       to_throw:: `
-        test.fnk:1:12
+        test.fnk:1:11
         1| rx/foo.bar/n
-                       ^
+                      ^
 
-        Unexpected end of code.
+        Cannot use 'n' as an infix operator.
       `

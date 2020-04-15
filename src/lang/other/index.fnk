@@ -1,0 +1,28 @@
+{curr_value} = import '@fink/prattler'
+{add_identifier, other_token} = import '@fink/prattler/symbols'
+
+{symbol} = import '../symbols'
+{identifier} = import '../identifier'
+{number} = import '../literals/number'
+
+
+looks_like_num = fn ctx:
+  value = curr_value:: ctx
+  null != value.match:: rx/^[0-9]+.*/
+
+
+other = fn:
+  nud = fn: fn ctx:
+    match ctx:
+      looks_like_num:: ?:
+        number:: ctx
+      else:
+        identifier:: ctx
+
+  {...symbol(other_token), nud}
+
+
+add_other = fn ctx:
+  pipe ctx:
+    add_identifier:: other()
+

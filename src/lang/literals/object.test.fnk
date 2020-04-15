@@ -82,10 +82,10 @@ describe:: 'object {...} - parsing failures', fn:
         1| {
             ^
 
-        Expected '}' but found Symbol(end).
-      `
+        Expected one of [ '}' ] but found Symbol(end).`
 
-  it:: `throws when missing '}'`, fn:
+
+  it:: `throws when encountering bad start of prop key`, fn:
     expect::
       fn: parse_expr:: `{foo) bar}`, 'test.fnk'
 
@@ -94,5 +94,16 @@ describe:: 'object {...} - parsing failures', fn:
         1| {foo) bar}
                ^
 
-        Expected '}' but found ')'.
-      `
+        Expected one of [ '}' ] but found ')'.`
+
+
+  it:: `throws when encountering bad prop key expr`, fn:
+    expect::
+      fn: parse_expr:: `{2*3: bar}`, 'test.fnk'
+
+      to_throw:: `
+        test.fnk:1:1
+        1| {2*3: bar}
+            ^
+
+        Expected prop-key but found 'arithm' expression.`

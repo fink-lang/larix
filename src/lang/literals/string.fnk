@@ -89,8 +89,8 @@ string = fn op:
       left.type == 'ident': lbp
       else:
         throw token_error::
-          `Expected identifier before tagged string.`,
-          ctx.next_token,
+          `Expected identifier before tagged string.`
+          ctx.next_token
           ctx
 
   led = fn: fn ctx, left:

@@ -1,4 +1,4 @@
-{add_operator_like} = import  '@fink/prattler/symbols'
+{add_operator} = import  '@fink/prattler/symbols'
 
 {infix_right} = import  '../generic/infix'
 {prefix} = import  '../generic/prefix'
@@ -11,6 +11,6 @@ prefix_logical = fn op: prefix:: op, 'logical'
 add_logical_operators = fn ctx:
   pipe ctx:
     # TODO: call them `and`, `or`, `not`
-    add_operator_like:: logical:: '||'
-    add_operator_like:: logical:: '&&'
-    add_operator_like:: prefix_logical:: '!'
+    add_operator:: logical:: '||'
+    add_operator:: logical:: '&&'
+    add_operator:: prefix_logical:: '!'

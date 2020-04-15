@@ -1,5 +1,5 @@
 {
-  next_is_end, next_loc, collect_text, advance, expression
+  next_is_end, next_is, next_loc, collect_text, advance, expression
 } = import '@fink/prattler'
 
 {next_is_unindented} = import '../indentation'
@@ -12,7 +12,7 @@ collect_comments = fn ctx, op:
   comment = {op, ...text}
 
   match next_ctx:
-    {next_token: {value: '#'}}:
+    next_is:: ?, '#':
       [comments, final_ctx] = collect_comments::
         advance:: next_ctx
         op

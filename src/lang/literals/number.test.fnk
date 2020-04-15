@@ -3,19 +3,6 @@
 {parse_expr, parse} = import '../../'
 
 
-describe:: 'other symbols', fn:
-  it:: 'parses a word', fn:
-    expect::
-      parse_expr:: `  foobar  `
-      to_match_snapshot
-
-
-  it:: 'parses a non-word', fn:
-    expect::
-      parse_expr:: `  π  `
-      to_match_snapshot
-
-
 describe:: 'numbers', fn:
   it:: 'parses int 12345', fn:
     expect::
@@ -61,11 +48,3 @@ describe:: 'numbers', fn:
 
         Expected exponent.
       `
-
-
-describe:: 'symbols as infix operators', fn:
-  it:: 'parses with left to right precendence', fn:
-    expect::
-      parse_expr:: `123 add 4 add 5`
-      to_match_snapshot
-

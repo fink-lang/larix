@@ -33,15 +33,6 @@ call (1:0-6:20)
   # trailing comment
 `;
 
-exports[`call:: ... parses multiline with comma (TODO) 1`] = `
-call (1:0-4:2)
-  ident (1:0-1:3) foo
-  ident (2:2-2:5) bar
-  ident (3:2-3:4) ni
-  ident (4:2-4:7) shrub
-
-`;
-
 exports[`call:: ... parses single line 1`] = `
 call (1:0-1:15)
   ident (1:0-1:6) foobar

@@ -1,0 +1,16 @@
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
+
+{parse_expr, parse} = import '../../'
+
+
+describe:: 'other symbols', fn:
+  it:: 'parses a word', fn:
+    expect::
+      parse_expr:: `  foobar  `
+      to_match_snapshot
+
+
+  it:: 'parses a non-word', fn:
+    expect::
+      parse_expr:: `  π  `
+      to_match_snapshot

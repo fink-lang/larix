@@ -1,4 +1,4 @@
-{add_operator_like} = import '@fink/prattler/symbols'
+{add_operator} = import '@fink/prattler/symbols'
 {next_is, curr_loc, expression} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
@@ -23,4 +23,4 @@ spread = fn op, type:
 
 add_spread_operator = fn ctx:
   pipe ctx:
-    add_operator_like:: spread:: '...', 'spread'
+    add_operator:: spread:: '...', 'spread'

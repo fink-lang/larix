@@ -1,4 +1,4 @@
-{add_operator_like} = import '@fink/prattler/symbols'
+{add_operator} = import '@fink/prattler/symbols'
 
 {infix, infix_right} = import '../generic/infix'
 {prefix} = import '../generic/prefix'
@@ -11,12 +11,12 @@ arithm_prefix = fn op: prefix:: op, 'arithm_prefix'
 
 add_arithmetic_operators = fn ctx:
   pipe ctx:
-    add_operator_like:: arithm:: '+'
-    add_operator_like:: arithm:: '-'
+    add_operator:: arithm:: '+'
+    add_operator:: arithm:: '-'
 
-    add_operator_like:: arithm:: '*'
-    add_operator_like:: arithm:: '/'
-    add_operator_like:: arithm:: '%'
-    add_operator_like:: arithm_right:: '^'
+    add_operator:: arithm:: '*'
+    add_operator:: arithm:: '/'
+    add_operator:: arithm:: '%'
+    add_operator:: arithm_right:: '^'
 
-    add_operator_like:: arithm_prefix:: '-'
+    add_operator:: arithm_prefix:: '-'

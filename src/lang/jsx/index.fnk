@@ -1,4 +1,4 @@
-{add_operator_like, add_non_binding} = import '@fink/prattler/symbols'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
 {jsx} = import './jsx'
@@ -6,6 +6,6 @@
 
 add_jsx = fn ctx:
   pipe ctx:
-    add_operator_like:: jsx:: '<'
-    add_non_binding:: symbol:: '/>'
-    add_non_binding:: symbol:: '</'
+    add_operator:: jsx:: '<'
+    add_separator:: symbol:: '/>'
+    add_separator:: symbol:: '</'

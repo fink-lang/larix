@@ -1,4 +1,4 @@
-{add_non_binding} = import '@fink/prattler/symbols'
+{add_separator} = import '@fink/prattler/symbols'
 
 {comment} = import './comment'
 {doc_comment} = import './doc-comment'
@@ -6,5 +6,5 @@
 
 add_comments = fn ctx:
   pipe ctx:
-    add_non_binding:: comment:: '#'
-    add_non_binding:: doc_comment:: '---'
+    add_separator:: comment:: '#'
+    add_separator:: doc_comment:: '---'
