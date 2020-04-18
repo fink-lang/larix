@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`match ...: parses complex: {foo}: bar 1`] = `
-module (1:0-13:8)
-  cond match (1:0-13:8)
+module (1:0-14:0)
+  cond match (1:0-14:0)
     ident (1:6-1:10) item
     :
     cond:expr (3:2-3:24)
@@ -13,11 +13,10 @@ module (1:0-13:8)
           ident (3:3-3:6) foo
         prop (3:8-3:18)
           ident (3:8-3:12) spam
-          block (3:12-3:18)
-            object (3:14-3:18)
-              prop (3:15-3:17)
-                ident (3:15-3:17) ni
-                ident (3:15-3:17) ni
+          object (3:14-3:18)
+            prop (3:15-3:17)
+              ident (3:15-3:17) ni
+              ident (3:15-3:17) ni
       block (3:19-3:24)
         ident (3:21-3:24) bar
     cond:expr (6:2-6:20)
@@ -36,25 +35,54 @@ module (1:0-13:8)
         object (9:8-9:36)
           prop (9:9-9:17)
             ident (9:9-9:12) bar
-            block (9:12-9:17)
-              number (9:14-9:17) 123
+            number (9:14-9:17) 123
           prop (9:19-9:35)
             ident (9:19-9:23) spam
-            block (9:23-9:35)
-              array (9:25-9:35)
-                number (9:26-9:29) 456
-                number (9:31-9:34) 789
+            array (9:25-9:35)
+              number (9:26-9:29) 456
+              number (9:31-9:34) 789
       block (9:37-9:41)
         ident (9:39-9:41) ni
-    cond:expr (11:2-13:8)
+    cond:expr (11:2-14:0)
       ident (11:2-11:6) else
-      block (11:6-13:8)
+      block (11:6-14:0)
         # fallback for no match
         ident (13:4-13:8) spam
 `;
 
-exports[`match ...: parses single line: match foo: bar 1`] = `
-module (1:0-7:6)
+exports[`match ...: parses partials 1`] = `
+module (1:0-7:0)
+  cond match (1:0-7:0)
+    ident (1:6-1:9) foo
+    :
+    cond:expr (2:2-2:22)
+      object (2:2-2:17)
+        prop (2:3-2:16)
+          ident (2:3-2:9) length
+          comp > (2:11-2:16)
+            partial (2:11-2:12) ?
+            number (2:15-2:16) 1
+      block (2:17-2:22)
+        ident (2:19-2:22) bar
+    cond:expr (4:2-4:17)
+      call (4:2-4:12)
+        ident (4:2-4:8) is_str
+        partial (4:11-4:12) ?
+      block (4:12-4:17)
+        ident (4:14-4:17) foo
+    cond:expr (6:2-7:0)
+      comp > (6:2-6:18)
+        array (6:2-6:10)
+          spread ... (6:3-6:6)
+            null
+          partial (6:8-6:9) ?
+        ident (6:13-6:18) shrub
+      block (6:18-7:0)
+        ident (6:20-6:22) ni
+`;
+
+exports[`match ...: parses simple 1`] = `
+module (1:0-8:0)
   cond match (1:0-7:0)
     ident (1:6-1:10) item
     :

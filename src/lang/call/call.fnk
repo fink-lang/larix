@@ -1,55 +1,15 @@
-{
-  curr_loc, expression, next_is_end, advance, curr_value, next_loc, next_is
-} = import '@fink/prattler'
+{curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
-{seq} = import '../generic/sequence'
-{get_block} = import '../block'
-{curr_next_adjecent} = import '../indentation'
+{terminated_block} = import '../block'
 
 
-call = fn op:
-  led = fn: fn ctx, callee:
-    {start} = callee.loc
-    [args, next_ctx] = seq:: ctx, ')'
-    {end} = curr_loc:: next_ctx
-
-    [{type: 'call', callee, args, loc: {start, end}}, next_ctx]
-
-  {...symbol(op), led}
-
-
-params = fn ctx:
-  [expr, seq_ctx] = expression:: ctx, 0
-
-  match true:
-    next_is:: seq_ctx, ',':
-      [exprs, next_ctx] = params:: advance:: seq_ctx, ','
-      [[expr, ...exprs], next_ctx]
-    else:
-      [[expr], seq_ctx]
-
-
-call_no_parens = fn op:
+call = fn op, end_symbol:
   led = fn: fn ctx, callee:
     {start} = callee.loc
 
-    {end: {line: curr_end_line}} = curr_loc:: ctx
-    {start: {line: next_start_line}} = next_loc:: ctx
+    [{exprs: args, comments, loc}, next_ctx] = terminated_block:: ctx, end_symbol
 
-    [args, next_ctx, comments] = match next_start_line:
-      curr_end_line:
-        params:: ctx
-      else:
-        [{exprs, comments}, next_ctx] = get_block:: ctx
-        [exprs, next_ctx, comments]
-
-    {start: end} = curr_loc:: next_ctx
-
-    node = {type: 'call', callee, args, comments, loc: {start, end}}
-
-    [node, next_ctx]
+    [{type: 'call', callee, args,  comments, loc: {...loc, start}}, next_ctx]
 
   {...symbol(op), led}
-
-

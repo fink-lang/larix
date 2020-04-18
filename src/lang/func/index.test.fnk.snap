@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`func: fn ...: ... parses multi line args 1`] = `
+block fn (1:0-6:0)
+  ident (2:2-2:5) foo
+  assign = (3:2-3:8)
+    ident (3:2-3:5) bar
+    ident (3:6-3:8) ni
+  :
+  arithm + (5:2-5:11)
+    ident (5:2-5:5) foo
+    ident (5:8-5:11) bar
+`;
+
 exports[`func: fn ...: ... parses multi line: fn foo, bar=1: foo 1`] = `
 --- 
 --- doc comment

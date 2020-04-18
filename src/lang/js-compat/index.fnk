@@ -1,7 +1,8 @@
 {add_non_separating} = import '@fink/prattler/symbols'
-{expression, curr_loc} = import '@fink/prattler'
+{curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
+{single_expression} = import '../block'
 
 
 js_op = fn op, type:
@@ -10,7 +11,7 @@ js_op = fn op, type:
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx
-      [right, next_ctx] = expression:: ctx, 0
+      [right, next_ctx] = single_expression:: ctx, 0
       {end} = right.loc
 
       [{type, op, right, loc: {start, end}}, next_ctx]

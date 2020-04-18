@@ -1,13 +1,23 @@
-{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
+{describe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
 {parse_expr} = import '../../'
 
 
 describe:: 'prop access', fn:
 
-  it:: 'parses single line: foo.bar', fn:
+  it:: 'parses single line', fn:
     expect::
       parse_expr:: `foo.bar`
+      to_match_snapshot
+
+
+  it:: 'parses with taken keywords', fn:
+    expect::
+      parse_expr:: `foo.match`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `foo.fn`
       to_match_snapshot
 
 
@@ -21,4 +31,15 @@ describe:: 'prop access', fn:
     expect::
       parse_expr:: 'foo.(Symbol.iterator)'
       to_match_snapshot
+
+
+  it:: 'throws with invalid member)', fn:
+    expect::
+      fn: parse_expr:: 'foo.[bar]', 'test.fnk'
+      to_throw:: `
+        test.fnk:1:4
+        1| foo.[bar]
+               ^
+
+        Expected member key to be an ident, string or group expr.`
 

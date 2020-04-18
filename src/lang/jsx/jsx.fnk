@@ -4,13 +4,12 @@
 {token_error} = import '@fink/prattler/errors'
 
 {symbol} = import '../symbols'
-{get_block} = import '../block'
+{terminated_block} = import '../block'
 
 
 jsx_expr_container = fn ctx:
-  [expr, end_ctx] = get_block:: ctx
-  next_ctx = assert_advance:: end_ctx, '}'
-
+  [block, next_ctx] = terminated_block:: ctx, '}'
+  expr = {...block, type: 'block'}
   [{type: 'jsx-expr-container', expr, loc: expr.loc}, next_ctx]
 
 

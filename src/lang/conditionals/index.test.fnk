@@ -5,7 +5,7 @@
 
 describe:: 'match ...:', fn:
 
-  it:: 'parses single line: match foo: bar', fn:
+  it:: 'parses simple', fn:
     expect::
       parse:: `
         match item:
@@ -39,3 +39,14 @@ describe:: 'match ...:', fn:
       to_match_snapshot
 
 
+  it:: 'parses partials', fn:
+    expect::
+      parse:: `
+        match foo:
+          {length: ? > 1}: bar
+
+          is_str:: ?: foo
+
+          [..., ?] > shrub: ni
+      `
+      to_match_snapshot

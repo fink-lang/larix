@@ -1,18 +1,28 @@
-{advance, curr_loc, curr_value, next_matches, expression} = import '@fink/prattler'
-
+{advance, curr_loc, curr_value, next_matches} = import '@fink/prattler'
 {add_operator} = import '@fink/prattler/symbols'
+{token_error} = import '@fink/prattler/errors'
+
 {symbol} = import '../symbols'
+{single_expression} = import '../block'
 
 
 member_expr = fn ctx, lbp:
-  match true:
-    next_matches:: ctx, rx/[`'"(]/:
-      expression:: ctx, lbp
-    else:
+  match ctx:
+    next_matches:: ?, rx/[`'"(]/:
+      single_expression:: ctx, lbp
+
+    next_matches:: ?, rx/^\w+/:
+      # TODO: reuse ../identifier
       key_ctx = advance:: ctx
       loc = curr_loc:: key_ctx
       value = curr_value:: key_ctx
       [{type: 'ident', value, loc}, key_ctx]
+
+    else:
+      throw token_error::
+        'Expected member key to be an ident, string or group expr.'
+        ctx.next_token
+        ctx
 
 
 prop_access = fn op, type:

@@ -34,3 +34,15 @@ describe:: 'func: fn ...: ...', fn:
           # trailing func comment
       `
       to_match_snapshot
+
+
+  it:: 'parses multi line args', fn:
+    expect::
+      parse_expr:: `
+        fn
+          foo
+          bar=ni
+        :
+          foo + bar
+      `
+      to_match_snapshot
