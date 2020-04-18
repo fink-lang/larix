@@ -1,138 +1,137 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`strings handles default indentation for lbp 1`] = `
-module (1:0-2:6)
+module (1:0-3:0)
   string ' (1:0-1:8)
-    \`foobar\`
+    'foobar'
   string ' (2:0-2:6)
-    \`spam\`
+    'spam'
 `;
 
 exports[`strings parses empty strings 1`] = `
 string \` (1:0-1:2)
-  \`\`
+  ''
 `;
 
 exports[`strings parses empty strings 2`] = `
 string " (1:0-1:2)
-  \`\`
+  ''
 `;
 
 exports[`strings parses empty strings 3`] = `
 string ' (1:0-1:2)
-  \`\`
+  ''
 `;
 
 exports[`strings parses escape characters 1`] = `
 string \` (1:0-1:16)
-  \` $ \\n \\t \\\` \\\\\`
+  ' $ \\n \\t \\\` \\\\'
 `;
 
 exports[`strings parses escape characters 2`] = `
 string ' (1:0-1:16)
-  \` $ \\n \\t \\' \\\\\`
+  ' $ \\n \\t \\' \\\\'
 `;
 
 exports[`strings parses escape characters 3`] = `
 string " (1:0-1:16)
-  \` $ \\n \\t \\" \\\\\`
+  ' $ \\n \\t \\" \\\\'
 `;
 
 exports[`strings parses escape characters 4`] = `
 string ' (1:0-1:20)
-  \`foo \\\${bar + spam}\`
+  'foo \\\${bar + spam}'
 `;
 
 exports[`strings parses multi line strings 1`] = `
 string ' (1:0-4:11)
-  \`foobar
+  'foobar
     spam shrub
-  ni\`
+  ni'
 `;
 
 exports[`strings parses multiline template strings 1`] = `
 string ' (1:0-5:1)
-  \`\`
+  ''
     ident (2:4-2:7) foo
-  \`:\`
+  ':'
     ident (2:11-2:14) bar
-  \`:\`
+  ':'
     arithm + (2:18-2:27)
       ident (2:18-2:22) spam
       ident (2:25-2:27) ni
-  \`
+  '
   
   ni
-  \`
+  '
 `;
 
 exports[`strings parses nested template strings 1`] = `
 string \` (1:0-1:31)
-  \`\\n\`
-    call (1:5-1:26)
+  '\\n'
+    call (1:5-1:27)
       ident (1:5-1:8) foo
       ident (1:11-1:14) bar
       string \` (1:16-1:27)
-        \`  \`
+        '  '
               ident (1:21-1:25) spam
-        \`\`
-  
-  \`\\n\`
+        ''
+  '\\n'
 `;
 
 exports[`strings parses single line strings 1`] = `
 string \` (1:0-1:9)
-  \`foo bar\`
+  'foo bar'
 `;
 
 exports[`strings parses single line strings 2`] = `
 string " (1:0-1:9)
-  \`foo bar\`
+  'foo bar'
 `;
 
 exports[`strings parses single line strings 3`] = `
 string ' (1:0-1:9)
-  \`foo bar\`
+  'foo bar'
 `;
 
 exports[`strings parses tagged strings 1`] = `
 string \` (1:0-1:13)
-   foo\`bar spam\`
+   foo'bar spam'
 `;
 
 exports[`strings parses tagged strings 2`] = `
 string ' (1:0-1:13)
-   foo\`bar spam\`
+   foo'bar spam'
 `;
 
 exports[`strings parses tagged strings 3`] = `
 string " (1:0-1:13)
-   foo\`bar spam\`
+   foo'bar spam'
 `;
 
 exports[`strings parses template strings with expressions 1`] = `
 string \` (1:0-1:24)
-  \`foo \`
+  'foo '
     arithm + (1:7-1:17)
       ident (1:7-1:10) bar
       ident (1:13-1:17) spam
-  \` spam\`
+  ' spam'
 `;
 
 exports[`strings parses template strings with expressions 2`] = `
 string ' (1:0-1:24)
-  \`foo \`
+  'foo '
     arithm + (1:7-1:17)
       ident (1:7-1:10) bar
       ident (1:13-1:17) spam
-  \` spam\`
+  ' spam'
 `;
 
 exports[`strings parses template strings with expressions 3`] = `
 string " (1:0-1:24)
-  \`foo \`
+  'foo '
     arithm + (1:7-1:17)
       ident (1:7-1:10) bar
       ident (1:13-1:17) spam
-  \` spam\`
+  ' spam'
 `;

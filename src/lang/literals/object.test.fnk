@@ -59,17 +59,24 @@ describe:: 'object {...}', fn:
       to_match_snapshot
 
 
-  it:: 'parses single prop with block value: {foo: spam ...}', fn:
+  it:: `parses keywords as keys`, fn:
     expect::
       parse_expr:: `
-        {
-          foo:
-            spam
-            ni
-        }
+        {fn, match, fold, unfold, map, find, filter, await, attempt}
       `
       to_match_snapshot
 
+
+describe:: 'dict', fn:
+  it:: 'parses', fn:
+    expect::
+      parse_expr:: `
+        dict:
+          foo
+          (bar+ni): 123
+          spam
+      `
+      to_match_snapshot
 
 
 describe:: 'object {...} - parsing failures', fn:
@@ -82,7 +89,7 @@ describe:: 'object {...} - parsing failures', fn:
         1| {
             ^
 
-        Expected one of [ '}' ] but found Symbol(end).`
+        Expected ',' or indented new line or '}'.`
 
 
   it:: `throws when encountering bad start of prop key`, fn:
@@ -94,7 +101,7 @@ describe:: 'object {...} - parsing failures', fn:
         1| {foo) bar}
                ^
 
-        Expected one of [ '}' ] but found ')'.`
+        Expected ',' or new-line or end of expressions.`
 
 
   it:: `throws when encountering bad prop key expr`, fn:

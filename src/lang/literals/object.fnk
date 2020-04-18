@@ -1,33 +1,52 @@
-{
-  next_is, next_matches, expression, curr_loc, curr_value, advance,
-  assert_next, next_value
-} = import '@fink/prattler'
+{next_is, next_matches, curr_loc, curr_value, advance} = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
-{seq} = import '../generic/sequence'
+{terminated_block, single_expression, add_named_block} = import '../block'
 
 
 value_expr = fn ctx, key:
   match ctx:
     next_is:: ?, ':':
-      expression:: ctx, 0
+      next_ctx = advance:: ctx
+      single_expression:: next_ctx, 0
     else:
       [key, ctx]
 
 
+default_assignment = fn ctx, left:
+   expr_ctx = advance:: ctx
+
+   [right, next_ctx] = single_expression:: expr_ctx, 0
+   {loc: {end}} = right
+
+   [
+    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
+    next_ctx
+  ]
+
+
 key_expr = fn ctx:
-  [key, next_ctx] = expression:: ctx, 0
-  match key:
-    # TODO: add support for ? in [...] operator all match fall through
-    {type: 'group'}: [key, next_ctx]
-    {type: 'assign'}: [key, next_ctx]
-    {type: 'ident'}: [key, next_ctx]
-    {type: 'string'}: [key, next_ctx]
-    {type: 'spread'}: [key, next_ctx]
+  match ctx:
+    next_matches:: ?, rx/[`'"(]|\.\.\./:
+      single_expression:: ctx, 0
+
+    next_matches:: ?, rx/^\w+/:
+      key_ctx = advance:: ctx
+      loc = curr_loc:: key_ctx
+      value = curr_value:: key_ctx
+      key = {type: 'ident', value, loc}
+
+      match key_ctx:
+        next_is:: ?, '=':
+          default_assignment:: key_ctx, key
+        else: [
+          key, key_ctx]
+
     else:
       throw token_error::
-        `Expected prop-key but found '${key.type}' expression.`
+        `Expected prop-key but found '${ctx.next_token.value}'.`
         ctx.next_token
         ctx
 
@@ -48,13 +67,20 @@ prop_expr = fn ctx:
 
 
 object = fn op:
-  {
-    ...symbol(op),
+  nud = fn: fn ctx:
+    # {start} = curr_loc:: ctx
+    [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, '}', prop_expr
 
-    nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
-      [exprs, next_ctx] = seq:: ctx, '}', prop_expr
-      {end} = curr_loc:: next_ctx
+    [{type: 'object', exprs, loc}, next_ctx]
 
-      [{type: 'object', exprs, loc: {start, end}}, next_ctx]
-  }
+  {...symbol(op), nud}
+
+
+add_object = fn ctx:
+  pipe ctx:
+    add_operator:: object:: '{'
+    add_separator:: symbol:: ','
+    add_separator:: symbol:: ':'
+    add_separator:: symbol:: '}'
+
+    add_named_block:: 'dict', 'object', prop_expr

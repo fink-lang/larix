@@ -1,19 +1,22 @@
 {assert_advance, collect_text, curr_loc, next_loc} = import '@fink/prattler'
-{curr_value, expression} = import '@fink/prattler'
+{curr_value} = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
 
 {indentation} = import '../indentation'
+{terminated_block} = import '../block'
+
 {unindent_text} = import '../../string-utils'
 
 
 get_expr_part = fn ctx:
   expr_ctx = assert_advance:: ctx, '{'
-  [expr, next_ctx] = expression:: expr_ctx, 0
 
-  str_ctx = assert_advance:: next_ctx, '}'
-  [expr, str_ctx]
+  [{exprs: [expr]}, next_ctx] = terminated_block:: expr_ctx, '}'
+  # TODO: just use block or assert there is only one expr
+  [expr, next_ctx]
 
 
 get_str_part = fn ctx, op:
@@ -104,3 +107,11 @@ string = fn op:
     get_unindented_text:: ctx, op
 
   {...symbol(op), lbp, led, nud}
+
+
+
+add_string = fn ctx:
+  pipe ctx:
+    add_operator:: string:: '`'
+    add_operator:: string:: `'`
+    add_operator:: string:: `"`

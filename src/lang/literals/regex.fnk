@@ -1,6 +1,7 @@
 {assert_advance, advance, collect_text} = import '@fink/prattler'
 {next_is, next_is_end, next_matches, next_loc} = import '@fink/prattler'
 {curr_is, curr_value, curr_loc} = import '@fink/prattler'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {unindent_text} = import '../../string-utils'
 {symbol} = import '../symbols'
@@ -57,3 +58,7 @@ regex = fn op:
       [{type: 'regex', pattern, flags, loc: {start, end}}, end_ctx]
   }
 
+
+add_regex = fn ctx:
+  pipe ctx:
+    add_operator:: regex:: 'rx/'
