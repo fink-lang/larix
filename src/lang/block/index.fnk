@@ -1,89 +1,245 @@
-{expression, curr_loc} = import '@fink/prattler'
+{
+  assert_advance, advance, expression,
+  next_is, next_is_end, curr_is, curr_loc, next_loc, curr_value
+} = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
+{end_token} = import '@fink/prattler/tokenizer'
+{add_separator, add_non_separating} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
-{next_is_unindented} = import '../indentation'
-{get_next_line_indentation, indentation} = import '../indentation'
-{push_indentation, pop_indentation} = import '../indentation'
-{seq} = import '../generic/sequence'
+{next_is_unindented, indentation, push_indentation, pop_indentation} = import '../indentation'
+{collect_single_comment} = import '../comments/comment'
 
 
-default_expr = fn ctx: expression:: ctx, 0
+empty_op = fn {loc: {end}}:
+  {type: 'empty', value: '', loc: {start: end, end}}
 
 
-get_indentations = fn ctx:
+next_is_indented_nl = fn ctx:
   curr_ind = indentation:: ctx
-  next_line_ind = get_next_line_indentation:: ctx
+  {end: {line: curr_line}} = curr_loc:: ctx
+  {start: {line: next_line, column: next_ind}} = next_loc:: ctx
 
-  match true:
-    (next_line_ind > 0 && next_line_ind <= curr_ind):
+  curr_line < next_line && curr_ind < next_ind
+
+
+pop_block = fn prev_ind: fn ctx:
+  {blocks: [end_symbol, ...blocks]} = ctx
+
+  match ctx:
+    next_is:: ?, end_symbol:
+      ind_ctx = {...ctx, blocks}
+      next_ctx = pop_indentation:: ind_ctx, prev_ind
+      assert_advance:: next_ctx, end_symbol
+
+    # next_is_unindented:: ?:
+    # next_is_end:: ?:
+    else:
       throw token_error::
-        `Expected indentation > ${curr_ind}.`
+        `Expected ',' or indented new line or '${end_symbol}'.`
         ctx.next_token
         ctx
+
+
+pop_block_no_end = fn prev_ind: fn ctx:
+  next_ctx = pop_indentation:: ctx, prev_ind
+
+  match next_ctx:
+    next_is_end:: ?: advance:: next_ctx
+    else: next_ctx
+
+
+push_block = fn ctx, end_symbol:
+  {blocks=[]} = ctx
+  curr_ind = indentation:: ctx
+
+  ind_ctx = match end_symbol:
+    end_token: ctx
+    else: push_indentation:: ctx, curr_ind + 1
+
+  match end_symbol:
+    end_token:
+      pop = pop_block_no_end:: curr_ind
+      [pop, {...ind_ctx, blocks}]
+    # TODO: should be bock_end
+    null:
+      pop = pop_block_no_end:: curr_ind
+      [pop, {...ind_ctx, blocks}]
     else:
-      [curr_ind, next_line_ind]
+      pop = pop_block:: curr_ind
+      [pop, {...ind_ctx, blocks: [end_symbol, ...blocks]}]
 
 
-single_expr_block = fn ctx, block_expr:
-  [expr, next_ctx] = block_expr:: ctx
-  [[expr], next_ctx, {}]
+next_is_end_of_block = fn ctx:
+  {blocks: [end_symbol]} = ctx
+
+  match ctx:
+    next_is_end:: ?, end_symbol: true
+    next_is_unindented:: ?: true
+    # TODO: should be responsibility of enclosing block
+    next_is:: ?, ':': true
+    else: false
 
 
-indented_expr_block = fn ctx, block_expr, end_ind, block_ind:
+next_is_nl = fn ctx:
+  {end: {line: curr_line}} = curr_loc:: ctx
+  {start: {line: next_line}} = next_loc:: ctx
+  curr_line < next_line
+
+
+{log} = console
+
+maybe_empty_comma = fn expr, ctx:
+  match ctx:
+    next_is_end_of_block:: ?:
+      [[expr, empty_op:: ctx.next_token], ctx]
+    else:
+      [[expr], ctx]
+
+
+empty_and_maybe_last = fn ctx:
+  expr = empty_op:: ctx.next_token
+  next_ctx = advance:: ctx
+
+  match next_ctx:
+    next_is_nl:: ?:
+      [[expr], next_ctx]
+    else:
+      maybe_empty_comma:: expr, next_ctx
+
+
+empty_or_expr = fn ctx, single_expr:
+  match ctx:
+    next_is:: ?, ',':
+      expr = empty_op:: ctx.next_token
+      next_ctx = advance:: ctx
+      [[expr], next_ctx]
+    else:
+      [expr, next_ctx] = single_expr:: ctx
+      [[expr], next_ctx]
+
+
+expr_with_sep = fn ctx, single_expr:
+  {start: {line: start_line}} = next_loc:: ctx
+  [expr, next_ctx] = single_expr:: ctx
+
+  match next_ctx:
+    next_is_end_of_block:: ?:
+      [[expr], next_ctx]
+
+    # TODO, should be next_is_nl:: ?:
+    # but issues with trailing comments in match (do they have correct end loc?)
+    {next_token: {loc: {start: {line: ? > start_line}}}}:
+      [[expr], next_ctx]
+
+    next_is:: ?, ',':
+      post_comma_ctx = advance:: next_ctx
+      maybe_empty_comma:: expr, post_comma_ctx
+
+    else:
+      # TODO: use current end of block in err message
+      throw token_error::
+        `Expected ',' or new-line or end of expressions.`
+        next_ctx.next_token
+        next_ctx
+
+
+indented_expr = fn ctx, single_expr:
+  {start: {column: block_ind}} = next_loc:: ctx
   block_ctx = push_indentation:: ctx, block_ind
+  get_next_expr:: block_ctx, single_expr
 
-  [exprs, next_ctx, comments] = pipe block_ctx:
-    unfold curr_ctx:
-      [expr, next_ctx] = match true:
-        next_is_unindented:: curr_ctx:
-          [null, curr_ctx]
-        else:
-          block_expr:: curr_ctx
 
-      ([expr, next_ctx], next_ctx)
+get_next_expr = fn ctx, single_expr:
+  match ctx:
+    next_is_end_of_block:: ?:
+      [[], ctx]
 
-    while [expr]:
-      expr != null
+    next_is_indented_nl:: ?:
+      indented_expr:: ctx, single_expr
 
-    fold [expr, next_ctx], [exprs]=[[]]:
+    next_is_nl:: ?:
+      empty_or_expr:: ctx, single_expr
+
+    next_is:: ?, ',':
+      empty_and_maybe_last:: ctx
+
+    else:
+      expr_with_sep:: ctx, single_expr
+
+
+get_all = fn ctx, single_expr:
+  [exprs, rest_ctx] = get_next_expr:: ctx, single_expr
+
+  match rest_ctx:
+    next_is_end_of_block:: ?:
+      [exprs, rest_ctx]
+    else:
+      [rest, next_ctx] = get_all:: rest_ctx, single_expr
+      [[...exprs, ...rest], next_ctx]
+
+
+expressions = fn ctx, end_symbol, single_expr:
+  {start} = curr_loc:: ctx
+
+  [pop_block, block_ctx] = push_block:: ctx, end_symbol
+
+  [all_exprs, next_ctx] = get_all:: block_ctx, single_expr
+
+  [exprs, comments] = pipe all_exprs:
+    fold expr, [exprs]=[[]]:
       match expr:
         {type: 'comment'}:
           {exprs: trailing} = expr
-          [exprs, next_ctx, {trailing}]
+          [exprs, {trailing}]
         else:
-          [[...exprs, expr], next_ctx, {}]
+          [[...exprs, expr], {}]
 
-  final_ctx = pop_indentation:: next_ctx, end_ind
+  end_ctx = pop_block:: next_ctx
 
-  [exprs, final_ctx, comments]
+  {end} = curr_loc:: end_ctx
+
+  [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
 
 
-get_block = fn ctx, type='block', block_expr=default_expr:
-  {start} = curr_loc:: ctx
+single_expression = fn ctx, lbp=0:
+  [expr, next_ctx] = expression:: ctx, lbp
 
-  [end_ind, block_ind] = get_indentations:: ctx
+  match next_ctx:
+    next_is_nl:: ?:
+      [expr, next_ctx]
 
-  [exprs, next_ctx, comments] = match true:
-    block_ind > 0:
-      indented_expr_block:: ctx, block_expr, end_ind, block_ind
+    next_is:: ?, '#':
+      comment_ctx = advance:: next_ctx
+      [item, expr_ctx] = collect_single_comment:: comment_ctx, '#'
+      comments = {...expr.comments, trailing: [item]}
+      [{...expr, comments}, expr_ctx]
     else:
-      single_expr_block:: ctx, block_expr
-
-  {end} = curr_loc:: next_ctx
-  [{type, exprs, comments, loc: {start, end}}, next_ctx]
+      [expr, next_ctx]
 
 
-named_block = fn op, type='block', block_expr=default_expr:
-  {
-    ...symbol(op),
+terminated_block = fn ctx, end_symbol, block_expr=single_expression:
+  expressions:: ctx, end_symbol, block_expr
 
-    nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
-      [args, body_ctx] = seq:: ctx, ':'
-      [{exprs, comments, loc}, next_ctx] = get_block:: body_ctx, type, block_expr
 
-      [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
-  }
+indented_block = fn ctx, block_expr=single_expression:
+  # TODO: null should be bock_end
+  terminated_block:: ctx, null, block_expr
 
+
+named_block = fn op, type, block_expr:
+  nud = fn: fn ctx:
+    {start} = curr_loc:: ctx
+
+    [{exprs: args}, body_ctx] = terminated_block:: ctx, ':'
+    [{exprs, comments, loc}, next_ctx] = indented_block:: body_ctx, block_expr
+    [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
+
+  {...symbol(op), nud}
+
+
+add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
+   pipe ctx:
+    add_non_separating:: named_block:: op, type, block_expr
+    add_separator:: symbol:: ':'
 
