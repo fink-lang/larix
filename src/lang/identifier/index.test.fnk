@@ -14,3 +14,24 @@ describe:: 'other symbols', fn:
     expect::
       parse_expr:: `  π  `
       to_match_snapshot
+
+
+describe:: 'symbols as prefix operators', fn:
+  it:: 'parses with left to right precendence', fn:
+    expect::
+      parse:: `
+        foo bar, spam, shrub
+        foo bar, spam shrub
+        foo
+          bar
+          spam
+            1 + 23
+            234
+          ni(na)
+        foo bar,
+          fn bar:
+            spam
+          ni
+            na
+      `
+      to_match_snapshot

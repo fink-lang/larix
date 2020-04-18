@@ -1,8 +1,71 @@
-{curr_value, curr_loc} = import '@fink/prattler'
+{curr_value, curr_loc, next_loc, expression, next_is, next_is_end, advance} = import '@fink/prattler'
+{next_value} = import '@fink/prattler'
+{token_error} = import '@fink/prattler/errors'
+{other_token, next_lbp} = import '@fink/prattler/symbols'
+{end_token} = import '@fink/prattler/tokenizer'
+
+{indented_block} = import '../block'
+{indentation} = import '../indentation'
+{symbol} = import '../symbols'
+
+
+as_call = fn callee, ctx:
+  {start} = callee.loc
+
+  [{exprs: args, comments, loc}, next_ctx] = indented_block:: ctx
+
+  [{type: 'call', callee, args,  comments, loc: {...loc, start}}, next_ctx]
+
+
+
+next_is_call_arg = fn ident_node, ctx:
+  next_val = next_value:: ctx
+
+  {end: {line: curr_line, column: curr_col}} = curr_loc:: ctx
+  {start: {line: next_line, column: next_col}} = next_loc:: ctx
+  curr_ind = indentation:: ctx
+
+  lbp = next_lbp:: ctx, ident_node
+  no_lbp = lbp == 0
+  same_line = curr_line == next_line
+  indented = curr_ind < next_col
+  str_templ_tag = next_col == curr_col && same_line
+  is_end = next_is_end:: ctx
+
+  # TODO: there should be a better way
+  match true:
+    is_end: false
+    str_templ_tag: false
+    next_val == '=': false
+    next_val == '<': false
+    next_val == '>': false
+    next_val == '==': false
+    next_val == '!=': false
+    next_val == '>=': false
+    next_val == '<=': false
+    next_val == '+': false
+    next_val == '-': false
+    next_val == '*': false
+    next_val == '^': false
+    next_val == '%': false
+    next_val == '&&': false
+    next_val == '||': false
+    next_val == '/': false
+    next_val == '#': false
+    # istanbul ignore else
+    indented: true
+    # istanbul ignore next
+    else: false
 
 
 identifier = fn ctx:
   value = curr_value:: ctx
   loc = curr_loc:: ctx
 
-  [{type: 'ident', value, loc}, ctx]
+  node = {type: 'ident', value, loc}
+
+  match next_is_call_arg:: node, ctx:
+    true:
+      as_call:: node, ctx
+    else:
+      [{type: 'ident', value, loc}, ctx]
