@@ -6,6 +6,14 @@
 {terminated_block, single_expression, add_named_block} = import '../block'
 
 
+next_is_key = fn ctx:
+  {next_token: {value}} = ctx
+  match ctx:
+    next_matches:: ?, rx/^\w+$/: true
+    {tokenizer: {tokens: {(value): {}}}}: false
+    else: true
+
+
 value_expr = fn ctx, key:
   match ctx:
     next_is:: ?, ':':
@@ -29,10 +37,10 @@ default_assignment = fn ctx, left:
 
 key_expr = fn ctx:
   match ctx:
-    next_matches:: ?, rx/[`'"(]|\.\.\./:
+    next_matches:: ?, rx/^[`'"(]|\.\.\.$/:
       single_expression:: ctx, 0
 
-    next_matches:: ?, rx/^\w+/:
+    next_is_key:: ?:
       key_ctx = advance:: ctx
       loc = curr_loc:: key_ctx
       value = curr_value:: key_ctx

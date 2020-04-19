@@ -18,7 +18,7 @@ object dict (1:0-5:0)
     ident (4:2-4:6) spam
 `;
 
-exports[`object {...} parses calculated prop: {(...): 123, ...} 1`] = `
+exports[`object {...} parses calculated prop 1`] = `
 object (1:0-1:26)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
@@ -34,7 +34,7 @@ object (1:0-1:26)
     ident (1:21-1:25) spam
 `;
 
-exports[`object {...} parses default assignment prop: {foo=123} 1`] = `
+exports[`object {...} parses default assignment prop 1`] = `
 object (1:0-1:9)
   prop (1:1-1:8)
     ident (1:1-1:4) foo
@@ -79,17 +79,20 @@ object (1:0-1:60)
     ident (1:52-1:59) attempt
 `;
 
-exports[`object {...} parses multiple shorthand exprs: {foo, bar} 1`] = `
-object (1:0-1:10)
+exports[`object {...} parses multiple shorthand exprs 1`] = `
+object (1:0-1:13)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
     ident (1:1-1:4) foo
   prop (1:6-1:9)
     ident (1:6-1:9) bar
     ident (1:6-1:9) bar
+  prop (1:11-1:12)
+    ident (1:11-1:12) π
+    ident (1:11-1:12) π
 `;
 
-exports[`object {...} parses multiple shorthand exprs: {foo, bar} 2`] = `
+exports[`object {...} parses multiple shorthand exprs 2`] = `
 object (1:0-1:28)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
@@ -103,21 +106,21 @@ object (1:0-1:28)
       'ni'
 `;
 
-exports[`object {...} parses single prop: {foo: spam} 1`] = `
+exports[`object {...} parses single prop 1`] = `
 object (1:0-1:11)
   prop (1:1-1:10)
     ident (1:1-1:4) foo
     ident (1:6-1:10) spam
 `;
 
-exports[`object {...} parses single shorthand prop: {foo} 1`] = `
+exports[`object {...} parses single shorthand prop 1`] = `
 object (1:0-1:5)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
     ident (1:1-1:4) foo
 `;
 
-exports[`object {...} parses single str prop: {'foo': spam} 1`] = `
+exports[`object {...} parses single str prop} 1`] = `
 object (1:0-1:13)
   prop (1:1-1:12)
     string ' (1:1-1:6)
@@ -125,7 +128,7 @@ object (1:0-1:13)
     ident (1:8-1:12) spam
 `;
 
-exports[`object {...} parses spread prop: {foo, ...bar} 1`] = `
+exports[`object {...} parses spread prop 1`] = `
 object (1:0-1:13)
   prop (1:1-1:4)
     ident (1:1-1:4) foo
