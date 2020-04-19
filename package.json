@@ -30,7 +30,7 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@fink/prattler": "^3.0.0"
+    "@fink/prattler": "^3.0.1"
   },
   "devDependencies": {
     "@fink/cli": "^2.3.0",
