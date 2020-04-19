@@ -1,6 +1,5 @@
 {
-  assert_advance, advance, expression,
-  next_is, next_is_end, curr_is, curr_loc, next_loc, curr_value
+  assert_advance, advance, expression, next_is, next_is_end, curr_loc, next_loc
 } = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
 {end_token} = import '@fink/prattler/tokenizer'
@@ -8,7 +7,8 @@
 
 {symbol} = import '../symbols'
 {next_is_unindented, indentation, push_indentation, pop_indentation} = import '../indentation'
-{collect_single_comment} = import '../comments/comment'
+{collect_single_comment} = import '../comments/collect'
+
 
 
 empty_op = fn {loc: {end}}:
@@ -132,22 +132,7 @@ get_all = fn ctx, single_expr:
           # TODO: check if next is actially a start of an expr.
           [expr, next_ctx] = single_expr:: ctx
           # new line at end of expr is a separator
-          next_is_start = match true:
-            next_is_nl:: next_ctx:
-              true
-            else:
-              ---
-              TODO: collect_text might have and issue incorrect text loc
-              and not advancing ignorable tokens.
-              This causes issues with end of block comments
-              ```
-                match:
-                  shrub
-                  # block comment
-                foobar
-              ```
-              ---
-              next_ctx.curr_token.value == '\n'
+          next_is_start = next_is_nl:: next_ctx
 
           [[...exprs, expr], next_ctx, false, next_is_start, false]
 

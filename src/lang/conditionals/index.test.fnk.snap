@@ -83,7 +83,7 @@ module (1:0-7:0)
 
 exports[`match ...: parses simple 1`] = `
 module (1:0-8:0)
-  cond match (1:0-7:0)
+  cond match (1:0-6:21)
     ident (1:6-1:10) item
     :
     cond:expr (2:2-2:22)
