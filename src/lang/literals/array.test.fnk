@@ -218,6 +218,6 @@ describe:: 'array [...] - parsing failures', fn:
         1| [1)]
              ^
 
-        Expected ',' or new-line or end of expressions.`
+        Expected ',' or indented new line or end of block.`
 
 

@@ -87,96 +87,76 @@ next_is_nl = fn ctx:
   curr_line < next_line
 
 
-{log} = console
-
-maybe_empty_comma = fn expr, ctx:
-  match ctx:
-    next_is_end_of_block:: ?:
-      [[expr, empty_op:: ctx.next_token], ctx]
-    else:
-      [[expr], ctx]
-
-
-empty_and_maybe_last = fn ctx:
-  expr = empty_op:: ctx.next_token
-  next_ctx = advance:: ctx
-
-  match next_ctx:
-    next_is_nl:: ?:
-      [[expr], next_ctx]
-    else:
-      maybe_empty_comma:: expr, next_ctx
-
-
-empty_or_expr = fn ctx, single_expr:
-  match ctx:
-    next_is:: ?, ',':
-      expr = empty_op:: ctx.next_token
-      next_ctx = advance:: ctx
-      [[expr], next_ctx]
-    else:
-      [expr, next_ctx] = single_expr:: ctx
-      [[expr], next_ctx]
-
-
-expr_with_sep = fn ctx, single_expr:
-  {start: {line: start_line}} = next_loc:: ctx
-  [expr, next_ctx] = single_expr:: ctx
-
-  match next_ctx:
-    next_is_end_of_block:: ?:
-      [[expr], next_ctx]
-
-    # TODO, should be next_is_nl:: ?:
-    # but issues with trailing comments in match (do they have correct end loc?)
-    {next_token: {loc: {start: {line: ? > start_line}}}}:
-      [[expr], next_ctx]
-
-    next_is:: ?, ',':
-      post_comma_ctx = advance:: next_ctx
-      maybe_empty_comma:: expr, post_comma_ctx
-
-    else:
-      # TODO: use current end of block in err message
-      throw token_error::
-        `Expected ',' or new-line or end of expressions.`
-        next_ctx.next_token
-        next_ctx
-
-
-indented_expr = fn ctx, single_expr:
-  {start: {column: block_ind}} = next_loc:: ctx
-  block_ctx = push_indentation:: ctx, block_ind
-  get_next_expr:: block_ctx, single_expr
-
-
-get_next_expr = fn ctx, single_expr:
-  match ctx:
-    next_is_end_of_block:: ?:
-      [[], ctx]
-
-    next_is_indented_nl:: ?:
-      indented_expr:: ctx, single_expr
-
-    next_is_nl:: ?:
-      empty_or_expr:: ctx, single_expr
-
-    next_is:: ?, ',':
-      empty_and_maybe_last:: ctx
-
-    else:
-      expr_with_sep:: ctx, single_expr
-
-
 get_all = fn ctx, single_expr:
-  [exprs, rest_ctx] = get_next_expr:: ctx, single_expr
 
-  match rest_ctx:
-    next_is_end_of_block:: ?:
-      [exprs, rest_ctx]
-    else:
-      [rest, next_ctx] = get_all:: rest_ctx, single_expr
-      [[...exprs, ...rest], next_ctx]
+  [exprs, next_ctx] = pipe [ctx, [], true, false]:
+    unfold [ctx, exprs, at_start, was_comma]:
+      [next_exprs, next_ctx, done, next_at_start, next_was_comma] = match ctx:
+        next_is_end_of_block:: ?:
+          match was_comma:
+            true:
+              expr = empty_op:: ctx.curr_token
+              [[...exprs, expr], ctx, true]
+            else:
+              [exprs, ctx, true]
+
+        next_is_indented_nl:: ?:
+          {start: {column: block_ind}} = next_loc:: ctx
+          block_ctx = push_indentation:: ctx, block_ind
+          [exprs, block_ctx, false, true, was_comma]
+
+        next_is:: ?, ',':
+          next_ctx = advance:: ctx
+
+          match at_start:
+            true:
+              expr = empty_op:: ctx.next_token
+              match was_comma:
+                true:
+                  expr0 = empty_op:: ctx.curr_token
+                  [[...exprs, expr0, expr], next_ctx, false, true, false]
+                else:
+                  [[...exprs, expr], next_ctx, false, true, false]
+            else:
+
+              [exprs, next_ctx, false, true, true]
+        else:
+          match at_start:
+            false:
+              # TODO: use curr block's end symbol
+              throw token_error::
+                `Expected ',' or indented new line or end of block.`
+                ctx.next_token
+                ctx
+
+          # TODO: check if next is actially a start of an expr.
+          [expr, next_ctx] = single_expr:: ctx
+          # new line at end of expr is a separator
+          next_is_start = match true:
+            next_is_nl:: next_ctx:
+              true
+            else:
+              ---
+              TODO: collect_text might have and issue incorrect text loc
+              and not advancing ignorable tokens.
+              This causes issues with end of block comments
+              ```
+                match:
+                  shrub
+                  # block comment
+                foobar
+              ```
+              ---
+              next_ctx.curr_token.value == '\n'
+
+          [[...exprs, expr], next_ctx, false, next_is_start, false]
+
+      (
+        [next_exprs, next_ctx, done],
+        [next_ctx, next_exprs, next_at_start, next_was_comma]
+      )
+
+    find [exprs, ctx, done]: done
 
 
 expressions = fn ctx, end_symbol, single_expr:
@@ -198,7 +178,6 @@ expressions = fn ctx, end_symbol, single_expr:
   end_ctx = pop_block:: next_ctx
 
   {end} = curr_loc:: end_ctx
-
   [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
 
 

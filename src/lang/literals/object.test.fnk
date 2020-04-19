@@ -92,7 +92,7 @@ describe:: 'object {...} - parsing failures', fn:
         Expected ',' or indented new line or '}'.`
 
 
-  it:: `throws when encountering bad start of prop key`, fn:
+  it:: `throws when encountering bad end of prop`, fn:
     expect::
       fn: parse_expr:: `{foo) bar}`, 'test.fnk'
 
@@ -101,16 +101,26 @@ describe:: 'object {...} - parsing failures', fn:
         1| {foo) bar}
                ^
 
-        Expected ',' or new-line or end of expressions.`
+        Expected ',' or indented new line or end of block.`
 
-
-  it:: `throws when encountering bad prop key expr`, fn:
     expect::
       fn: parse_expr:: `{2*3: bar}`, 'test.fnk'
 
       to_throw:: `
-        test.fnk:1:1
+        test.fnk:1:2
         1| {2*3: bar}
-            ^
+             ^
 
-        Expected prop-key but found 'arithm' expression.`
+        Expected ',' or indented new line or end of block.`
+
+
+  it:: `throws when encountering bad start of prop key`, fn:
+    expect::
+      fn: parse_expr:: `{foo, [bar]: spam}`, 'test.fnk'
+
+      to_throw:: `
+        test.fnk:1:6
+        1| {foo, [bar]: spam}
+                 ^
+
+        Expected prop-key but found '['.`
