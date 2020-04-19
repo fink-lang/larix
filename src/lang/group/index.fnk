@@ -1,9 +1,7 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
-{next_is, curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
-{seq} = import '../generic/sequence'
-{get_block} = import '../block'
+{terminated_block} = import '../block'
 
 
 group = fn op:
@@ -11,11 +9,9 @@ group = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
-      [exprs, next_ctx] = seq:: ctx, ')'
-      {end} = curr_loc:: next_ctx
+      [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ')'
 
-      [{type: 'group', exprs, loc: {start, end}}, next_ctx]
+      [{type: 'group', exprs, comments, loc}, next_ctx]
   }
 
 

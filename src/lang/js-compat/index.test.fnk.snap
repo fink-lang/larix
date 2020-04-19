@@ -8,18 +8,16 @@ assign = (1:0-1:30)
       ident (1:14-1:20) Foobar
       ident (1:21-1:25) spam
       ident (1:27-1:29) ni
-
 `;
 
 exports[`js-compat operators parses new 2`] = `
-assign = (1:0-1:29)
+assign = (1:0-1:31)
   ident (1:0-1:7) new_foo
-  new (1:10-1:29)
-    call (1:14-1:29)
+  new (1:10-1:31)
+    call (1:14-1:31)
       ident (1:14-1:20) Foobar
       ident (1:23-1:27) spam
       ident (1:29-1:31) ni
-
 `;
 
 exports[`js-compat operators parses throw 1`] = `
@@ -31,19 +29,17 @@ assign = (1:0-1:38)
       call (1:25-1:38)
         ident (1:25-1:28) err
         string ' (1:29-1:37)
-          \`foobar\`
-
+          'foobar'
 `;
 
 exports[`js-compat operators parses throw 2`] = `
-assign = (1:0-1:38)
+assign = (1:0-1:39)
   ident (1:0-1:9) throw_foo
-  logical || (1:12-1:38)
+  logical || (1:12-1:39)
     ident (1:12-1:15) foo
-    throw (1:19-1:38)
-      call (1:25-1:38)
+    throw (1:19-1:39)
+      call (1:25-1:39)
         ident (1:25-1:28) err
         string ' (1:31-1:39)
-          \`foobar\`
-
+          'foobar'
 `;

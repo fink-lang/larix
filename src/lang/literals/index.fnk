@@ -1,42 +1,12 @@
-{add_operator, add_separator} = import '@fink/prattler/symbols'
-
-{symbol} = import '../symbols'
-
-{array} = import './array'
-{object} = import './object'
-{string} = import './string'
-{regex} = import './regex'
-
-
-add_array_literal = fn ctx:
-  pipe ctx:
-    add_operator:: array:: '['
-    add_separator:: symbol:: ','
-    add_separator:: symbol:: ']'
-
-
-add_object_literal = fn ctx:
-  pipe ctx:
-    add_operator:: object:: '{'
-    add_separator:: symbol:: ','
-    add_separator:: symbol:: '}'
-
-
-add_string_literal = fn ctx:
-  pipe ctx:
-    add_operator:: string:: '`'
-    add_operator:: string:: `'`
-    add_operator:: string:: `"`
-
-
-add_regex_literal = fn ctx:
-  pipe ctx:
-    add_operator:: regex:: 'rx/'
+{add_array} = import './array'
+{add_object} = import './object'
+{add_string} = import './string'
+{add_regex} = import './regex'
 
 
 add_literals = fn ctx:
   pipe ctx:
-    add_array_literal
-    add_object_literal
-    add_string_literal
-    add_regex_literal
+    add_array
+    add_object
+    add_string
+    add_regex

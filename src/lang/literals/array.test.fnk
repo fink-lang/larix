@@ -22,21 +22,177 @@ describe:: 'array [...]', fn:
       parse_expr:: `[1, 2]`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `[1, 2, 3]`
+      to_match_snapshot
+
 
   it:: 'parses leading commas: [,, foo]', fn:
     expect::
       parse_expr:: `[,, foo]`
       to_match_snapshot
 
+
   it:: 'parses trailing commas: [...foo,,]', fn:
     expect::
       parse_expr:: `[...foo, ]`
       to_match_snapshot
+
     expect::
       parse_expr:: `[...foo, , ]`
       to_match_snapshot
+
     expect::
       parse_expr:: `[, ...foo, ]`
+      to_match_snapshot
+
+
+describe:: 'array block', fn:
+  it:: 'parses empty', fn:
+    expect::
+      parse_expr:: `
+        [
+        ]`
+      to_match_snapshot
+
+
+  it:: 'parses single elemement', fn:
+    expect::
+      parse_expr:: `
+        [
+          1
+        ]`
+      to_match_snapshot
+
+
+  it:: 'parses multiple elements', fn:
+    expect::
+      parse_expr:: `
+        [
+          1
+          2
+        ]`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        [
+          1, 2
+        ]`
+      to_match_snapshot
+
+
+  it:: 'parses leading commas', fn:
+    expect::
+      parse_expr:: `
+        [
+          ,
+          ,
+          foo
+        ]`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        [
+          ,,
+          foo
+        ]`
+      to_match_snapshot
+
+
+  it:: 'parses trailing commas', fn:
+    expect::
+      parse_expr:: `
+        [
+          foo
+          ,
+        ]`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        [
+          foo
+          ,
+          ,
+        ]`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        [
+          ,
+          ...foo
+          ,
+        ]`
+      to_match_snapshot
+
+
+describe:: 'list', fn:
+  it:: 'parses single elemement', fn:
+    expect::
+      parse_expr:: `
+        list:
+          1
+        `
+      to_match_snapshot
+
+
+  it:: 'parses multiple elements', fn:
+    expect::
+      parse_expr:: `
+        list:
+          1
+          2
+        `
+      to_match_snapshot
+
+
+  it:: 'parses leading commas', fn:
+    expect::
+      parse_expr:: `
+        list:
+          ,
+          ,
+          foo
+        `
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        list:
+          ,,
+          foo
+        `
+      to_match_snapshot
+
+
+  it:: 'parses trailing commas', fn:
+    expect::
+      parse_expr:: `
+        list:
+          foo
+          ,
+        `
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        list:
+          foo
+          ,
+          ,
+        `
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `
+        list:
+          ,
+          ...foo
+          ,
+        `
       to_match_snapshot
 
 
@@ -50,8 +206,7 @@ describe:: 'array [...] - parsing failures', fn:
         1| [
             ^
 
-        Expected one of [ ']' ] but found Symbol(end).
-      `
+        Expected ',' or indented new line or ']'.`
 
 
   it:: `throws when missing ']'`, fn:
@@ -63,7 +218,6 @@ describe:: 'array [...] - parsing failures', fn:
         1| [1)]
              ^
 
-        Expected one of [ ']' ] but found ')'.
-      `
+        Expected ',' or indented new line or end of block.`
 
 

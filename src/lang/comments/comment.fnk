@@ -1,24 +1,8 @@
-{
-  next_is_end, next_is, next_loc, collect_text, advance, expression
-} = import '@fink/prattler'
-
-{next_is_unindented} = import '../indentation'
+{curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
-
-
-collect_comments = fn ctx, op:
-  [text, next_ctx] = collect_text:: ctx, '\n'
-  comment = {op, ...text}
-
-  match next_ctx:
-    next_is:: ?, '#':
-      [comments, final_ctx] = collect_comments::
-        advance:: next_ctx
-        op
-      [[comment, ...comments], final_ctx]
-    else:
-      [[comment], next_ctx]
+{next_is_end_of_block, single_expression} = import '../block'
+{collect_comments} = import './collect'
 
 
 comment = fn op:
@@ -26,17 +10,19 @@ comment = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
+      {start} = curr_loc:: ctx
+
       [items, expr_ctx] = collect_comments:: ctx, op
 
-      match expr_ctx:
-        next_is_end:: ?:
-          [{type: 'comment', op, exprs: items}, expr_ctx]
+      {end} = curr_loc:: expr_ctx
+      loc = {start, end}
 
-        next_is_unindented:: ?:
-          [{type: 'comment', op, exprs: items}, expr_ctx]
+      match expr_ctx:
+        next_is_end_of_block:: ?:
+          [{type: 'comment', op, exprs: items, loc}, expr_ctx]
 
         else:
           # TODO: should lbp be really 0
-          [{comments, ...expr}, next_ctx] = expression:: expr_ctx, 0
+          [{comments, ...expr}, next_ctx] = single_expression:: expr_ctx, 0
           [{...expr, comments: {...comments, leading: items}}, next_ctx]
   }

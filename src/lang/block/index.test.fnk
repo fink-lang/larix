@@ -1,16 +1,170 @@
-{describe, it, expect, to_match_snapshot} = import '../../testing/jest'
+{decribe, it, expect, to_match_snapshot, to_throw} = import '../../testing/jest'
 
-{parse_expr} = import '../../'
+{parse} = import '../..'
 
 
-describe:: 'block assignment', fn:
-
-  it:: 'parses block:  foo = : bar ', fn:
+describe:: 'expression block', fn:
+  it:: 'parses empty', fn:
     expect::
-      parse_expr:: `
-        foo = :
-          bar
-          spam
+      parse:: ``
+      to_match_snapshot
+
+
+  it:: 'parses single expr', fn:
+    expect::
+      parse:: `1`
+      to_match_snapshot
+
+
+  it:: 'parses multiple', fn:
+    expect::
+      parse:: `
+        1
+        2
+        3
       `
       to_match_snapshot
+
+
+  it:: 'ignores trailing comma before newline', fn:
+    expect::
+      parse:: `
+        1,
+        2
+      `
+      to_match_snapshot
+
+
+  it:: 'parses with leading empty expressions', fn:
+    expect::
+      parse:: `
+        1
+        ,,2
+        3
+      `
+      to_match_snapshot
+
+
+  it:: 'parses with trailing empty expressions', fn:
+    expect::
+      parse:: `
+        1
+        2,,
+        3,
+      `
+      to_match_snapshot
+
+
+  it:: 'parses with empty expressions', fn:
+    expect::
+      parse:: `
+        ,
+        2
+        ,
+      `
+      to_match_snapshot
+
+
+
+describe:: 'single line expressions', fn:
+
+  it:: 'parses multiple', fn:
+    expect::
+      parse:: `1, 2`
+      to_match_snapshot
+
+
+  it:: 'parses leading empty', fn:
+    expect::
+      parse:: `,1, 2`
+      to_match_snapshot
+
+    expect::
+      parse:: `,,1, 2`
+      to_match_snapshot
+
+
+  it:: 'parses trailing empty', fn:
+    expect::
+      parse:: `1,`
+      to_match_snapshot
+
+    expect::
+      parse:: `2,,`
+      to_match_snapshot
+
+
+
+describe:: 'nesting', fn:
+  it:: 'parses nested', fn:
+    expect::
+      parse:: `
+        (
+          foo
+
+          (foo, foo:: bar, spam)
+
+          # leading group comment
+          (
+            bar
+            spam
+          )
+
+          # leading comment
+          # for next line
+          spam # trailing same line comment
+
+          # trailing block comment
+        )`
+      to_match_snapshot
+
+
+describe:: 'errors', fn:
+  it:: 'throws due to end of indentation', fn:
+    expect::
+      fn: parse::
+        `
+          foo = (
+            bar
+            spam
+          shrub`
+        'test.fnk'
+      to_throw:: `
+        test.fnk:4:0
+        1| foo = (
+        2|   bar
+        3|   spam
+        4| shrub
+           ^
+
+        Expected ',' or indented new line or ')'.`
+
+
+  it:: 'throws due to end of indentation', fn:
+    expect::
+      fn: parse::
+        `
+          foo = (
+            bar = (
+          spam`
+        'test.fnk'
+      to_throw:: `
+        test.fnk:3:0
+        1| foo = (
+        2|   bar = (
+        3| spam
+           ^
+
+        Expected ',' or indented new line or ')'.`
+
+
+  it:: 'throws due to missing closing symbol', fn:
+    expect::
+      fn: parse:: `(1,2`, 'test.fnk'
+      to_throw:: `
+        test.fnk:1:4
+        1| (1,2
+               ^
+
+        Expected ',' or indented new line or ')'.`
 

@@ -1,11 +1,10 @@
-{expression, curr_loc} = import '@fink/prattler'
-
 {symbol} = import '../symbols'
+{single_expression} = import '../block'
 
 
 infix_led = fn type, op, lbp: fn ctx, left:
   {loc: {start}} = left
-  [right, next_ctx] = expression:: ctx, lbp
+  [right, next_ctx] = single_expression:: ctx, lbp
   {loc: {end}} = right
 
   [{type, op, left, right, loc: {start, end}}, next_ctx]

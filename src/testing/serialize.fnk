@@ -12,6 +12,14 @@ get_comment = fn indent, comments:
   lines.join:: '\n'
 
 
+trailing_comment = fn indent, node:
+  match node:
+    {comments: {trailing: {length: ? > 0}}}:
+      comment = get_comment:: '${indent}', node.comments.trailing
+      `\n${comment}`
+    else: ''
+
+
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   head = match true:
     (op && op != type):
@@ -19,19 +27,20 @@ str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
     else:
       `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
 
-  match comments:
-    {leading: []}:
-      comment_text = get_comment:: '${indent}', comments.leading
-      '${comment_text}\n${indent}${head}'
-    else:
-      '${indent}${head}'
+  leading = match comments:
+    {leading: {length: ? > 0}}:
+      comment = get_comment:: '${indent}', comments.leading
+      `${comment}\n`
+    else:  ''
+
+  '${leading}${indent}${head}'
 
 
 serialize_block = fn node, serialize, indent:
   head = str_type_op:: node, indent
   exprs = node.exprs.map:: fn expr: serialize:: expr, `${indent}  `
 
-  body = match true:
+  match true:
     (!!node.args):
       args = node.args.map:: fn expr: serialize:: expr, `${indent}  `
       arg_str = `${args.join:: '\n'}\n`
@@ -41,13 +50,6 @@ serialize_block = fn node, serialize, indent:
       exprs = node.exprs.map:: fn expr: serialize:: expr, `${indent}  `
       `${head}\n${exprs.join:: '\n'}`
 
-  match node:
-    {comments: {trailing: []}}:
-      comment_text = get_comment:: '${indent}  ', node.comments.trailing
-      '${body}\n${comment_text}'
-    else:
-      body
-
 
 serialize_call = fn node, serialize, indent:
   head = str_type_op:: node, indent
@@ -55,15 +57,10 @@ serialize_call = fn node, serialize, indent:
   callee = serialize:: node.callee, `${indent}  `
   args = node.args.map:: fn expr: serialize:: expr, `${indent}  `
   arg_str = match true:
-    args.length > 0: `${args.join:: '\n'}\n`
+    args.length > 0: `${args.join:: '\n'}`
     else: ''
 
-  match node:
-    {comments: {trailing: []}}:
-      comment_text = get_comment:: '${indent}  ', node.comments.trailing
-      '${head}\n${callee}\n${arg_str}${comment_text}'
-    else:
-      `${head}\n${callee}\n${arg_str}`
+  `${head}\n${callee}\n${arg_str}`
 
 
 serialize_infix = fn node, serialize, indent:
@@ -99,7 +96,7 @@ serialize_str = fn node, serialize, indent:
   [lne, ...lns] = pipe node.parts:
     map part:
       match part.type:
-        'string:text': '`${part.value}`'
+        'string:text': `'${part.value}'`
         else:
           value = serialize:: part, '${indent}  '
           `\n${value}\n`
@@ -156,8 +153,11 @@ serialize_jsx = fn node, serialize, indent:
 
 
 serialize = fn node, indent='':
-  match node:
+  result = match node:
     null: `${indent}null`
+
+    {type: 'empty'}:
+      str_type_op:: node, indent
 
     {type: ?.startsWith:: 'jsx-'}:
       serialize_jsx:: node, serialize, indent
@@ -192,3 +192,4 @@ serialize = fn node, indent='':
       head = str_type_op:: node, indent
       throw new Error:: `cannot serialize ${head}`
 
+  '${result}${trailing_comment:: '${indent}  ', node}'

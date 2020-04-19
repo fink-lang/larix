@@ -1,13 +1,7 @@
 {curr_loc, next_loc} = import '@fink/prattler'
 
-
-get_next_line_indentation = fn ctx:
-  curr = curr_loc:: ctx
-  next = next_loc:: ctx
-
-  match true:
-    curr.end.line < next.start.line:  next.start.column
-    else: 0
+# TODO: should this be part of ../block
+# using push_block/pop_block
 
 
 indentation = fn {indent}:
@@ -38,10 +32,7 @@ curr_next_adjecent = fn ctx:
   curr = curr_loc:: ctx
   next = next_loc:: ctx
 
-  (
-    curr.end.line == next.start.line
-    && curr.end.column == next.start.column
-  )
+  curr.end.line == next.start.line && curr.end.column == next.start.column
 
 
 init_indentation = fn ctx:

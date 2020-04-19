@@ -1,6 +1,7 @@
-{expression, curr_loc} = import '@fink/prattler'
+{curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
+{single_expression} = import '../block'
 
 
 prefix = fn op, type:
@@ -9,7 +10,7 @@ prefix = fn op, type:
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx
-      [right, next_ctx] = expression:: ctx, lbp
+      [right, next_ctx] = single_expression:: ctx, lbp
       {end} = right.loc
 
       [{type, op, right, loc: {start, end}}, next_ctx]

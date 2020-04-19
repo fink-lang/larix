@@ -17,7 +17,6 @@
 {add_import} = import './import'
 {add_prop_access} = import './prop-access'
 {add_whitespace_tokens} = import './whitespace'
-{add_colon} = import './colon'
 {add_js_ops} = import './js-compat'
 {add_partial} = import './partial'
 {add_other} = import './other'
@@ -36,7 +35,6 @@ init_language = fn ctx:
     add_iterables
 
     add_assignment_operators
-    add_colon
 
     add_other
     add_partial

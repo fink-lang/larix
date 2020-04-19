@@ -23,6 +23,17 @@ describe:: 'call()', fn:
       to_match_snapshot
 
 
+  it:: 'parses multiline args', fn:
+    expect::
+      parse_expr:: `
+        foobar(
+          1
+          2
+        )
+      `
+      to_match_snapshot
+
+
 describe:: 'call() - parsing failures', fn:
 
   it:: `throws when missing ')'`, fn:
@@ -33,18 +44,7 @@ describe:: 'call() - parsing failures', fn:
         1| foobar(
                   ^
 
-        Expected one of [ ')' ] but found Symbol(end).`
-
-
-  it:: `throws when missing ')'`, fn:
-    expect::
-      fn: parse_expr:: `foobar(1:)`, 'test.fnk'
-      to_throw:: `
-        test.fnk:1:8
-        1| foobar(1:)
-                   ^
-
-        Expected one of [ ')' ] but found ':'.`
+        Expected ',' or indented new line or ')'.`
 
 
 describe:: 'call:: ...', fn:
@@ -62,7 +62,6 @@ describe:: 'call:: ...', fn:
           fn bar:
             spam
           ni
-          shrub
           # trailing comment
       `
       to_match_snapshot

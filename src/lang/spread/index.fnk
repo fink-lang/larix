@@ -1,7 +1,8 @@
 {add_operator} = import '@fink/prattler/symbols'
-{next_is, curr_loc, expression} = import '@fink/prattler'
+{next_is, curr_loc} = import '@fink/prattler'
 
 {symbol} = import '../symbols'
+{single_expression} = import '../block'
 
 
 spread = fn op, type:
@@ -12,8 +13,10 @@ spread = fn op, type:
       {start} = curr_loc:: ctx
 
       [right, next_ctx] = match ctx:
-        next_is:: ?, ',': [null, ctx]
-        else: expression:: ctx, lbp
+        next_is:: ?, ',':
+          [null, ctx]
+        else:
+          single_expression:: ctx, lbp
 
       {end} = curr_loc:: next_ctx
 

@@ -3,14 +3,14 @@
 exports[`numbers parses float 123.456 1`] = `number (1:2-1:9) 123.456`;
 
 exports[`numbers parses float 123.456e10 1`] = `
-module (1:0-3:11)
+module (1:0-4:0)
   number (1:0-1:10) 123.456e78
   number (2:0-2:11) 123.456e+78
   number (3:0-3:11) 123.456e-78
 `;
 
 exports[`numbers parses hex, oct, bin 1`] = `
-module (1:0-4:8)
+module (1:0-5:0)
   number (1:0-1:18) 0x123456789abcdef0
   number (2:0-2:16) 0x123456789abcde
   number (3:0-3:10) 0o12345670

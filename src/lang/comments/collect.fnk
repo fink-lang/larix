@@ -1,0 +1,20 @@
+{next_is, collect_text, advance} = import '@fink/prattler'
+
+
+collect_single_comment = fn ctx, op:
+  [text, next_ctx] = collect_text:: ctx,  '\n'
+  [{op, ...text}, next_ctx]
+
+
+collect_comments = fn ctx, op:
+  [comment, next_ctx] = collect_single_comment:: ctx, op
+
+  match next_ctx:
+    # TODO: check not unindented?
+    next_is:: ?, op:
+      [comments, final_ctx] = collect_comments::
+        advance:: next_ctx
+        op
+      [[comment, ...comments], final_ctx]
+    else:
+      [[comment], next_ctx]

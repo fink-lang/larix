@@ -11,65 +11,72 @@ describe:: 'object {...}', fn:
       to_match_snapshot
 
 
-  it:: 'parses single shorthand prop: {foo}', fn:
+  it:: 'parses single shorthand prop', fn:
     expect::
       parse_expr:: `{foo}`
       to_match_snapshot
 
 
-  it:: 'parses multiple shorthand exprs: {foo, bar}', fn:
+  it:: 'parses multiple shorthand exprs', fn:
     expect::
-      parse_expr:: `{foo, bar}`
+      parse_expr:: `{foo, bar, π}`
       to_match_snapshot
 
 
-  it:: 'parses multiple shorthand exprs: {foo, bar}', fn:
+  it:: 'parses multiple shorthand exprs', fn:
     expect::
       parse_expr:: `{foo, bar: 123, shrub: 'ni'}`
       to_match_snapshot
 
 
-  it:: 'parses single prop: {foo: spam}', fn:
+  it:: 'parses single prop', fn:
     expect::
       parse_expr:: `{foo: spam}`
       to_match_snapshot
 
 
-  it:: 'parses spread prop: {foo, ...bar}', fn:
+  it:: 'parses spread prop', fn:
     expect::
       parse_expr:: `{foo, ...bar}`
       to_match_snapshot
 
 
-  it:: `parses single str prop: {'foo': spam}`, fn:
+  it:: `parses single str prop}`, fn:
     expect::
       parse_expr:: `{'foo': spam}`
       to_match_snapshot
 
 
-  it:: 'parses default assignment prop: {foo=123}', fn:
+  it:: 'parses default assignment prop', fn:
     expect::
       parse_expr:: `{foo=123}`
       to_match_snapshot
 
 
-  it:: `parses calculated prop: {(...): 123, ...}`, fn:
+  it:: `parses calculated prop`, fn:
     expect::
       parse_expr:: `{foo, (bar+ni): 123, spam}`
       to_match_snapshot
 
 
-  it:: 'parses single prop with block value: {foo: spam ...}', fn:
+  it:: `parses keywords as keys`, fn:
     expect::
       parse_expr:: `
-        {
-          foo:
-            spam
-            ni
-        }
+        {fn, match, fold, unfold, map, find, filter, await, attempt}
       `
       to_match_snapshot
 
+
+describe:: 'dict', fn:
+  it:: 'parses', fn:
+    expect::
+      parse_expr:: `
+        dict:
+          foo
+          (bar+ni): 123
+          spam
+      `
+      to_match_snapshot
 
 
 describe:: 'object {...} - parsing failures', fn:
@@ -82,10 +89,10 @@ describe:: 'object {...} - parsing failures', fn:
         1| {
             ^
 
-        Expected one of [ '}' ] but found Symbol(end).`
+        Expected ',' or indented new line or '}'.`
 
 
-  it:: `throws when encountering bad start of prop key`, fn:
+  it:: `throws when encountering bad end of prop`, fn:
     expect::
       fn: parse_expr:: `{foo) bar}`, 'test.fnk'
 
@@ -94,16 +101,26 @@ describe:: 'object {...} - parsing failures', fn:
         1| {foo) bar}
                ^
 
-        Expected one of [ '}' ] but found ')'.`
+        Expected ',' or indented new line or end of block.`
 
-
-  it:: `throws when encountering bad prop key expr`, fn:
     expect::
       fn: parse_expr:: `{2*3: bar}`, 'test.fnk'
 
       to_throw:: `
-        test.fnk:1:1
+        test.fnk:1:2
         1| {2*3: bar}
-            ^
+             ^
 
-        Expected prop-key but found 'arithm' expression.`
+        Expected ',' or indented new line or end of block.`
+
+
+  it:: `throws when encountering bad start of prop key`, fn:
+    expect::
+      fn: parse_expr:: `{foo, [bar]: spam}`, 'test.fnk'
+
+      to_throw:: `
+        test.fnk:1:6
+        1| {foo, [bar]: spam}
+                 ^
+
+        Expected prop-key but found '['.`

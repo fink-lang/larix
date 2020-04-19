@@ -1,7 +1,7 @@
-{curr_loc} = import '@fink/prattler'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
-{seq} = import '../generic/sequence'
+{terminated_block, add_named_block} = import '../block'
 
 
 array = fn op:
@@ -9,9 +9,15 @@ array = fn op:
     ...symbol(op),
 
     nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
-      [exprs, next_ctx] = seq:: ctx, ']'
-      {end} = curr_loc:: next_ctx
-
-      [{type: 'array', exprs, loc: {start, end}}, next_ctx]
+      [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ']'
+      [{type: 'array', exprs, loc}, next_ctx]
   }
+
+
+add_array = fn ctx:
+  pipe ctx:
+    add_operator:: array:: '['
+    add_separator:: symbol:: ','
+    add_separator:: symbol:: ']'
+
+    add_named_block:: 'list', 'array'

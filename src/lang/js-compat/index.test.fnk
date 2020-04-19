@@ -9,6 +9,7 @@ describe:: 'js-compat operators', fn:
     expect::
       parse_expr:: 'new_foo = new Foobar(spam, ni)'
       to_match_snapshot
+
     expect::
       parse_expr:: 'new_foo = new Foobar:: spam, ni'
       to_match_snapshot
@@ -18,7 +19,7 @@ describe:: 'js-compat operators', fn:
     expect::
       parse_expr:: `throw_foo = foo || throw err('foobar')`
       to_match_snapshot
+
     expect::
       parse_expr:: `throw_foo = foo || throw err:: 'foobar'`
       to_match_snapshot
-
