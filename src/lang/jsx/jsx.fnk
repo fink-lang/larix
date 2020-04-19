@@ -74,7 +74,7 @@ jsx_attr = fn ctx:
   [value, next_ctx] = match true:
     next_is:: ctx, '=':
       jsx_attr_value:: advance:: ctx
-    else :
+    else:
       [null, ctx]
 
   {end} = curr_loc:: next_ctx
