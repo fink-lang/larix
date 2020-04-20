@@ -101,17 +101,17 @@ describe:: 'object {...} - parsing failures', fn:
         1| {foo) bar}
                ^
 
-        Expected ',' or indented new line or end of block.`
+        Expected ',' or indented new line or '}'.`
 
     expect::
       fn: parse_expr:: `{2*3: bar}`, 'test.fnk'
 
       to_throw:: `
-        test.fnk:1:2
+        test.fnk:1:1
         1| {2*3: bar}
-             ^
+            ^
 
-        Expected ',' or indented new line or end of block.`
+        Expected prop-key but found '2'.`
 
 
   it:: `throws when encountering bad start of prop key`, fn:

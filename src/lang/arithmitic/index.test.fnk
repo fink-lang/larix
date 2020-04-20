@@ -40,3 +40,14 @@ describe:: 'arithmitic', fn:
       parse_expr:: `(a - b) * c`
       to_match_snapshot
 
+
+  it:: 'parses multiline', fn:
+    expect::
+      parse_expr:: `
+        a
+          + b +
+          c
+            + d
+      `
+      to_match_snapshot
+
