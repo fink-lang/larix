@@ -1,77 +1,27 @@
-{
-  assert_advance, advance, expression, next_is, next_is_end, curr_loc, next_loc
-} = import '@fink/prattler'
+{advance, expression, next_is, next_is_end, curr_loc, next_loc} = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
 {end_token} = import '@fink/prattler/tokenizer'
 {add_separator, add_non_separating} = import '@fink/prattler/symbols'
 
 {symbol} = import '../symbols'
-{next_is_unindented, indentation, push_indentation, pop_indentation} = import '../indentation'
 {collect_single_comment} = import '../comments/collect'
 
+{curr_indentation, update_indentation, push_block, pop_block} = import './indentation'
+{end_of_block_indent, next_is_unindented, next_is_indented} = import './indentation'
 
 
 empty_op = fn {loc: {end}}:
   {type: 'empty', value: '', loc: {start: end, end}}
 
 
-next_is_indented_nl = fn ctx:
-  curr_ind = indentation:: ctx
-  {end: {line: curr_line}} = curr_loc:: ctx
-  {start: {line: next_line, column: next_ind}} = next_loc:: ctx
-
-  curr_line < next_line && curr_ind < next_ind
-
-
-pop_block = fn prev_ind: fn ctx:
-  {blocks: [end_symbol, ...blocks]} = ctx
-
-  match ctx:
-    next_is:: ?, end_symbol:
-      ind_ctx = {...ctx, blocks}
-      next_ctx = pop_indentation:: ind_ctx, prev_ind
-      assert_advance:: next_ctx, end_symbol
-
-    # next_is_unindented:: ?:
-    # next_is_end:: ?:
-    else:
-      throw token_error::
-        `Expected ',' or indented new line or '${end_symbol}'.`
-        ctx.next_token
-        ctx
-
-
-pop_block_no_end = fn prev_ind: fn ctx:
-  next_ctx = pop_indentation:: ctx, prev_ind
-
-  match next_ctx:
-    next_is_end:: ?: advance:: next_ctx
-    else: next_ctx
-
-
-push_block = fn ctx, end_symbol:
-  {blocks=[]} = ctx
-  curr_ind = indentation:: ctx
-
-  ind_ctx = match end_symbol:
-    end_token: ctx
-    else: push_indentation:: ctx, curr_ind + 1
-
-  match end_symbol:
-    end_token:
-      pop = pop_block_no_end:: curr_ind
-      [pop, {...ind_ctx, blocks}]
-    # TODO: should be bock_end
-    null:
-      pop = pop_block_no_end:: curr_ind
-      [pop, {...ind_ctx, blocks}]
-    else:
-      pop = pop_block:: curr_ind
-      [pop, {...ind_ctx, blocks: [end_symbol, ...blocks]}]
+get_end_symb = fn {blocks: [block, ...blocks]}:
+  match block:
+    {end_symbol: end_of_block_indent}: get_end_symb:: {blocks}
+    else: block.end_symbol
 
 
 next_is_end_of_block = fn ctx:
-  {blocks: [end_symbol]} = ctx
+  end_symbol = get_end_symb:: ctx
 
   match ctx:
     next_is_end:: ?, end_symbol: true
@@ -88,22 +38,20 @@ next_is_nl = fn ctx:
 
 
 get_all = fn ctx, single_expr:
+  pipe [[], ctx, true, false]:
+    unfold [exprs, ctx, at_start, was_comma]:
+      [done, next] = match ctx:
+        next_is_indented:: ?:
+          next_ctx = update_indentation:: ctx
+          [false, [exprs, next_ctx, true, was_comma]]
 
-  [exprs, next_ctx] = pipe [ctx, [], true, false]:
-    unfold [ctx, exprs, at_start, was_comma]:
-      [next_exprs, next_ctx, done, next_at_start, next_was_comma] = match ctx:
         next_is_end_of_block:: ?:
           match was_comma:
             true:
               expr = empty_op:: ctx.curr_token
-              [[...exprs, expr], ctx, true]
+              [true, [[...exprs, expr], ctx]]
             else:
-              [exprs, ctx, true]
-
-        next_is_indented_nl:: ?:
-          {start: {column: block_ind}} = next_loc:: ctx
-          block_ctx = push_indentation:: ctx, block_ind
-          [exprs, block_ctx, false, true, was_comma]
+              [true, [exprs, ctx]]
 
         next_is:: ?, ',':
           next_ctx = advance:: ctx
@@ -114,18 +62,18 @@ get_all = fn ctx, single_expr:
               match was_comma:
                 true:
                   expr0 = empty_op:: ctx.curr_token
-                  [[...exprs, expr0, expr], next_ctx, false, true, false]
+                  [false, [[...exprs, expr0, expr], next_ctx, true, false]]
                 else:
-                  [[...exprs, expr], next_ctx, false, true, false]
+                  [false, [[...exprs, expr], next_ctx, true, false]]
             else:
 
-              [exprs, next_ctx, false, true, true]
+              [false, [exprs, next_ctx, true, true]]
         else:
           match at_start:
             false:
               # TODO: use curr block's end symbol
               throw token_error::
-                `Expected ',' or indented new line or end of block.`
+                `Expected ',' or indented new line or '${get_end_symb:: ctx}'.`
                 ctx.next_token
                 ctx
 
@@ -134,20 +82,20 @@ get_all = fn ctx, single_expr:
           # new line at end of expr is a separator
           next_is_start = next_is_nl:: next_ctx
 
-          [[...exprs, expr], next_ctx, false, next_is_start, false]
+          [false, [[...exprs, expr], next_ctx, next_is_start, false]]
 
-      (
-        [next_exprs, next_ctx, done],
-        [next_ctx, next_exprs, next_at_start, next_was_comma]
-      )
+      ([done, next], next)
 
-    find [exprs, ctx, done]: done
+    find [done]: done
+
+    fn [, [exprs, next_ctx]]:
+      [exprs, next_ctx]
 
 
 expressions = fn ctx, end_symbol, single_expr:
   {start} = curr_loc:: ctx
 
-  [pop_block, block_ctx] = push_block:: ctx, end_symbol
+  block_ctx = push_block:: ctx, end_symbol
 
   [all_exprs, next_ctx] = get_all:: block_ctx, single_expr
 
@@ -178,6 +126,7 @@ single_expression = fn ctx, lbp=0:
       [item, expr_ctx] = collect_single_comment:: comment_ctx, '#'
       comments = {...expr.comments, trailing: [item]}
       [{...expr, comments}, expr_ctx]
+
     else:
       [expr, next_ctx]
 
@@ -187,8 +136,7 @@ terminated_block = fn ctx, end_symbol, block_expr=single_expression:
 
 
 indented_block = fn ctx, block_expr=single_expression:
-  # TODO: null should be bock_end
-  terminated_block:: ctx, null, block_expr
+  terminated_block:: ctx, end_of_block_indent, block_expr
 
 
 named_block = fn op, type, block_expr:
@@ -207,3 +155,6 @@ add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
     add_non_separating:: named_block:: op, type, block_expr
     add_separator:: symbol:: ':'
 
+
+init_indentation = fn ctx:
+  {...ctx, blocks: [{end_symbol: end_token, min_ind: 0, curr_ind: 0}]}

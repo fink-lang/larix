@@ -1,4 +1,4 @@
-{init_indentation} = import './indentation'
+{init_indentation} = import './block'
 
 {add_jsx} = import './jsx'
 {add_conditionals} = import './conditionals'

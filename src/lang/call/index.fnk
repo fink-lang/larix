@@ -2,6 +2,7 @@
 
 {call} = import './call'
 {add_named_block} = import '../block'
+{end_of_block_indent} = import '../block/indentation'
 {symbol} = import '../symbols'
 
 
@@ -14,8 +15,7 @@ add_call_with_parens = fn ctx:
 
 add_call_without_parens = fn ctx:
   pipe ctx:
-    # TODO: null should be bock_end
-    add_operator:: call:: '::', null
+    add_operator:: call:: '::', end_of_block_indent
 
 
 add_pipe = fn ctx:

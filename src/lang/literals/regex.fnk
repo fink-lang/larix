@@ -5,7 +5,13 @@
 
 {unindent_text} = import '../../string-utils'
 {symbol} = import '../symbols'
-{get_next_line_indentation, curr_next_adjecent} = import '../indentation'
+
+
+curr_next_adjecent = fn ctx:
+  curr = curr_loc:: ctx
+  next = next_loc:: ctx
+
+  curr.end.line == next.start.line && curr.end.column == next.start.column
 
 
 get_text = fn ctx, op:
@@ -22,10 +28,10 @@ get_text = fn ctx, op:
 
 
 get_flags = fn ctx:
-  could_be_tag = curr_next_adjecent:: ctx
+  could_be_flag = curr_next_adjecent:: ctx
 
   match true:
-    could_be_tag && next_matches:: ctx, rx/[gimsuy]/:
+    could_be_flag && next_matches:: ctx, rx/[gimsuy]/:
       next_ctx = advance:: ctx
       flags = curr_value:: next_ctx
       [flags, next_ctx]

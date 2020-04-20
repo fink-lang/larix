@@ -5,8 +5,8 @@
 
 {symbol} = import '../symbols'
 
-{indentation} = import '../indentation'
 {terminated_block} = import '../block'
+{next_is_new_expr} = import '../block/indentation'
 
 {unindent_text} = import '../../string-utils'
 
@@ -88,7 +88,7 @@ string = fn op:
     {start: {column: next_start_col}} = next_loc:: ctx
 
     match true:
-      next_start_col <= indentation:: ctx: 0
+      next_is_new_expr:: ctx: 0
       left.type == 'ident': lbp
       else:
         throw token_error::

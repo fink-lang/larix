@@ -9,6 +9,7 @@
 next_is_key = fn ctx:
   {next_token: {value}} = ctx
   match ctx:
+    next_matches:: ?, rx/^[0-9].*/: false
     next_matches:: ?, rx/^\w+$/: true
     {tokenizer: {tokens: {(value): {}}}}: false
     else: true

@@ -9,6 +9,16 @@ arithm * (1:0-1:11)
   ident (1:10-1:11) c
 `;
 
+exports[`arithmitic parses multiline 1`] = `
+arithm + (1:0-4:7)
+  arithm + (1:0-3:3)
+    arithm + (1:0-2:5)
+      ident (1:0-1:1) a
+      ident (2:4-2:5) b
+    ident (3:2-3:3) c
+  ident (4:6-4:7) d
+`;
+
 exports[`arithmitic parses single line: a % b / c 1`] = `
 arithm / (1:0-1:9)
   arithm % (1:0-1:5)
