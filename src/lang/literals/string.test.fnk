@@ -35,11 +35,11 @@ describe:: 'strings', fn:
 
   it:: 'parses multi line strings', fn:
     expect::
-      parse_expr:: `'
-        foobar
-          spam shrub
-        ni'
-      `
+      parse_expr:: `'\n  foobar\n    spam shrub\n   ni'`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `fn:\n  '\n    foobar\n     spam shrub\n    ni\n  '`
       to_match_snapshot
 
 
@@ -93,20 +93,14 @@ describe:: 'strings', fn:
   it:: 'parses multiline template strings', fn:
     expect::
       parse_expr:: `
-        '
-          \${foo}:\${bar}:\${spam + ni}
-
-          ni
-        '
-      `
+        '\n  \${foo}:\${bar}:\${spam + ni}\n\n  ni\n'
+        `
       to_match_snapshot
 
 
   it:: 'parses nested template strings', fn:
     expect::
-      parse_expr:: '
-        `\\n\${foo:: bar, `  \${spam}`}\\n`
-      '
+      parse_expr:: '`\\n\${foo:: bar, `  \${spam}`}\\n`'
       to_match_snapshot
 
 
@@ -115,7 +109,7 @@ describe:: 'strings', fn:
       parse:: `
         'foobar'
         'spam'
-      `
+        `
       to_match_snapshot
 
 
@@ -130,8 +124,7 @@ describe:: 'string - parsing failures', fn:
         1| "foo bar,
                     ^
 
-        Unexpected end of code.
-      `
+        Unexpected end of code.`
 
 
   it:: 'throws when not tagged with identifier', fn:
@@ -143,5 +136,4 @@ describe:: 'string - parsing failures', fn:
         1| 12'bar spam'
              ^
 
-        Expected identifier before tagged string.
-      `
+        Expected identifier before tagged string.`
