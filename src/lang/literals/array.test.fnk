@@ -1,4 +1,4 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
 
 {parse_expr} = import '../../'
 
@@ -30,6 +30,13 @@ describe:: 'array [...]', fn:
   it:: 'parses leading commas: [,, foo]', fn:
     expect::
       parse_expr:: `[,, foo]`
+      to_match_snapshot
+
+
+  it:: 'parses middle commas: [,, foo]', fn:
+    expect::
+      # [a, , ..., b, c]
+      parse_expr:: `[foo, ,bar]`
       to_match_snapshot
 
 
