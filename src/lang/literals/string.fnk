@@ -6,9 +6,7 @@
 {symbol} = import '../symbols'
 
 {terminated_block} = import '../block'
-{next_is_new_expr} = import '../block/indentation'
-
-{unindent_text} = import '../../string-utils'
+{next_is_new_expr, curr_indentation} = import '../block/indentation'
 
 
 get_expr_part = fn ctx:
@@ -55,28 +53,62 @@ get_parts = fn ctx, op:
       [[str_part], next_ctx]
 
 
+get_str_ind = fn str, min_ind:
+  # TODO: fix regex space removal
+  # pipe str.matchAll:: rx/\n([ ]+)/g:
+
+  matched = str.matchAll:: new RegExp:: '\\n([ ]{${min_ind},})', 'g'
+  pipe matched:
+    map [, spaces]: spaces.length
+
+
+min = fn [...items]:
+  match items:
+    {length: ? > 0}: Math.min:: ...items
+    else: 0
+
+
+get_unindent = fn ctx, parts:
+  min_ind = 1 + curr_indentation:: ctx
+
+  ind = pipe parts:
+    filter part:
+      match part:
+        {type: 'string:text'}: true
+        else: false
+
+    map part:
+      ...get_str_ind:: part.value, min_ind
+
+    min
+
+  rx = new RegExp:: '\\n[ ]{0,${ind}}', 'g'
+
+  fn str: str.replace:: rx, '\n'
+
+
 get_unindented_text = fn ctx, op:
   {start} = curr_loc:: ctx
 
-  [[first, ...rest], next_ctx] = get_parts:: ctx, op
+  [raw_parts, next_ctx] = get_parts:: ctx, op
 
-  ind = match true:
-    first.value.startsWith:: '\n':
-      [, spaces] = first.value.match:: rx/^\n+(\s+)/
-      spaces.length
-    else: 0
+  unindent = get_unindent:: ctx, raw_parts
 
-  first_part = match ind:
-    0: first
-    else: {...first, value: first.value.slice:: 1 + ind}
-
-  [...parts] = pipe [first_part, ...rest]:
+  [first, ...rest] = pipe raw_parts:
     map part:
       match part:
         {type: 'string:text'}:
-          {...part, value: unindent_text:: part.value, ind}
+          value = unindent:: part.value
+          {...part, value}
         else:
           part
+
+  # remove first empty line
+  parts = match first.value:
+    ?.startsWith:: '\n':
+      [{...first, value: first.value.slice:: 1}, ...rest]
+    else:
+      [first, ...rest]
 
   {end} = curr_loc:: next_ctx
   [{type: 'string', op, parts, loc: {start, end}}, next_ctx]
@@ -107,7 +139,6 @@ string = fn op:
     get_unindented_text:: ctx, op
 
   {...symbol(op), lbp, led, nud}
-
 
 
 add_string = fn ctx:
