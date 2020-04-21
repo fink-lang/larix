@@ -12,6 +12,13 @@ array (1:0-1:8)
   ident (1:4-1:7) foo
 `;
 
+exports[`array [...] parses middle commas: [,, foo] 1`] = `
+array (1:0-1:11)
+  ident (1:1-1:4) foo
+  empty (1:5-1:5)
+  ident (1:7-1:10) bar
+`;
+
 exports[`array [...] parses multiple elements: [1, 2] 1`] = `
 array (1:0-1:6)
   number (1:1-1:2) 1

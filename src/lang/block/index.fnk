@@ -59,15 +59,15 @@ get_all = fn ctx, single_expr:
           match at_start:
             true:
               expr = empty_op:: ctx.next_token
-              match was_comma:
-                true:
-                  expr0 = empty_op:: ctx.curr_token
-                  [false, [[...exprs, expr0, expr], next_ctx, true, false]]
-                else:
-                  [false, [[...exprs, expr], next_ctx, true, false]]
+              [false, [[...exprs, expr], next_ctx, true, false]]
             else:
+              match next_ctx:
+                next_is:: ?, ',':
+                  expr = empty_op:: ctx.next_token
+                  [false, [[...exprs, expr], next_ctx, false, false]]
+                else:
+                  [false, [exprs, next_ctx, true, true]]
 
-              [false, [exprs, next_ctx, true, true]]
         else:
           match at_start:
             false:

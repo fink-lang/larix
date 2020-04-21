@@ -1,4 +1,4 @@
-{describe, it, expect, to_equal} = import '../../testing/jest'
+{describe, it, expect, to_equal} = import '@fink/jest'
 
 {init_parser, start_parser, next_is_end, next_loc} = import '@fink/prattler'
 
