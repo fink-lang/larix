@@ -48,6 +48,11 @@ next_is_call_arg = fn ident_node, ctx:
     next_val == '||': false
     next_val == '/': false
     next_val == '#': false
+    next_val == ':': false
+    next_val == ',': false
+    next_val == '}': false
+    next_val == ')': false
+    next_val == ']': false
     # istanbul ignore else
     indented: true
     # istanbul ignore next
