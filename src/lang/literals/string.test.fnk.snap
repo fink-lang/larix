@@ -80,7 +80,7 @@ string ' (1:0-5:1)
 exports[`strings parses nested template strings 1`] = `
 string \` (1:0-1:31)
   '\\n'
-    call (1:5-1:27)
+    call :: (1:5-1:27)
       ident (1:5-1:8) foo
       ident (1:11-1:14) bar
       string \` (1:16-1:27)

@@ -6,7 +6,9 @@
 
 prefix = fn op, type:
   {
-    ...symbol(op),
+    ...symbol(op)
+
+    lbp: fn: fn: 0
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx

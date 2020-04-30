@@ -65,7 +65,7 @@ module (1:0-7:0)
       block (2:17-2:22)
         ident (2:19-2:22) bar
     cond:expr (4:2-4:17)
-      call (4:2-4:12)
+      call :: (4:2-4:12)
         ident (4:2-4:8) is_str
         partial (4:11-4:12) ?
       block (4:12-4:17)

@@ -15,7 +15,7 @@ infix = fn op, type:
   {
     ...symbol(op),
 
-    led: fn lbp: infix_led:: type, op, lbp
+    led: fn lbp: infix_led:: type, op, lbp + 1
   }
 
 

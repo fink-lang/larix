@@ -19,7 +19,9 @@ other = fn:
       else:
         identifier:: ctx
 
-  {...symbol(other_token), nud}
+  lbp = fn: fn: 0
+
+  {...symbol(other_token), nud, lbp}
 
 
 add_other = fn ctx:

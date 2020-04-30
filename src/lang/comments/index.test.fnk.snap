@@ -1,13 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`comments parses doc-comment 1`] = `
-module (1:0-5:0)
+module (1:0-8:0)
   --- 
   --- foobar spam ham
   --- 
   assign = (4:0-4:9)
     ident (4:0-4:4) spam
     ident (4:7-4:9) ni
+  --- bar
+  ident (7:0-7:4) spam
 `;
 
 exports[`comments parses line comments 1`] = `

@@ -55,7 +55,7 @@ pop_block = fn ctx:
         else:
           # TODO: use curr block's min indentation in msg
           throw token_error::
-            `Expected ',' or indented new line or '${end_symbol}'.`
+            `Expected ',' or indented new line or '${end_symbol.toString()}'.`
             ctx.next_token
             ctx
 

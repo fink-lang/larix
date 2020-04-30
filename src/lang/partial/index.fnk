@@ -6,7 +6,9 @@
 
 partial = fn op:
   {
-    ...symbol(op),
+    ...symbol(op)
+
+    lbp: fn: fn: 0
 
     nud: fn: fn ctx:
       loc = curr_loc:: ctx

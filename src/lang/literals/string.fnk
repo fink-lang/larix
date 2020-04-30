@@ -121,6 +121,7 @@ string = fn op:
 
     match true:
       next_is_new_expr:: ctx: 0
+      left.loc.end.column != next_start_col: 0
       left.type == 'ident': lbp
       else:
         throw token_error::

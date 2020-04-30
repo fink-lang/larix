@@ -82,7 +82,7 @@ object = fn op:
 
     [{type: 'object', exprs, loc}, next_ctx]
 
-  {...symbol(op), nud}
+  {...symbol(op), nud, lbp: fn: fn: 0}
 
 
 add_object = fn ctx:

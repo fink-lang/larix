@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse, parse_expr} = import '../../'
 
 
 describe:: 'regex rx/.../', fn:
@@ -43,7 +43,7 @@ describe:: 'regex - parsing failures', fn:
 
   it:: 'throws when missing end', fn:
     expect::
-      fn: parse_expr:: `rx/foo.bar`, 'test.fnk'
+      fn: parse:: `rx/foo.bar`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:10
@@ -56,12 +56,12 @@ describe:: 'regex - parsing failures', fn:
 
   it:: 'throws unssupported flags', fn:
     expect::
-      fn: parse_expr:: `rx/foo.bar/n`, 'test.fnk'
+      fn: parse:: `rx/foo.bar/n`, 'test.fnk'
 
       to_throw:: `
         test.fnk:1:11
         1| rx/foo.bar/n
                       ^
 
-        Cannot use 'n' as an infix operator.
+        Expected ',' or indented new line or 'Symbol(end)'.
       `
