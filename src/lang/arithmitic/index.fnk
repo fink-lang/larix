@@ -4,10 +4,10 @@
 
 
 arithm = fn op: infix:: op, 'arithm'
-arithm_right = fn op: infix_right:: op, 'arithm_right'
+arithm_right = fn op: infix_right:: op, 'arithm:right'
 
 minus = fn op, type:
-  {nud} = prefix:: op, 'arithm_prefix'
+  {nud} = prefix:: op, 'arithm:prefix'
 
   {
     ...arithm:: op

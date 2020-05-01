@@ -81,22 +81,22 @@ arithm + (1:0-1:9)
 `;
 
 exports[`arithmitic parses ^ 1`] = `
-arithm_right ^ (1:0-1:5)
+arithm:right ^ (1:0-1:5)
   ident (1:0-1:1) a
   ident (1:4-1:5) b
 `;
 
 exports[`arithmitic parses ^ 2`] = `
-arithm_right ^ (1:0-1:9)
+arithm:right ^ (1:0-1:9)
   ident (1:0-1:1) a
-  arithm_right ^ (1:4-1:9)
+  arithm:right ^ (1:4-1:9)
     ident (1:4-1:5) b
     ident (1:8-1:9) c
 `;
 
 exports[`arithmitic parses ^ 3`] = `
 arithm * (1:0-1:9)
-  arithm_right ^ (1:0-1:5)
+  arithm:right ^ (1:0-1:5)
     ident (1:0-1:1) a
     ident (1:4-1:5) b
   ident (1:8-1:9) c
@@ -105,7 +105,7 @@ arithm * (1:0-1:9)
 exports[`arithmitic parses ^ 4`] = `
 arithm * (1:0-1:9)
   ident (1:0-1:1) a
-  arithm_right ^ (1:4-1:9)
+  arithm:right ^ (1:4-1:9)
     ident (1:4-1:5) b
     ident (1:8-1:9) c
 `;
@@ -133,19 +133,19 @@ arithm + (1:0-1:9)
 `;
 
 exports[`arithmitic parses - prefix 1`] = `
-arithm_prefix - (1:0-1:2)
+arithm:prefix - (1:0-1:2)
   ident (1:1-1:2) a
 `;
 
 exports[`arithmitic parses - prefix 2`] = `
 arithm - (1:0-1:6)
-  arithm_prefix - (1:0-1:2)
+  arithm:prefix - (1:0-1:2)
     ident (1:1-1:2) a
   ident (1:5-1:6) b
 `;
 
 exports[`arithmitic parses - prefix 3`] = `
-arithm_prefix - (1:0-1:6)
+arithm:prefix - (1:0-1:6)
   arithm * (1:1-1:6)
     ident (1:1-1:2) a
     ident (1:5-1:6) b
@@ -154,7 +154,7 @@ arithm_prefix - (1:0-1:6)
 exports[`arithmitic parses - prefix 4`] = `
 arithm * (1:0-1:6)
   ident (1:0-1:1) a
-  arithm_prefix - (1:4-1:6)
+  arithm:prefix - (1:4-1:6)
     ident (1:5-1:6) b
 `;
 
