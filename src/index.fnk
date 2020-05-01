@@ -2,7 +2,7 @@
 
 {init_language} = import './lang'
 {parse_module} = import './lang/module'
-{single_expression} = import './lang/block'
+{single_expression} = import './lang/block/expr'
 
 
 init = fn ctx:

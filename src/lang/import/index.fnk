@@ -1,6 +1,6 @@
 {add_non_separating} = import '@fink/prattler/symbols'
 
-{prefix} = import '../generic/prefix'
+{prefix} = import '../symbols'
 
 
 add_import = fn ctx:

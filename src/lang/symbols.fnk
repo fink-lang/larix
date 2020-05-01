@@ -1,15 +1,84 @@
-{symbol: parser_symbol} = import '@fink/prattler/symbols'
+{symbol} = import '@fink/prattler/symbols'
+{curr_loc, curr_value} = import '@fink/prattler'
+
 {next_is_new_expr} = import './block/indentation'
+{single_expression} = import './block/expr'
 
 
-symbol = fn id:
+
+infix_led = fn type, op, lbp: fn ctx, left:
+  {loc: {start}} = left
+  [right, next_ctx] = single_expression:: ctx, lbp
+  {loc: {end}} = right
+
+  [{type, op, left, right, loc: {start, end}}, next_ctx]
+
+
+left_binding = fn lbp: fn ctx:
+  match ctx:
+    next_is_new_expr:: ?:
+      0
+    else:
+      lbp
+
+
+non_bining = fn: fn: 0
+
+
+infix = fn op, type:
   {
-    ...parser_symbol(id),
+    ...symbol:: op
 
-    lbp: fn lbp: fn ctx:
-      match ctx:
-        next_is_new_expr:: ?:
-          0
-        else:
-          lbp
+    lbp: left_binding
+
+    led: fn lbp: infix_led:: type, op, lbp + 1
+  }
+
+
+infix_right = fn op, type:
+  {
+    ...symbol:: op
+
+    lbp: left_binding
+
+    led: fn lbp: infix_led:: type, op, lbp - 1
+  }
+
+
+# TODO: why is this not type, op?
+prefix = fn op, type:
+  {
+    ...symbol:: op
+
+    lbp: non_bining
+
+    nud: fn lbp: fn ctx:
+      {start} = curr_loc:: ctx
+      [right, next_ctx] = single_expression:: ctx, lbp
+      {end} = right.loc
+
+      [{type, op, right, loc: {start, end}}, next_ctx]
+  }
+
+
+literal = fn op, type:
+  {
+    ...symbol:: op
+
+    lbp: non_bining
+
+    nud: fn: fn ctx:
+      loc = curr_loc:: ctx
+      value = curr_value:: ctx
+      # TODO: op must be value, so no need for gettign value
+      # TODO: assert that value is indeed op?
+      [{type, value, loc}, ctx]
+  }
+
+
+terminator = fn op:
+  {
+    ...symbol:: op
+
+    lbp: left_binding
   }

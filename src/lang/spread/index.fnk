@@ -1,15 +1,13 @@
 {add_operator} = import '@fink/prattler/symbols'
 {next_is, curr_loc} = import '@fink/prattler'
 
-{symbol} = import '../symbols'
-{single_expression} = import '../block'
+{prefix} = import '../symbols'
+{single_expression} = import '../block/expr'
 
 
 spread = fn op, type:
   {
-    ...symbol(op),
-
-    lbp: fn: fn: 0
+    ...prefix:: op
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx

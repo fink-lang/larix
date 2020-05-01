@@ -1,7 +1,7 @@
 {assert_advance} = import '@fink/prattler'
 
-{add_named_block} = import '../block'
-{indented_block, single_expression} = import '../block'
+{add_named_block, indented_block} = import '../block'
+{single_expression} = import '../block/expr'
 
 
 get_condition = fn ctx:
@@ -33,5 +33,7 @@ cond_result_expr = fn ctx:
 
 add_conditionals = fn ctx:
   pipe ctx:
+    # TODO: 'block', 'match'
     add_named_block:: 'match', 'cond', cond_result_expr
+    # TODO: 'block', 'attempt'
     add_named_block:: 'attempt', 'attempt'

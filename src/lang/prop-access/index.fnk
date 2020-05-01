@@ -2,8 +2,8 @@
 {add_operator} = import '@fink/prattler/symbols'
 {token_error} = import '@fink/prattler/errors'
 
-{symbol} = import '../symbols'
-{single_expression} = import '../block'
+{infix} = import '../symbols'
+{single_expression} = import '../block/expr'
 {identifier} = import '../identifier'
 
 
@@ -27,7 +27,7 @@ member_expr = fn ctx, lbp:
 
 prop_access = fn op, type:
   {
-    ...symbol(op),
+    ...infix:: op
 
     led: fn lbp: fn ctx, left:
       {loc: {start}} = left

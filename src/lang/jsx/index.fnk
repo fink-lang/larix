@@ -1,12 +1,12 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{symbol} = import '../symbols'
+{terminator} = import '../symbols'
 {jsx} = import './jsx'
 
 
 add_jsx = fn ctx:
   pipe ctx:
     add_operator:: jsx:: '<'
-    # TODO: add lbp: fn: fn: 0
-    add_separator:: symbol:: '/>'
-    add_separator:: symbol:: '</'
+    add_separator:: terminator:: '/>'
+    # TODO: use prefix?
+    add_separator:: terminator:: '</'

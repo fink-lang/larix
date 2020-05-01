@@ -1,0 +1,162 @@
+{advance, expression, next_is, next_is_end, curr_loc, next_loc} = import '@fink/prattler'
+{token_error} = import '@fink/prattler/errors'
+
+{collect_single_comment} = import '../comments/collect'
+{next_is_call_arg} = import '../call/opless'
+{call_expr} = import '../call/expr'
+
+{update_indentation, push_block, pop_block} = import './indentation'
+{end_of_block_indent, next_is_unindented, next_is_indented} = import './indentation'
+{next_is_new_expr} = import './indentation'
+
+
+empty_expr = fn {loc: {end}}:
+  {type: 'empty', value: '', loc: {start: end, end}}
+
+
+get_end_symb = fn {blocks: [block, ...blocks]}:
+  match block:
+    {end_symbol: end_of_block_indent}: get_end_symb:: {blocks}
+    else: block.end_symbol
+
+
+end_symb_str = fn ctx:
+  symb = get_end_symb:: ctx
+  symb.toString()
+
+
+next_is_end_of_block = fn ctx:
+  end_symbol = get_end_symb:: ctx
+
+  match ctx:
+    next_is_end:: ?, end_symbol: true
+    next_is_unindented:: ?: true
+    # TODO: should be responsibility of enclosing block
+    next_is:: ?, ':': true
+    else: false
+
+
+next_is_nl = fn ctx:
+  {end: {line: curr_line}} = curr_loc:: ctx
+  {start: {line: next_line}} = next_loc:: ctx
+  curr_line < next_line
+
+
+get_all = fn ctx, single_expr:
+  pipe [[], ctx, true, false]:
+    unfold [exprs, ctx, at_start, was_comma]:
+      [done, next] = match ctx:
+        next_is_indented:: ?:
+          next_ctx = update_indentation:: ctx
+          [false, [exprs, next_ctx, true, was_comma]]
+
+        next_is_end_of_block:: ?:
+          match was_comma:
+            true:
+              expr = empty_expr:: ctx.curr_token
+              [true, [[...exprs, expr], ctx]]
+            else:
+              [true, [exprs, ctx]]
+
+        next_is:: ?, ',':
+          next_ctx = advance:: ctx
+
+          match at_start:
+            true:
+              expr = empty_expr:: ctx.next_token
+              [false, [[...exprs, expr], next_ctx, true, false]]
+            else:
+              match next_ctx:
+                next_is:: ?, ',':
+                  expr = empty_expr:: ctx.next_token
+                  [false, [[...exprs, expr], next_ctx, false, false]]
+                else:
+                  [false, [exprs, next_ctx, true, true]]
+
+        else:
+          match at_start:
+            false:
+              throw token_error::
+                `Expected ',' or indented new line or '${end_symb_str:: ctx}'.`
+                ctx.next_token
+                ctx
+
+          # TODO: check if next is actially a start of an expr.
+          [expr, next_ctx] = single_expr:: ctx
+          # new line at end of expr is a separator
+          next_is_start = next_is_nl:: next_ctx
+
+          [false, [[...exprs, expr], next_ctx, next_is_start, false]]
+
+      ([done, next], next)
+
+    find [done]: done
+
+    fn [, [exprs, next_ctx]]:
+      [exprs, next_ctx]
+
+
+expressions = fn ctx, end_symbol, single_expr:
+  {start} = curr_loc:: ctx
+
+  block_ctx = push_block:: ctx, end_symbol
+
+  [all_exprs, next_ctx] = get_all:: block_ctx, single_expr
+
+  [exprs, comments] = pipe all_exprs:
+    fold expr, [exprs]=[[]]:
+      match expr:
+        {type: 'comment'}:
+          {exprs: trailing} = expr
+          [exprs, {trailing}]
+        else:
+          [[...exprs, expr], {}]
+
+  end_ctx = pop_block:: next_ctx
+
+  {end} = curr_loc:: end_ctx
+  [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
+
+
+# TODO: move to ../comments/?
+add_trailing_comment = fn expr, ctx:
+  match ctx:
+    next_is_nl:: ?:
+      [expr, ctx]
+
+    next_is:: ?, '#':
+      comment_ctx = advance:: ctx
+      [item, next_ctx] = collect_single_comment:: comment_ctx, '#'
+      comments = {...expr.comments, trailing: [item]}
+
+      [{...expr, comments}, next_ctx]
+    else:
+      [expr, ctx]
+
+
+expression_with_comment = fn ctx, lbp:
+  [expr, next_ctx] = expression:: ctx, lbp
+  add_trailing_comment:: expr, next_ctx
+
+
+single_expression = fn ctx, lbp=0:
+  [expr, next_ctx] = expression_with_comment:: ctx, lbp
+
+  match next_ctx:
+    next_is:: ?, ',':
+      [expr, next_ctx]
+
+    next_is_end_of_block:: ?:
+      [expr, next_ctx]
+
+    next_is_new_expr:: ?:
+      [expr, next_ctx]
+
+    next_is_call_arg:: expr, lbp, ?:
+      indented_block =  fn ctx, block_expr=single_expression:
+        expressions:: ctx, end_of_block_indent, block_expr
+
+      call_expr:: next_ctx, expr, '', indented_block
+
+    else:
+      [expr, next_ctx]

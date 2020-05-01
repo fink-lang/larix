@@ -80,3 +80,7 @@ update_indentation = fn ctx:
   indented_block = {...block, curr_ind: column, min_ind: column}
 
   {...ctx, blocks: [indented_block, ...blocks]}
+
+
+init_indentation = fn ctx:
+  {...ctx, blocks: [{end_symbol: end_token, min_ind: 0, curr_ind: 0}]}

@@ -1,5 +1,6 @@
 {add_operator} = import '@fink/prattler/symbols'
-{infix} = import '../generic/infix'
+
+{infix} = import '../symbols'
 
 
 comp = fn op: infix:: op, 'comp'

@@ -1,21 +1,7 @@
-{curr_value, curr_loc} = import '@fink/prattler'
-{add_non_separating} = import '@fink/prattler/symbols'
-
-{symbol} = import '../symbols'
-
-
-partial = fn op:
-  {
-    ...symbol(op)
-
-    lbp: fn: fn: 0
-
-    nud: fn: fn ctx:
-      loc = curr_loc:: ctx
-      [{type: 'partial', value: '?', loc}, ctx]
-  }
+{add_operator} = import '@fink/prattler/symbols'
+{literal} = import '../symbols'
 
 
 add_partial = fn ctx:
   pipe ctx:
-    add_non_separating:: partial:: '?'
+    add_operator:: literal:: '?', 'partial'

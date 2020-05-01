@@ -1,14 +1,12 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{symbol} = import '../symbols'
+{prefix, terminator} = import '../symbols'
 {terminated_block, add_named_block} = import '../block'
 
 
 array = fn op:
   {
-    ...symbol(op)
-
-    lbp: fn: fn: 0
+    ...prefix:: op
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ']'
@@ -19,7 +17,7 @@ array = fn op:
 add_array = fn ctx:
   pipe ctx:
     add_operator:: array:: '['
-    add_separator:: symbol:: ','
-    add_separator:: symbol:: ']'
+    add_separator:: terminator:: ','
+    add_separator:: terminator:: ']'
 
     add_named_block:: 'list', 'array'

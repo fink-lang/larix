@@ -1,13 +1,13 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{symbol} = import '../symbols'
+{terminator} = import '../symbols'
 {terminated_block} = import '../block'
 
 
 group = fn op:
-  # TOOD: lbp: fn: fn: 0
+  # TOOD: should be prefix, but overloaded with call op
   {
-    ...symbol(op)
+    ...terminator:: op
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ')'
@@ -19,5 +19,5 @@ group = fn op:
 add_group = fn ctx:
   pipe ctx:
     add_operator:: group:: '('
-    add_separator:: symbol:: ','
-    add_separator:: symbol:: ')'
+    add_separator:: terminator:: ','
+    add_separator:: terminator:: ')'

@@ -1,7 +1,7 @@
-{add_operator} = import  '@fink/prattler/symbols'
+{add_operator, add_non_separating} = import  '@fink/prattler/symbols'
 
-{infix_right} = import  '../generic/infix'
-{prefix} = import  '../generic/prefix'
+{infix_right} = import  '../symbols'
+{prefix} = import  '../symbols'
 
 
 logical = fn op: infix_right:: op, 'logical'
@@ -10,7 +10,7 @@ prefix_logical = fn op: prefix:: op, 'logical'
 
 add_logical_operators = fn ctx:
   pipe ctx:
-    # TODO: call them `and`, `or`, `not`
+    # TODO: deprecate?
     add_operator:: logical:: '||'
     add_operator:: logical:: '&&'
     add_operator:: prefix_logical:: '!'

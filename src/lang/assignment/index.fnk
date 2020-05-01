@@ -1,5 +1,5 @@
 {add_operator} = import '@fink/prattler/symbols'
-{infix_right} = import '../generic/infix'
+{infix_right} = import '../symbols'
 
 
 assign = fn op: infix_right:: op, 'assign'
