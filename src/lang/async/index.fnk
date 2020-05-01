@@ -3,10 +3,8 @@
 {prefix} = import '../symbols'
 
 
-await_op = fn op: prefix:: op, 'await'
-
-
 add_async = fn ctx:
   pipe ctx:
-    add_non_separating:: await_op:: 'await'
+    # TODO: 'await' 'prefix' ?
+    add_non_separating:: prefix:: 'await', 'await'
 

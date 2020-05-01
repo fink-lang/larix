@@ -1,5 +1,5 @@
 {symbol} = import '@fink/prattler/symbols'
-{curr_loc, curr_value} = import '@fink/prattler'
+{curr_loc} = import '@fink/prattler'
 
 {next_is_new_expr} = import './block/indentation'
 {single_expression} = import './block/expr'
@@ -69,10 +69,8 @@ literal = fn op, type:
 
     nud: fn: fn ctx:
       loc = curr_loc:: ctx
-      value = curr_value:: ctx
-      # TODO: op must be value, so no need for gettign value
-      # TODO: assert that value is indeed op?
-      [{type, value, loc}, ctx]
+      # value = curr_value:: ctx
+      [{type, value: op, loc}, ctx]
   }
 
 

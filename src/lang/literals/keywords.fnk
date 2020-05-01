@@ -1,0 +1,11 @@
+{add_non_separating} = import '@fink/prattler/symbols'
+{literal} = import '../symbols'
+
+
+add_keywords = fn ctx:
+  pipe ctx:
+    add_non_separating:: literal:: 'true', 'literal'
+    add_non_separating:: literal:: 'false', 'literal'
+    add_non_separating:: literal:: 'null', 'literal'
+    # TODO: should that live under conditional?
+    add_non_separating:: literal:: 'else', 'literal'

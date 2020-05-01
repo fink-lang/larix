@@ -90,11 +90,11 @@ get_unindent = fn ctx, parts:
 get_unindented_text = fn ctx, op:
   {start} = curr_loc:: ctx
 
-  [raw_parts, next_ctx] = get_parts:: ctx, op
+  [parts, next_ctx] = get_parts:: ctx, op
 
-  unindent = get_unindent:: ctx, raw_parts
+  unindent = get_unindent:: ctx, parts
 
-  [first, ...rest] = pipe raw_parts:
+  [first, ...rest] = pipe parts:
     map part:
       match part:
         {type: 'string:text'}:
@@ -104,14 +104,14 @@ get_unindented_text = fn ctx, op:
           part
 
   # remove first empty line
-  parts = match first.value:
+  exprs = match first.value:
     ?.startsWith:: '\n':
       [{...first, value: first.value.slice:: 1}, ...rest]
     else:
       [first, ...rest]
 
   {end} = curr_loc:: next_ctx
-  [{type: 'string', op, parts, loc: {start, end}}, next_ctx]
+  [{type: 'string', op, exprs, loc: {start, end}}, next_ctx]
 
 
 string = fn op:
@@ -119,10 +119,10 @@ string = fn op:
     ...prefix:: op
 
     lbp: fn lbp: fn ctx, left:
-      # default indentation behaviour
       {start: {column: next_start_col}} = next_loc:: ctx
 
       match true:
+        # default indentation behaviour
         next_is_new_expr:: ctx: 0
         left.loc.end.column != next_start_col: 0
         left.type == 'ident': lbp
@@ -137,6 +137,7 @@ string = fn op:
 
       [{loc: {end}, ...str}, next_ctx] = get_unindented_text:: ctx, op
 
+      # TODO: use `left` rather than `tag`?
       [{...str, tag: left, loc: {start, end}}, next_ctx]
 
     nud: fn: fn ctx:

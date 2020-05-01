@@ -10,12 +10,13 @@
 jsx_expr_container = fn ctx:
   [block, next_ctx] = terminated_block:: ctx, '}'
   expr = {...block, type: 'block'}
+  # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-expr-container', expr, loc: expr.loc}, next_ctx]
 
 
 jsx_txt = fn ctx:
   [{value: text, loc}, next_ctx] = collect_text:: ctx, rx/'<\/|<|{/
-
+  # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-text', value: text, loc}, next_ctx]
 
 
@@ -59,11 +60,11 @@ jsx_attr_value = fn ctx:
 
     next_is:: ctx, `"`:
       jsx_string_val:: advance:: ctx
+
     next_is:: ctx, `'`:
       jsx_string_val:: advance:: ctx
 
     else:
-      # TODO: multiple values not supported by assert
       assert_next:: ctx, '{', '"', "'"
 
 
@@ -127,6 +128,7 @@ jsx_elem = fn ctx:
   [self_closing, children, next_ctx] = body_or_end_elem:: body_ctx, name
   {end} = curr_loc:: next_ctx
 
+  # TODO: all other types use foo:bar to denote sub-types
   [
     {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}},
     next_ctx

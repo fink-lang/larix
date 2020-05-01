@@ -55,17 +55,6 @@ describe:: 'map item: ...', fn:
       to_match_snapshot
 
 
-describe:: 'flat_map item: ...', fn:
-
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
-        flat_map item:
-          [item, item * 2]
-      `
-      to_match_snapshot
-
-
 describe:: 'filter item: ...', fn:
 
   it:: 'parses', fn:
