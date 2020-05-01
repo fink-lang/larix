@@ -1,0 +1,22 @@
+{next_lbp} = import '@fink/prattler/symbols'
+
+
+is_callable = fn callee, lbp:
+  match callee:
+    {type: 'ident'}: true
+    {type: 'member'}: true
+    {type: 'partial'}: true
+    {type: 'group'}:
+      # member expr foo.(bar) will use lbp of . operator
+      # normal groups (foo bar) will use 0
+      lbp == 0
+    else:
+      false
+
+
+next_is_call_arg = fn callee, lbp, ctx:
+  match true:
+    ! is_callable:: callee, lbp: false
+    # TODO: use vs is_op
+    0 < next_lbp:: ctx, callee: false
+    else: true

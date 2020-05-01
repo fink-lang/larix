@@ -5,8 +5,9 @@
 
 
 group = fn op:
+  # TOOD: lbp: fn: fn: 0
   {
-    ...symbol(op),
+    ...symbol(op)
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ')'

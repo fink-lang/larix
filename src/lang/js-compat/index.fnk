@@ -4,10 +4,12 @@
 {symbol} = import '../symbols'
 {single_expression} = import '../block'
 
-
+# TODO: use prefix ?
 js_op = fn op, type:
   {
-    ...symbol(op),
+    ...symbol(op)
+
+    lbp: fn: fn: 0
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx

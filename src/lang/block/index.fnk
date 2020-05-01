@@ -5,12 +5,15 @@
 
 {symbol} = import '../symbols'
 {collect_single_comment} = import '../comments/collect'
+{next_is_call_arg} = import '../call/opless'
+{call_expr} = import '../call/expr'
 
 {curr_indentation, update_indentation, push_block, pop_block} = import './indentation'
 {end_of_block_indent, next_is_unindented, next_is_indented} = import './indentation'
+{next_is_new_expr} = import './indentation'
 
 
-empty_op = fn {loc: {end}}:
+empty_expr = fn {loc: {end}}:
   {type: 'empty', value: '', loc: {start: end, end}}
 
 
@@ -18,6 +21,11 @@ get_end_symb = fn {blocks: [block, ...blocks]}:
   match block:
     {end_symbol: end_of_block_indent}: get_end_symb:: {blocks}
     else: block.end_symbol
+
+
+end_symb_str = fn ctx:
+  symb = get_end_symb:: ctx
+  symb.toString()
 
 
 next_is_end_of_block = fn ctx:
@@ -48,7 +56,7 @@ get_all = fn ctx, single_expr:
         next_is_end_of_block:: ?:
           match was_comma:
             true:
-              expr = empty_op:: ctx.curr_token
+              expr = empty_expr:: ctx.curr_token
               [true, [[...exprs, expr], ctx]]
             else:
               [true, [exprs, ctx]]
@@ -58,12 +66,12 @@ get_all = fn ctx, single_expr:
 
           match at_start:
             true:
-              expr = empty_op:: ctx.next_token
+              expr = empty_expr:: ctx.next_token
               [false, [[...exprs, expr], next_ctx, true, false]]
             else:
               match next_ctx:
                 next_is:: ?, ',':
-                  expr = empty_op:: ctx.next_token
+                  expr = empty_expr:: ctx.next_token
                   [false, [[...exprs, expr], next_ctx, false, false]]
                 else:
                   [false, [exprs, next_ctx, true, true]]
@@ -71,9 +79,8 @@ get_all = fn ctx, single_expr:
         else:
           match at_start:
             false:
-              # TODO: use curr block's end symbol
               throw token_error::
-                `Expected ',' or indented new line or '${get_end_symb:: ctx}'.`
+                `Expected ',' or indented new line or '${end_symb_str:: ctx}'.`
                 ctx.next_token
                 ctx
 
@@ -114,18 +121,42 @@ expressions = fn ctx, end_symbol, single_expr:
   [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
 
 
-single_expression = fn ctx, lbp=0:
-  [expr, next_ctx] = expression:: ctx, lbp
-
-  match next_ctx:
+# TODO: move to ../comments/?
+add_trailing_comment = fn expr, ctx:
+  match ctx:
     next_is_nl:: ?:
-      [expr, next_ctx]
+      [expr, ctx]
 
     next_is:: ?, '#':
-      comment_ctx = advance:: next_ctx
-      [item, expr_ctx] = collect_single_comment:: comment_ctx, '#'
+      comment_ctx = advance:: ctx
+      [item, next_ctx] = collect_single_comment:: comment_ctx, '#'
       comments = {...expr.comments, trailing: [item]}
-      [{...expr, comments}, expr_ctx]
+
+      [{...expr, comments}, next_ctx]
+    else:
+      [expr, ctx]
+
+
+expression_with_comment = fn ctx, lbp:
+  [expr, next_ctx] = expression:: ctx, lbp
+  add_trailing_comment:: expr, next_ctx
+
+
+single_expression = fn ctx, lbp=0:
+  [expr, next_ctx] = expression_with_comment:: ctx, lbp
+
+  match next_ctx:
+    next_is:: ?, ',':
+      [expr, next_ctx]
+
+    next_is_end_of_block:: ?:
+      [expr, next_ctx]
+
+    next_is_new_expr:: ?:
+      [expr, next_ctx]
+
+    next_is_call_arg:: expr, lbp, ?:
+      call_expr:: next_ctx, expr, '', indented_block
 
     else:
       [expr, next_ctx]
@@ -147,7 +178,7 @@ named_block = fn op, type, block_expr:
     [{exprs, comments, loc}, next_ctx] = indented_block:: body_ctx, block_expr
     [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
 
-  {...symbol(op), nud}
+  {...symbol(op), nud, lbp: fn: fn: 0}
 
 
 add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:

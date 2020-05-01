@@ -18,3 +18,4 @@ collect_comments = fn ctx, op:
       [[comment, ...comments], final_ctx]
     else:
       [[comment], next_ctx]
+

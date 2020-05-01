@@ -7,5 +7,6 @@
 add_jsx = fn ctx:
   pipe ctx:
     add_operator:: jsx:: '<'
+    # TODO: add lbp: fn: fn: 0
     add_separator:: symbol:: '/>'
     add_separator:: symbol:: '</'

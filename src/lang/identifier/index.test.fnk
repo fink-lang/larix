@@ -1,9 +1,9 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr, parse} = import '../../'
+{parse_expr} = import '../../'
 
 
-describe:: 'other symbols', fn:
+describe:: 'indentifiers', fn:
   it:: 'parses a word', fn:
     expect::
       parse_expr:: `  foobar  `
@@ -13,36 +13,4 @@ describe:: 'other symbols', fn:
   it:: 'parses a non-word', fn:
     expect::
       parse_expr:: `  π  `
-      to_match_snapshot
-
-
-describe:: 'symbols as prefix operators', fn:
-  it:: 'parses with left to right precendence', fn:
-    expect::
-      parse:: `
-        foo bar, spam, shrub
-        foo bar, spam shrub
-        foo
-          bar
-          spam
-            1 + 23
-            234
-          ni(na)
-        foo bar,
-          fn bar:
-            spam
-          ni
-            na
-      `
-      to_match_snapshot
-
-
-  it:: 'parses identifiers as non callse before closing separators', fn:
-    expect::
-      parse:: `
-         match foo:
-           true : (a , b )
-           false: [a , b ]
-           else : {foo: spam }
-      `
       to_match_snapshot

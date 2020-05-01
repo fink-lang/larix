@@ -9,6 +9,8 @@ spread = fn op, type:
   {
     ...symbol(op),
 
+    lbp: fn: fn: 0
+
     nud: fn lbp: fn ctx:
       {start} = curr_loc:: ctx
 

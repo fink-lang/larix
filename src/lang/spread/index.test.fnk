@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
 describe:: 'spread', fn:
@@ -10,7 +10,19 @@ describe:: 'spread', fn:
       parse_expr:: `...foobar`
       to_match_snapshot
 
+
   it:: 'parses standalone', fn:
     expect::
       parse_expr:: `[a, ..., b]`
       to_match_snapshot
+
+
+  it:: 'parses multiple', fn:
+    expect::
+      parse_expr:: `
+        (
+          ...a
+          ...b
+        )`
+      to_match_snapshot
+

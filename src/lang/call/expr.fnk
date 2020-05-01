@@ -1,0 +1,7 @@
+
+call_expr = fn ctx, callee, op, arg_block:
+  {start} = callee.loc
+
+  [{exprs: args, comments, loc}, next_ctx] = arg_block:: ctx
+
+  [{type: 'call', callee, args, op, comments, loc: {...loc, start}}, next_ctx]

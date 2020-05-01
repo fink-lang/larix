@@ -7,6 +7,8 @@ doc_comment = fn op:
   {
     ...symbol(op),
 
+    lbp: fn: fn: 0
+
     nud: fn: fn ctx:
       [text, expr_ctx] = collect_text:: ctx, op
       comment = {op, ...text}

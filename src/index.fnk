@@ -1,7 +1,8 @@
-{init_parser, start_parser, expression} = import '@fink/prattler'
+{init_parser, start_parser} = import '@fink/prattler'
 
 {init_language} = import './lang'
 {parse_module} = import './lang/module'
+{single_expression} = import './lang/block'
 
 
 init = fn ctx:
@@ -13,7 +14,7 @@ init = fn ctx:
 
 parse_expr = fn code, filename:
   ctx = init:: {code, filename}
-  [expr] = expression:: ctx, 0
+  [expr] = single_expression:: ctx, 0
   expr
 
 

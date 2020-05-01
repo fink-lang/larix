@@ -31,6 +31,9 @@ describe:: 'comments', fn:
         foobar spam ham
         ---
         spam = ni
+
+        ---bar---
+        spam
       `
       to_match_snapshot
 

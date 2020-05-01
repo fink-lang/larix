@@ -134,9 +134,10 @@ jsx_elem = fn ctx:
 
 
 jsx = fn op:
+  # TODO overloaded with comp
+    # lbp: fn: fn: 0
   {
-    ...symbol(op),
-
+    ...symbol(op)
     nud: fn: fn ctx: jsx_elem:: ctx
   }
 

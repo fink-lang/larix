@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`call expr parses call expr 1`] = `
+module (1:0-13:0)
+  call (1:0-1:7)
+    ident (1:0-1:3) foo
+    ident (1:4-1:7) bar
+  call (2:0-2:13)
+    ident (2:0-2:3) foo
+    ident (2:4-2:7) bar
+    ident (2:9-2:13) spam
+  call (3:0-3:7)
+    ident (3:0-3:3) foo
+    number (3:4-3:7) 123
+  call (4:0-4:9)
+    ident (4:0-4:3) foo
+    string ' (4:4-4:9)
+      'bar'
+  call (5:0-5:12)
+    ident (5:0-5:3) foo
+    regex (5:4-5:12)
+      /spam/
+  call (6:0-6:6)
+    ident (6:0-6:3) foo
+    array (6:4-6:6)
+
+  call (7:0-7:6)
+    ident (7:0-7:3) foo
+    object (7:4-7:6)
+
+  call (8:0-8:16)
+    ident (8:0-8:3) foo
+    new (8:4-8:16)
+      call (8:8-8:16)
+        ident (8:8-8:11) Bar
+        ident (8:12-8:16) spam
+  call (9:0-9:13)
+    ident (9:0-9:3) foo
+    await (9:4-9:13)
+      ident (9:10-9:13) bar
+  call (10:0-13:0)
+    ident (10:0-10:3) foo
+    cond match (10:4-13:0)
+
+      :
+      cond:expr (11:2-13:0)
+        ident (11:2-11:5) bar
+        block (11:5-13:0)
+          ident (11:7-11:11) spam
+`;
+
+exports[`call expr parses member call expr 1`] = `
+module (1:0-4:0)
+  call (1:0-1:12)
+    member . (1:0-1:7)
+      ident (1:0-1:3) foo
+      ident (1:4-1:7) bar
+    ident (1:8-1:12) spam
+  call (2:0-2:14)
+    member . (2:0-2:9)
+      ident (2:0-2:3) foo
+      group (2:4-2:9)
+        ident (2:5-2:8) bar
+    ident (2:10-2:14) spam
+  call (3:0-4:0)
+    member . (3:0-3:12)
+      member . (3:0-3:7)
+        ident (3:0-3:3) foo
+        ident (3:4-3:7) bar
+      ident (3:8-3:12) spam
+    ident (3:13-3:18) shrub
+`;
+
+exports[`call expr parses non-calls 1`] = `
+module (1:0-5:0)
+  cond match (1:0-5:0)
+    ident (1:6-1:9) foo
+    :
+    cond:expr (2:2-2:16)
+      ident (2:2-2:5) bar
+      block (2:6-2:16)
+        group (2:8-2:16)
+          ident (2:9-2:10) a
+          ident (2:13-2:14) b
+    cond:expr (3:2-3:17)
+      ident (3:2-3:7) false
+      block (3:7-3:17)
+        array (3:9-3:17)
+          ident (3:10-3:11) a
+          ident (3:14-3:15) b
+    cond:expr (4:2-5:0)
+      ident (4:2-4:6) else
+      block (4:7-5:0)
+        object (4:9-4:21)
+          prop (4:10-4:19)
+            ident (4:10-4:13) foo
+            ident (4:15-4:19) spam
+`;
+
+exports[`call expr parses non-calls 2`] = `
+module (1:0-5:0)
+  group (1:0-1:12)
+    ident (1:1-1:4) foo
+    ident (1:7-1:10) bar
+  array (2:0-2:12)
+    ident (2:1-2:4) foo
+    ident (2:7-2:10) bar
+  object (3:0-3:13)
+    prop (3:1-3:11)
+      ident (3:1-3:4) foo
+      ident (3:7-3:11) spam
+  string ' (4:0-4:13)
+     foo'bar spam'
+`;
+
+exports[`call expr parses other call expr 1`] = `
+module (1:0-3:0)
+  call (1:0-1:14)
+    group (1:0-1:9)
+      call (1:1-1:8)
+        ident (1:1-1:4) foo
+        ident (1:5-1:8) bar
+    ident (1:10-1:14) spam
+  array (2:0-2:12)
+    spread ... (2:1-2:11)
+      call (2:4-2:11)
+        ident (2:4-2:7) foo
+        ident (2:8-2:11) bar
+`;
+
+exports[`call expr parses with left to right precendence 1`] = `
+module (1:0-14:0)
+  call (1:0-1:20)
+    ident (1:0-1:3) foo
+    ident (1:4-1:7) bar
+    ident (1:9-1:13) spam
+    ident (1:15-1:20) shrub
+  call (2:0-2:19)
+    ident (2:0-2:3) foo
+    ident (2:4-2:7) bar
+    call (2:9-2:19)
+      ident (2:9-2:13) spam
+      ident (2:14-2:19) shrub
+  call (3:0-8:8)
+    ident (3:0-3:3) foo
+    ident (4:2-4:5) bar
+    call (5:2-7:7)
+      ident (5:2-5:6) spam
+      arithm + (6:4-6:10)
+        number (6:4-6:5) 1
+        number (6:8-6:10) 23
+      number (7:4-7:7) 234
+    call ( (8:2-8:8)
+      ident (8:2-8:4) ni
+      ident (8:5-8:7) na
+  call (9:0-14:0)
+    ident (9:0-9:3) foo
+    ident (9:4-9:7) bar
+    block fn (10:2-11:8)
+      ident (10:5-10:8) bar
+      :
+      ident (11:4-11:8) spam
+    call (12:2-14:0)
+      ident (12:2-12:4) ni
+      ident (13:4-13:6) na
+`;

@@ -5,38 +5,86 @@
 
 describe:: 'comparison', fn:
 
-  it:: 'parses single line: a == b', fn:
+  it:: 'parses ==', fn:
     expect::
       parse_expr:: `a == b`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a + b == c`
+      to_match_snapshot
 
-  it:: 'parses single line: a != b', fn:
+    expect::
+      parse_expr:: `a == b == c`
+      to_match_snapshot
+
+
+  it:: 'parses !=', fn:
     expect::
       parse_expr:: `a != b`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a != b != c`
+      to_match_snapshot
 
-  it:: 'parses single line: a <= b', fn:
+    expect::
+      parse_expr:: `a + b != c`
+      to_match_snapshot
+
+
+  it:: 'parses <=', fn:
     expect::
       parse_expr:: `a <= b`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a <= b <= c`
+      to_match_snapshot
 
-  it:: 'parses single line: a >= b', fn:
+    expect::
+      parse_expr:: `a + b <= c`
+      to_match_snapshot
+
+
+  it:: 'parses >=', fn:
     expect::
       parse_expr:: `a >= b`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a >= b >= c`
+      to_match_snapshot
 
-  it:: 'parses single line: a > b', fn:
+    expect::
+      parse_expr:: `a + b >= c`
+      to_match_snapshot
+
+
+  it:: 'parses >', fn:
     expect::
       parse_expr:: `a > b`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a > b > c`
+      to_match_snapshot
 
-  it:: 'parses single line: a < b', fn:
+    expect::
+      parse_expr:: `a + b > c`
+      to_match_snapshot
+
+
+  it:: 'parses <', fn:
     expect::
       parse_expr:: `a < b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a < b < c`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a + b < c`
       to_match_snapshot
 

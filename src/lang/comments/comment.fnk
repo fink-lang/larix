@@ -7,7 +7,9 @@
 
 comment = fn op:
   {
-    ...symbol(op),
+    ...symbol(op)
+
+    lbp: fn: fn: 0
 
     nud: fn: fn ctx:
       {start} = curr_loc:: ctx

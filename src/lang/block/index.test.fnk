@@ -1,4 +1,4 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
 
 {parse} = import '../..'
 
@@ -63,7 +63,6 @@ describe:: 'expression block', fn:
         ,
       `
       to_match_snapshot
-
 
 
 describe:: 'single line expressions', fn:

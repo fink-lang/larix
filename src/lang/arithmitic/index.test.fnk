@@ -5,36 +5,108 @@
 
 describe:: 'arithmitic', fn:
 
-  it:: 'parses single line: a + b * c', fn:
+  it:: 'parses +', fn:
+    expect::
+      parse_expr:: `a + b`
+      to_match_snapshot
+
     expect::
       parse_expr:: `a + b * c`
       to_match_snapshot
 
-  it:: 'parses single line: a * b + c', fn:
+
+  it:: 'parses * ', fn:
+    expect::
+      parse_expr:: `a * b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a * b * c`
+      to_match_snapshot
+
     expect::
       parse_expr:: `a * b + c`
       to_match_snapshot
 
+  it:: 'parses / ', fn:
+    expect::
+      parse_expr:: `a / b`
+      to_match_snapshot
 
-  it:: 'parses single line: a % b / c', fn:
+    expect::
+      parse_expr:: `a / b / c`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a / b + c`
+      to_match_snapshot
+
+
+  it:: 'parses %', fn:
+    expect::
+      parse_expr:: `a % b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a % b % c`
+      to_match_snapshot
+
     expect::
       parse_expr:: `a % b / c`
       to_match_snapshot
 
 
-  it:: 'parses single line: a ^ b * c', fn:
+  it:: 'parses ^', fn:
+    expect::
+      parse_expr:: `a ^ b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a ^ b ^ c`
+      to_match_snapshot
+
     expect::
       parse_expr:: `a ^ b * c`
       to_match_snapshot
 
+    expect::
+      parse_expr:: `a * b ^ c`
+      to_match_snapshot
 
-  it:: 'parses single line: a * -b', fn:
+
+  it:: 'parses - prefix', fn:
+    expect::
+      parse_expr:: `-a`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `-a - b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `-a * b`
+      to_match_snapshot
+
     expect::
       parse_expr:: `a * -b`
       to_match_snapshot
 
 
-  it:: 'parses grouped: (a - b) * c', fn:
+  it:: 'parses -', fn:
+    expect::
+      parse_expr:: `a - b`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a - b - c`
+      to_match_snapshot
+
+    expect::
+      parse_expr:: `a - b + c`
+      to_match_snapshot
+
+
+  it:: 'parses grouped', fn:
     expect::
       parse_expr:: `(a - b) * c`
       to_match_snapshot

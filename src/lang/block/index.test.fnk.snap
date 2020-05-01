@@ -117,7 +117,7 @@ module (1:0-17:1)
     ident (2:2-2:5) foo
     group (4:2-4:24)
       ident (4:3-4:6) foo
-      call (4:8-4:23)
+      call :: (4:8-4:23)
         ident (4:8-4:11) foo
         ident (4:14-4:17) bar
         ident (4:19-4:23) spam

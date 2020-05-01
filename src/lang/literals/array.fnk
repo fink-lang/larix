@@ -6,7 +6,9 @@
 
 array = fn op:
   {
-    ...symbol(op),
+    ...symbol(op)
+
+    lbp: fn: fn: 0
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ']'

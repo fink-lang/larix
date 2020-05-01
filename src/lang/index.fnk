@@ -39,6 +39,8 @@ init_language = fn ctx:
     add_other
     add_partial
 
+    add_jsx
+
     add_logical_operators
     add_comparison_operators
     add_arithmetic_operators
@@ -49,7 +51,6 @@ init_language = fn ctx:
 
     add_literals
 
-    add_jsx
     add_call_operators
 
     add_js_ops
