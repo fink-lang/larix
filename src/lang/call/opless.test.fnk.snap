@@ -83,13 +83,13 @@ module (1:0-5:0)
           ident (2:9-2:10) a
           ident (2:13-2:14) b
     cond:expr (3:2-3:17)
-      ident (3:2-3:7) false
+      literal (3:2-3:7) false
       block (3:7-3:17)
         array (3:9-3:17)
           ident (3:10-3:11) a
           ident (3:14-3:15) b
     cond:expr (4:2-5:0)
-      ident (4:2-4:6) else
+      literal (4:2-4:6) else
       block (4:7-5:0)
         object (4:9-4:21)
           prop (4:10-4:19)

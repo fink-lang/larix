@@ -2,6 +2,7 @@
 {add_object} = import './object'
 {add_string} = import './string'
 {add_regex} = import './regex'
+{add_keywords} = import './keywords'
 
 
 add_literals = fn ctx:
@@ -10,3 +11,4 @@ add_literals = fn ctx:
     add_object
     add_string
     add_regex
+    add_keywords

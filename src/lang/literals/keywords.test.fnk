@@ -1,0 +1,31 @@
+{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+
+{parse_expr, parse} = import '../../'
+
+
+describe:: 'keywords', fn:
+  it:: 'parses true', fn:
+    expect::
+      parse:: `
+        foo = true
+        bar = trueish
+      `
+      to_match_snapshot
+
+
+  it:: 'parses false', fn:
+    expect::
+      parse:: `
+        foo = false
+        bar = falseish
+      `
+      to_match_snapshot
+
+
+  it:: 'parses null', fn:
+    expect::
+      parse:: `
+        foo = null
+        bar = nullish
+      `
+      to_match_snapshot

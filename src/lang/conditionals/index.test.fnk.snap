@@ -44,7 +44,7 @@ module (1:0-14:0)
       block (9:37-9:41)
         ident (9:39-9:41) ni
     cond:expr (11:2-14:0)
-      ident (11:2-11:6) else
+      literal (11:2-11:6) else
       block (11:6-14:0)
         # fallback for no match
         ident (13:4-13:8) spam
@@ -92,7 +92,7 @@ module (1:0-8:0)
         ident (2:16-2:22) result
     cond:expr (5:2-5:12)
       # fallback if no match
-      ident (5:2-5:6) else
+      literal (5:2-5:6) else
       block (5:6-5:12)
         ident (5:8-5:12) spam
     # trailing comment

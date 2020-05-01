@@ -170,6 +170,7 @@ serialize = fn node, indent='':
 
     {left: {}, right: {}}:
       serialize_infix:: node, serialize, indent
+
     {key: {}, value: {}}:
       serialize_infix:: node, serialize, indent
 
