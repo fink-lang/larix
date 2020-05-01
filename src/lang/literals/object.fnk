@@ -26,12 +26,13 @@ value_expr = fn ctx, key:
 
 
 default_assignment = fn ctx, left:
-   expr_ctx = advance:: ctx
+  expr_ctx = advance:: ctx
 
-   [right, next_ctx] = single_expression:: expr_ctx, 0
-   {loc: {end}} = right
+  [right, next_ctx] = single_expression:: expr_ctx, 0
+  {loc: {end}} = right
 
-   [
+  # TODO use ../assign?
+  [
     {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
     next_ctx
   ]
@@ -72,8 +73,7 @@ prop_expr = fn ctx:
   {start} = key.loc
   {end} = value.loc
 
-  # TODO: should `key, value` just be `left, right` to simplify matters
-  [{type: 'prop', key, value, loc: {start, end}}, next_ctx]
+  [{type: 'object:prop', left: key, right: value, loc: {start, end}}, next_ctx]
 
 
 object = fn op:
