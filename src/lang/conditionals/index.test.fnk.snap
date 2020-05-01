@@ -8,13 +8,13 @@ module (1:0-14:0)
     match:expr (3:2-3:24)
       # nested object pattern
       object (3:2-3:19)
-        prop (3:3-3:6)
+        object:prop (3:3-3:6)
           ident (3:3-3:6) foo
           ident (3:3-3:6) foo
-        prop (3:8-3:18)
+        object:prop (3:8-3:18)
           ident (3:8-3:12) spam
           object (3:14-3:18)
-            prop (3:15-3:17)
+            object:prop (3:15-3:17)
               ident (3:15-3:17) ni
               ident (3:15-3:17) ni
       block (3:19-3:24)
@@ -33,10 +33,10 @@ module (1:0-14:0)
       array (9:2-9:37)
         ident (9:3-9:6) foo
         object (9:8-9:36)
-          prop (9:9-9:17)
+          object:prop (9:9-9:17)
             ident (9:9-9:12) bar
             number (9:14-9:17) 123
-          prop (9:19-9:35)
+          object:prop (9:19-9:35)
             ident (9:19-9:23) spam
             array (9:25-9:35)
               number (9:26-9:29) 456
@@ -57,7 +57,7 @@ module (1:0-7:0)
     :
     match:expr (2:2-2:22)
       object (2:2-2:17)
-        prop (2:3-2:16)
+        object:prop (2:3-2:16)
           ident (2:3-2:9) length
           comp > (2:11-2:16)
             partial (2:11-2:12) ?

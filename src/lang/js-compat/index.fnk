@@ -8,5 +8,7 @@ js_op = fn op, type: prefix:: op, type
 
 add_js_ops = fn ctx:
   pipe ctx:
+    # TODO: 'new' 'prefix' ?
     add_non_separating:: js_op:: 'new', 'new'
+    # TODO: 'throw' 'prefix' ?
     add_non_separating:: js_op:: 'throw', 'throw'

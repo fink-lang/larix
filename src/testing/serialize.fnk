@@ -93,7 +93,7 @@ serialize_str = fn node, serialize, indent:
     (!!node.tag): ` ${node.tag.value}`
     else: ''
 
-  [lne, ...lns] = pipe node.parts:
+  [lne, ...lns] = pipe node.exprs:
     map part:
       match part.type:
         'string:text': `'${part.value}'`
@@ -111,7 +111,7 @@ serialize_str = fn node, serialize, indent:
 
 serialize_regex = fn node, serialize, indent:
   head = str_type_op:: node, indent
-  `${head}\n${indent}  /${node.pattern}/${node.flags}`
+  `${head}\n${indent}  /${node.value}/${node.flags}`
 
 
 serialize_other = fn node, serialize, indent:
@@ -159,8 +159,11 @@ serialize = fn node, indent='':
     {type: 'empty'}:
       str_type_op:: node, indent
 
-    {type: ?.startsWith:: 'jsx-'}:
-      serialize_jsx:: node, serialize, indent
+    {type: 'string'}:
+      serialize_str:: node, serialize, indent
+
+    {type: 'call'}:
+      serialize_call:: node, serialize, indent
 
     {type: 'regex'}:
       serialize_regex:: node, serialize, indent
@@ -168,10 +171,10 @@ serialize = fn node, indent='':
     {type: 'spread'}:
       serialize_prefix:: node, serialize, indent
 
-    {left: {}, right: {}}:
-      serialize_infix:: node, serialize, indent
+    {type: ?.startsWith:: 'jsx-'}:
+      serialize_jsx:: node, serialize, indent
 
-    {key: {}, value: {}}:
+    {left: {}, right: {}}:
       serialize_infix:: node, serialize, indent
 
     {right: {}}:
@@ -182,12 +185,6 @@ serialize = fn node, indent='':
 
     {value: {}}:
       serialize_other:: node, serialize, indent
-
-    {parts: []}:
-      serialize_str:: node, serialize, indent
-
-    {callee: {}}:
-      serialize_call:: node, serialize, indent
 
     else:
       head = str_type_op:: node, indent
