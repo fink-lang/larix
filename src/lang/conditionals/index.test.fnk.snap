@@ -2,10 +2,10 @@
 
 exports[`match ...: parses complex: {foo}: bar 1`] = `
 module (1:0-14:0)
-  cond match (1:0-14:0)
+  block match (1:0-14:0)
     ident (1:6-1:10) item
     :
-    cond:expr (3:2-3:24)
+    match:expr (3:2-3:24)
       # nested object pattern
       object (3:2-3:19)
         prop (3:3-3:6)
@@ -19,7 +19,7 @@ module (1:0-14:0)
               ident (3:15-3:17) ni
       block (3:19-3:24)
         ident (3:21-3:24) bar
-    cond:expr (6:2-6:20)
+    match:expr (6:2-6:20)
       # nested iterables
       array (6:2-6:15)
         ident (6:3-6:6) foo
@@ -28,7 +28,7 @@ module (1:0-14:0)
           number (6:12-6:13) 2
       block (6:15-6:20)
         ident (6:17-6:20) bar
-    cond:expr (9:2-9:41)
+    match:expr (9:2-9:41)
       # mixed nested:
       array (9:2-9:37)
         ident (9:3-9:6) foo
@@ -43,7 +43,7 @@ module (1:0-14:0)
               number (9:31-9:34) 789
       block (9:37-9:41)
         ident (9:39-9:41) ni
-    cond:expr (11:2-14:0)
+    match:expr (11:2-14:0)
       literal (11:2-11:6) else
       block (11:6-14:0)
         # fallback for no match
@@ -52,10 +52,10 @@ module (1:0-14:0)
 
 exports[`match ...: parses partials 1`] = `
 module (1:0-7:0)
-  cond match (1:0-7:0)
+  block match (1:0-7:0)
     ident (1:6-1:9) foo
     :
-    cond:expr (2:2-2:22)
+    match:expr (2:2-2:22)
       object (2:2-2:17)
         prop (2:3-2:16)
           ident (2:3-2:9) length
@@ -64,13 +64,13 @@ module (1:0-7:0)
             number (2:15-2:16) 1
       block (2:17-2:22)
         ident (2:19-2:22) bar
-    cond:expr (4:2-4:17)
+    match:expr (4:2-4:17)
       call :: (4:2-4:12)
         ident (4:2-4:8) is_str
         partial (4:11-4:12) ?
       block (4:12-4:17)
         ident (4:14-4:17) foo
-    cond:expr (6:2-7:0)
+    match:expr (6:2-7:0)
       comp > (6:2-6:18)
         array (6:2-6:10)
           spread ... (6:3-6:6)
@@ -83,14 +83,14 @@ module (1:0-7:0)
 
 exports[`match ...: parses simple 1`] = `
 module (1:0-8:0)
-  cond match (1:0-6:21)
+  block match (1:0-6:21)
     ident (1:6-1:10) item
     :
-    cond:expr (2:2-2:22)
+    match:expr (2:2-2:22)
       ident (2:2-2:14) test_pattern
       block (2:14-2:22)
         ident (2:16-2:22) result
-    cond:expr (5:2-5:12)
+    match:expr (5:2-5:12)
       # fallback if no match
       literal (5:2-5:6) else
       block (5:6-5:12)
