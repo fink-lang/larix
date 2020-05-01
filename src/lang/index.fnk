@@ -1,4 +1,4 @@
-{init_indentation} = import './block'
+{init_indentation} = import './block/indentation'
 
 {add_jsx} = import './jsx'
 {add_conditionals} = import './conditionals'
@@ -51,9 +51,9 @@ init_language = fn ctx:
 
     add_literals
 
-    add_call_operators
-
     add_js_ops
+
+    add_call_operators
 
     add_group
 

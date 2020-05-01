@@ -4,7 +4,7 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {unindent_text} = import '../../string-utils'
-{symbol} = import '../symbols'
+{prefix} = import '../symbols'
 
 
 curr_next_adjecent = fn ctx:
@@ -41,9 +41,7 @@ get_flags = fn ctx:
 
 regex = fn op:
   {
-    ...symbol(op)
-
-    lbp: fn: fn: 0
+    ...prefix:: op
 
     nud: fn: fn ctx:
       {start} = curr_loc:: ctx

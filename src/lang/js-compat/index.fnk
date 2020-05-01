@@ -1,23 +1,9 @@
 {add_non_separating} = import '@fink/prattler/symbols'
-{curr_loc} = import '@fink/prattler'
 
-{symbol} = import '../symbols'
-{single_expression} = import '../block'
+{prefix} = import '../symbols'
 
-# TODO: use prefix ?
-js_op = fn op, type:
-  {
-    ...symbol(op)
 
-    lbp: fn: fn: 0
-
-    nud: fn lbp: fn ctx:
-      {start} = curr_loc:: ctx
-      [right, next_ctx] = single_expression:: ctx, 0
-      {end} = right.loc
-
-      [{type, op, right, loc: {start, end}}, next_ctx]
-  }
+js_op = fn op, type: prefix:: op, type
 
 
 add_js_ops = fn ctx:

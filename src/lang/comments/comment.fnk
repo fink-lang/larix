@@ -1,15 +1,13 @@
 {curr_loc} = import '@fink/prattler'
 
-{symbol} = import '../symbols'
-{next_is_end_of_block, single_expression} = import '../block'
+{prefix} = import '../symbols'
+{next_is_end_of_block, single_expression} = import '../block/expr'
 {collect_comments} = import './collect'
 
 
 comment = fn op:
   {
-    ...symbol(op)
-
-    lbp: fn: fn: 0
+    ...prefix:: op
 
     nud: fn: fn ctx:
       {start} = curr_loc:: ctx

@@ -1,13 +1,11 @@
 {next_is, collect_text, expression} = import '@fink/prattler'
 
-{symbol} = import '../symbols'
+{prefix} = import '../symbols'
 
 
 doc_comment = fn op:
   {
-    ...symbol(op),
-
-    lbp: fn: fn: 0
+    ...prefix:: op
 
     nud: fn: fn ctx:
       [text, expr_ctx] = collect_text:: ctx, op

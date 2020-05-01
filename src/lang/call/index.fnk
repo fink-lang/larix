@@ -1,6 +1,6 @@
 {add_operator, add_separator, add_non_separating} = import '@fink/prattler/symbols'
 
-{symbol} = import '../symbols'
+{infix, terminator} = import '../symbols'
 
 {add_named_block, terminated_block} = import '../block'
 {end_of_block_indent} = import '../block/indentation'
@@ -9,17 +9,19 @@
 
 
 call = fn op, end_symbol:
-  led = fn: fn ctx, callee:
-    call_expr:: ctx, callee, op, fn ctx: terminated_block:: ctx, end_symbol
+  {
+    ...infix:: op
 
-  {...symbol(op), led}
+    led: fn: fn ctx, callee:
+      call_expr:: ctx, callee, op, fn ctx: terminated_block:: ctx, end_symbol
+  }
 
 
 add_call_with_parens = fn ctx:
   pipe ctx:
     add_operator:: call:: '(', ')'
-    add_separator:: symbol:: ','
-    add_separator:: symbol:: ')'
+    add_separator:: terminator:: ','
+    add_separator:: terminator:: ')'
 
 
 add_call_without_parens = fn ctx:

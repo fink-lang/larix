@@ -3,7 +3,7 @@
 {assert_advance, advance, collect_text} = import '@fink/prattler'
 {token_error} = import '@fink/prattler/errors'
 
-{symbol} = import '../symbols'
+{prefix} = import '../symbols'
 {terminated_block} = import '../block'
 
 
@@ -135,9 +135,10 @@ jsx_elem = fn ctx:
 
 jsx = fn op:
   # TODO overloaded with comp
-    # lbp: fn: fn: 0
   {
-    ...symbol(op)
-    nud: fn: fn ctx: jsx_elem:: ctx
+    ...prefix:: op
+
+    nud: fn: fn ctx:
+      jsx_elem:: ctx
   }
 

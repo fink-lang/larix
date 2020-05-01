@@ -3,7 +3,7 @@
 {token_error} = import '@fink/prattler/errors'
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{symbol} = import '../symbols'
+{prefix} = import '../symbols'
 
 {terminated_block} = import '../block'
 {next_is_new_expr, curr_indentation} = import '../block/indentation'
@@ -115,31 +115,33 @@ get_unindented_text = fn ctx, op:
 
 
 string = fn op:
-  lbp = fn lbp: fn ctx, left:
-    # default indentation behaviour
-    {start: {column: next_start_col}} = next_loc:: ctx
+  {
+    ...prefix:: op
 
-    match true:
-      next_is_new_expr:: ctx: 0
-      left.loc.end.column != next_start_col: 0
-      left.type == 'ident': lbp
-      else:
-        throw token_error::
-          `Expected identifier before tagged string.`
-          ctx.next_token
-          ctx
+    lbp: fn lbp: fn ctx, left:
+      # default indentation behaviour
+      {start: {column: next_start_col}} = next_loc:: ctx
 
-  led = fn: fn ctx, left:
-    {loc: {start}} = left
+      match true:
+        next_is_new_expr:: ctx: 0
+        left.loc.end.column != next_start_col: 0
+        left.type == 'ident': lbp
+        else:
+          throw token_error::
+            `Expected identifier before tagged string.`
+            ctx.next_token
+            ctx
 
-    [{loc: {end}, ...str}, next_ctx] = get_unindented_text:: ctx, op
+    led: fn: fn ctx, left:
+      {loc: {start}} = left
 
-    [{...str, tag: left, loc: {start, end}}, next_ctx]
+      [{loc: {end}, ...str}, next_ctx] = get_unindented_text:: ctx, op
 
-  nud = fn: fn ctx:
-    get_unindented_text:: ctx, op
+      [{...str, tag: left, loc: {start, end}}, next_ctx]
 
-  {...symbol(op), lbp, led, nud}
+    nud: fn: fn ctx:
+      get_unindented_text:: ctx, op
+  }
 
 
 add_string = fn ctx:
