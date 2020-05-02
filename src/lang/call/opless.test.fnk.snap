@@ -38,15 +38,21 @@ module (1:0-13:0)
     ident (9:0-9:3) foo
     await (9:4-9:13)
       ident (9:10-9:13) bar
-  call (10:0-13:0)
+  call (10:0-11:11)
     ident (10:0-10:3) foo
-    block match (10:4-13:0)
+    block match (10:4-11:11)
 
       :
-      match:expr (11:2-13:0)
+      match:expr (11:2-11:11)
         ident (11:2-11:5) bar
-        block (11:5-13:0)
+        block (11:5-11:11)
           ident (11:7-11:11) spam
+  string ' (12:0-12:20)
+    'foo '
+        call (12:7-12:15)
+          ident (12:7-12:10) bar
+          ident (12:11-12:15) spam
+    ' ni'
 `;
 
 exports[`call expr parses member call expr 1`] = `

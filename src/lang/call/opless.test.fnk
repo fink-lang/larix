@@ -18,7 +18,7 @@ describe:: 'call expr', fn:
         foo await bar
         foo match:
           bar: spam
-
+        'foo \${bar spam} ni'
       `
       to_match_snapshot
 
