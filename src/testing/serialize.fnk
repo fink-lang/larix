@@ -164,7 +164,7 @@ serialize_jsx = fn node, serialize, indent:
 serialize = fn node, indent='':
   result = match node:
     {error: {}}:
-      `${indent}error`
+      `${indent}::error::`
 
     {type: 'empty'}:
       str_type_op node, indent
