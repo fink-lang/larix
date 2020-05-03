@@ -86,6 +86,12 @@ serialize_prefix = fn node, serialize, indent:
   `${head}\n${right}`
 
 
+serialize_spread = fn node, serialize, indent:
+  match node:
+    {right: {}}: serialize_prefix node, serialize, indent
+    else: str_type_op:: node, indent
+
+
 serialize_str = fn node, serialize, indent:
   head = str_type_op:: node, indent
 
@@ -122,8 +128,8 @@ serialize_other = fn node, serialize, indent:
 serialize_jsx = fn node, serialize, indent:
   head = str_type_op:: node, indent
 
-  match true:
-    (node.type == 'jsx-elem'):
+  match node:
+    {type: 'jsx-elem'}:
       props = node.props.map:: fn expr: serialize:: expr, `${indent}  `
       children = node.children.map:: fn expr: serialize:: expr, `${indent}  `
 
@@ -137,25 +143,26 @@ serialize_jsx = fn node, serialize, indent:
 
       `${head} ${node.name}${props_str}${children_str}`
 
-    (node.type == 'jsx-attr'):
+    {type: 'jsx-attr', value: {}}:
       value = serialize:: node.value, `${indent}  `
       `${head} ${node.name}\n${indent}  ${value}`
 
-    (node.type == 'jsx-text'):
+    {type: 'jsx-attr'}:
+      `${head} ${node.name}`
+
+    {type: 'jsx-text'}:
       `${head}\n${indent}  ${JSON.stringify:: node.value}`
 
-    (node.type == 'jsx-string'):
+    {type: 'jsx-string'}:
       `${head}\n${indent}  '${node.value}'`
 
-    (node.type == 'jsx-expr-container'):
+    {type: 'jsx-expr-container'}:
       expr = serialize:: node.expr, `${indent}  `
       `${head}\n${expr}`
 
 
 serialize = fn node, indent='':
   result = match node:
-    null: `${indent}null`
-
     {error: {}}:
       `${indent}::error::`
 
@@ -172,7 +179,7 @@ serialize = fn node, indent='':
       serialize_regex:: node, serialize, indent
 
     {type: 'spread'}:
-      serialize_prefix:: node, serialize, indent
+      serialize_spread:: node, serialize, indent
 
     {type: ?.startsWith:: 'jsx-'}:
       serialize_jsx:: node, serialize, indent
@@ -190,7 +197,6 @@ serialize = fn node, indent='':
       serialize_other:: node, serialize, indent
 
     else:
-      console.log '==========', node
       head = str_type_op:: node, indent
       `Error: cannot serialize ${head}`
 
