@@ -81,33 +81,35 @@ jsx_attr = fn ctx:
   name = curr_value:: ctx
   {start} = curr_loc:: ctx
 
-  [value, next_ctx] = match true:
-    next_is:: ctx, '=':
-      jsx_attr_value:: advance:: ctx
+  [value, next_ctx] = match ctx:
+    next_is ?, '=':
+      [value, next_ctx] = jsx_attr_value:: advance:: ctx
+      [{value}, next_ctx]
     else:
-      [null, ctx]
+      [{}, ctx]
 
   {end} = curr_loc:: next_ctx
-  [{type: 'jsx-attr', name, value, loc: {start, end}}, next_ctx]
+  [{type: 'jsx-attr', name, ...value, loc: {start, end}}, next_ctx]
 
+
+done = true
 
 jsx_props = fn ctx:
   [props, next_ctx] = pipe ctx:
     unfold prop_ctx:
       [prop, next_ctx] = match prop_ctx:
         next_is_end:: ?, '/>':
-          [null, prop_ctx]
+          [done, prop_ctx]
 
         next_is_end:: ?, '>':
-          [null, prop_ctx]
+          [done, prop_ctx]
 
         else:
           jsx_attr:: advance:: prop_ctx
 
       ([prop, next_ctx], next_ctx)
 
-    while [prop]:
-      prop != null
+    while [prop]: prop != done
 
     fold [prop, next_ctx], [props]=[[]]:
       [[...props, prop], next_ctx]
