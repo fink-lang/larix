@@ -33,10 +33,7 @@ default_assignment = fn ctx, left:
   {loc: {end}} = right
 
   # TODO use ../assign?
-  [
-    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
-    next_ctx
-  ]
+  [{type: 'assign', op: '=', left, right, loc: {...left.loc, end}}, next_ctx]
 
 
 key_expr = fn ctx:
@@ -86,7 +83,7 @@ prop_expr = fn ctx:
 
 
 object = fn op:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
@@ -94,7 +91,6 @@ object = fn op:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, '}', prop_expr
 
       [{type: 'object', exprs, loc}, next_ctx]
-  }
 
 
 add_object = fn ctx:

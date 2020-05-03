@@ -6,7 +6,7 @@
 
 
 comment = fn op:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
@@ -25,4 +25,3 @@ comment = fn op:
           # TODO: should lbp be really 0
           [{comments, ...expr}, next_ctx] = single_expression expr_ctx, 0
           [{...expr, comments: {...comments, leading: items}}, next_ctx]
-  }

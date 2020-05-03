@@ -114,7 +114,7 @@ get_unindented_text = fn ctx, op:
 
 
 string = fn op:
-  {
+  dict:
     ...prefix op
 
     lbp: fn lbp: fn ctx, left:
@@ -140,7 +140,6 @@ string = fn op:
 
     nud: fn: fn ctx:
       get_unindented_text ctx, op
-  }
 
 
 add_string = fn ctx:

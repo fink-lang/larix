@@ -25,7 +25,7 @@ member_expr = fn ctx, lbp:
 
 
 prop_access = fn op, type:
-  {
+  dict:
     ...infix op
 
     led: fn lbp: fn ctx, left:
@@ -40,7 +40,6 @@ prop_access = fn op, type:
           {loc: {end}} = right
 
           [{type, op, left, right, loc: {start, end}}, next_ctx]
-  }
 
 
 add_prop_access = fn ctx:

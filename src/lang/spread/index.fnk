@@ -6,7 +6,7 @@
 
 
 spread = fn op, type:
-  {
+  dict:
     ...prefix op
 
     nud: fn lbp: fn ctx:
@@ -22,7 +22,6 @@ spread = fn op, type:
       {end} = curr_loc next_ctx
 
       [{type, op, ...right, loc: {start, end}}, next_ctx]
-  }
 
 
 add_spread_operator = fn ctx:

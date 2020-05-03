@@ -41,7 +41,7 @@ get_flags = fn ctx:
 
 
 regex = fn op:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
@@ -64,7 +64,6 @@ regex = fn op:
       {end} = curr_loc end_ctx
       # TODO: use `right` instead of flags?
       [{type: 'regex', value: pattern, flags, loc: {start, end}}, end_ctx]
-  }
 
 
 add_regex = fn ctx:

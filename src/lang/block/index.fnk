@@ -16,7 +16,7 @@ indented_block = fn ctx, block_expr=single_expression:
 
 
 named_block = fn op, type, block_expr:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
@@ -25,7 +25,6 @@ named_block = fn op, type, block_expr:
       [{exprs: args}, body_ctx] = terminated_block ctx, ':'
       [{exprs, comments, loc}, next_ctx] = indented_block body_ctx, block_expr
       [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
-  }
 
 
 add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:

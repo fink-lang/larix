@@ -6,14 +6,13 @@
 
 group = fn op:
   # TOOD: should be prefix, but overloaded with call op
-  {
+  dict:
     ...terminator op
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'
 
       [{type: 'group', exprs, comments, loc}, next_ctx]
-  }
 
 
 add_group = fn ctx:

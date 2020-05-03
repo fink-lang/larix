@@ -5,13 +5,12 @@
 
 
 array = fn op:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ']'
       [{type: 'array', exprs, loc}, next_ctx]
-  }
 
 
 add_array = fn ctx:

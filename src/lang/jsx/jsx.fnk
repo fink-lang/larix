@@ -147,10 +147,9 @@ jsx_elem = fn ctx:
 
 jsx = fn op:
   # TODO overloaded with comp
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
       jsx_elem ctx
-  }
 

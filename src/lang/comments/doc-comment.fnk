@@ -4,7 +4,7 @@
 
 
 doc_comment = fn op:
-  {
+  dict:
     ...prefix op
 
     nud: fn: fn ctx:
@@ -12,4 +12,4 @@ doc_comment = fn op:
       comment = {op, ...text}
       [{comments, ...expr}, next_ctx] = expression expr_ctx, 0
       [{...expr, comments: {...comments, leading: [comment]}}, next_ctx]
-  }
+

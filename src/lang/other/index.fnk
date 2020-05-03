@@ -14,7 +14,7 @@ looks_like_num = fn ctx:
 
 
 other = fn:
-  {
+  dict:
     ...literal other_token
 
     nud: fn: fn ctx:
@@ -23,7 +23,7 @@ other = fn:
           number ctx
         else:
           identifier ctx
-  }
+
 
 add_other = fn ctx:
   pipe ctx:

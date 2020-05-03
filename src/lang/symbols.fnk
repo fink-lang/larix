@@ -26,28 +26,26 @@ non_bining = fn: fn: 0
 
 
 infix = fn op, type:
-  {
+  dict:
     ...symbol op
 
     lbp: left_binding
 
     led: fn lbp: infix_led type, op, lbp + 1
-  }
 
 
 infix_right = fn op, type:
-  {
+  dict:
     ...symbol op
 
     lbp: left_binding
 
     led: fn lbp: infix_led type, op, lbp - 1
-  }
 
 
 # TODO: why is this not type, op?
 prefix = fn op, type:
-  {
+  dict:
     ...symbol op
 
     lbp: non_bining
@@ -58,11 +56,10 @@ prefix = fn op, type:
       {end} = right.loc
 
       [{type, op, right, loc: {start, end}}, next_ctx]
-  }
 
 
 literal = fn op, type:
-  {
+  dict:
     ...symbol op
 
     lbp: non_bining
@@ -71,12 +68,11 @@ literal = fn op, type:
       loc = curr_loc ctx
       # value = curr_value ctx
       [{type, value: op, loc}, ctx]
-  }
 
 
 terminator = fn op:
-  {
+  dict:
     ...symbol op
 
     lbp: left_binding
-  }
+
