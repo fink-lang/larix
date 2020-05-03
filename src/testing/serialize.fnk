@@ -40,8 +40,8 @@ serialize_block = fn node, serialize, indent:
   head = str_type_op node, indent
   exprs = node.exprs.map fn expr: serialize expr, `${indent}  `
 
-  match true:
-    (!!node.args):
+  match node:
+    {args: {}}:
       args = node.args.map fn expr: serialize expr, `${indent}  `
       arg_str = `${args.join '\n'}\n`
       `${head}\n${arg_str}${indent}  :\n${exprs.join '\n'}`
@@ -56,8 +56,8 @@ serialize_call = fn node, serialize, indent:
 
   callee = serialize node.callee, `${indent}  `
   args = node.args.map fn expr: serialize expr, `${indent}  `
-  arg_str = match true:
-    args.length > 0: `${args.join '\n'}`
+  arg_str = match args:
+    ?.length > 0: `${args.join '\n'}`
     else: ''
 
   `${head}\n${callee}\n${arg_str}`
@@ -66,18 +66,10 @@ serialize_call = fn node, serialize, indent:
 serialize_infix = fn node, serialize, indent:
   head = str_type_op node, indent
 
-  match true:
-    !!((node.left && node.right)):
-      left = serialize node.left, `${indent}  `
-      right = serialize node.right, `${indent}  `
+  left = serialize node.left, `${indent}  `
+  right = serialize node.right, `${indent}  `
 
-      `${head}\n${left}\n${right}`
-
-    (!!(node.key && node.value)):
-      left = serialize node.key, `${indent}  `
-      right = serialize node.value, `${indent}  `
-
-      `${head}\n${left}\n${right}`
+  `${head}\n${left}\n${right}`
 
 
 serialize_prefix = fn node, serialize, indent:
@@ -95,8 +87,8 @@ serialize_spread = fn node, serialize, indent:
 serialize_str = fn node, serialize, indent:
   head = str_type_op node, indent
 
-  tag = match true:
-    (!!node.tag): ` ${node.tag.value}`
+  tag = match node:
+    {tag: {}}: ` ${node.tag.value}`
     else: ''
 
   [lne, ...lns] = pipe node.exprs:
@@ -133,12 +125,12 @@ serialize_jsx = fn node, serialize, indent:
       props = node.props.map fn expr: serialize expr, `${indent}  `
       children = node.children.map fn expr: serialize expr, `${indent}  `
 
-      props_str = match true:
-        props.length > 0: `\n${props.join '\n'}`
+      props_str = match props:
+        ?.length > 0: `\n${props.join '\n'}`
         else: ''
 
-      children_str = match true:
-        children.length > 0: `\n${indent}  :\n${children.join '\n'}`
+      children_str = match children:
+        ?.length > 0: `\n${indent}  :\n${children.join '\n'}`
         else: ''
 
       `${head} ${node.name}${props_str}${children_str}`

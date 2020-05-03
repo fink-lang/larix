@@ -1,39 +1,48 @@
-{curr_value, curr_loc, next_is, advance} = import '@fink/prattler'
+{curr_value, next_value, curr_loc, next_is, advance} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
 
 
+exponent = fn ctx:
+  plus_minus = next_value ctx
+  next_ctx = advance ctx
+
+  match plus_minus:
+    ? == '+' || ? == '-':
+      ['${plus_minus}${next_value next_ctx}', advance next_ctx]
+    else:
+      # TODO use advance_expected
+      [, err_ctx] = add_error next_ctx,
+        'Expected exponent.'
+        next_ctx.curr_token
+
+      [plus_minus, err_ctx]
+
+
+float = fn ctx:
+  match ctx:
+    next_is ?, '.':
+      float_ctx = advance ctx
+      value = '.${next_value float_ctx}'
+
+      [exp, next_ctx] = match value:
+        ?.endsWith 'e':
+          exponent advance float_ctx
+        else:
+          ['', advance float_ctx]
+
+      # TODO need to check if valid number
+      ['${value}${exp}', next_ctx]
+    else:
+      ['', ctx]
+
+
 number = fn ctx:
-  int_value = curr_value ctx
   {start} = curr_loc ctx
 
-  [value, next_ctx] = match true:
-    next_is ctx, '.':
-      float_ctx = advance advance ctx
-      float_value = `${int_value}.${curr_value float_ctx}`
+  int_value = curr_value ctx
+  [float_value, next_ctx] = float ctx
 
-      match true:
-        float_value.endsWith 'e':
-          # TODO cleanup
-          e_ctx = advance float_ctx
-          e_value = `${float_value}${curr_value e_ctx}`
-          curr_val = curr_value e_ctx
-          match true:
-            curr_val == '+' || curr_val == '-':
-              n_ctx = advance e_ctx
-              [`${e_value}${curr_value n_ctx}`, n_ctx]
-            else:
-              # TODO use advance_expected
-              [, err_ctx] = add_error e_ctx,
-                `Expected exponent.`
-                e_ctx.curr_token
-
-              [e_value, err_ctx]
-
-        else:
-          [float_value, float_ctx]
-
-    else:
-      [int_value, ctx]
+  value = '${int_value}${float_value}'
 
   {end} = curr_loc next_ctx
   [{type: 'number', value, loc: {start, end}}, next_ctx]

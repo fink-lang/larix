@@ -19,8 +19,8 @@ get_text = fn ctx, op:
 
   [escaped] = text.match rx/\\*$/
 
-  match true:
-    escaped.length % 2 == 0:
+  match escaped:
+    ?.length % 2 == 0:
       [{text, loc: {start, end}}, next_ctx]
     else:
       [{text: new_text, loc: {end}}, final_ctx] = get_text next_ctx, op
@@ -30,8 +30,8 @@ get_text = fn ctx, op:
 get_flags = fn ctx:
   could_be_flag = curr_next_adjecent ctx
 
-  match true:
-    could_be_flag && next_matches ctx, rx/[gimsuy]/:
+  match ctx:
+    could_be_flag && next_matches ?, rx/[gimsuy]/:
       next_ctx = advance ctx
       # TODO use next_value ctx
       flags = curr_value next_ctx

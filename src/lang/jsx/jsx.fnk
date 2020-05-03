@@ -26,13 +26,13 @@ get_children = fn ctx:
     {value: ''}: []
     else: [txt]
 
-  match true:
-    curr_is next_ctx, '<':
+  match next_ctx:
+    curr_is ?, '<':
       [expr, children_ctx] = jsx_elem next_ctx
       [children, end_ctx] = get_children children_ctx
       [[...txt_children, expr, ...children], end_ctx]
 
-    curr_is next_ctx, '{':
+    curr_is ?, '{':
       [expr, children_ctx] = jsx_expr_container next_ctx
       [children, end_ctx] = get_children children_ctx
       [[...txt_children, expr, ...children], end_ctx]
@@ -120,8 +120,8 @@ jsx_props = fn ctx:
 
 
 body_or_end_elem = fn ctx, name:
-  match true:
-    next_is ctx, '>':
+  match ctx:
+    next_is ?, '>':
       [children, next_ctx] = jsx_body name, advance ctx
       [false, children, next_ctx]
     else:

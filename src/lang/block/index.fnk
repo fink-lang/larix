@@ -30,4 +30,5 @@ named_block = fn op, type, block_expr:
 add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
   pipe ctx:
     add_keyword named_block op, type, block_expr
+    add_separator terminator ','
     add_separator terminator ':'

@@ -1,7 +1,7 @@
 {next_lbp} = import '@fink/prattler/symbols'
 
 
-is_callable = fn callee, lbp:
+callable = fn callee, lbp:
   match callee:
     {type: 'ident'}: true
     {type: 'member'}: true
@@ -15,7 +15,7 @@ is_callable = fn callee, lbp:
 
 
 next_is_call_arg = fn callee, lbp, ctx:
-  match true:
-    ! is_callable callee, lbp: false
-    0 < next_lbp ctx, callee: false
+  match callee:
+    not callable ?, lbp: false
+    0 < next_lbp ctx, ?: false
     else: true
