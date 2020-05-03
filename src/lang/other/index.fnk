@@ -8,7 +8,9 @@
 
 looks_like_num = fn ctx:
   value = curr_value:: ctx
-  null != value.match:: rx/^[0-9]+.*/
+  match value.match:: rx/^[0-9]+.*/:
+    {}: true
+    else: false
 
 
 other = fn:
