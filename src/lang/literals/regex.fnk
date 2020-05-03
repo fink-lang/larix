@@ -33,7 +33,6 @@ get_flags = fn ctx:
   match ctx:
     could_be_flag && next_matches ?, rx/[gimsuy]/:
       next_ctx = advance ctx
-      # TODO use next_value ctx
       flags = curr_value next_ctx
       [flags, next_ctx]
     else:

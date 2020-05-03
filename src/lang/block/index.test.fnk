@@ -172,9 +172,6 @@ describe 'parse failures', fn:
 
 
   it 'errors due to missing closing symbol', fn:
-    [expr, {error}] = parse `(1,2`, 'test.fnk'
-
-    # TODO: snapshot expr?
     expect
       parse `(1,2`, 'test.fnk'
       to_match_snapshot

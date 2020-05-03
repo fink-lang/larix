@@ -5,6 +5,5 @@
 
 add_async = fn ctx:
   pipe ctx:
-    # TODO: 'await' 'prefix' ?
-    add_keyword prefix 'await', 'await'
+    add_keyword prefix 'await', 'prefix'
 

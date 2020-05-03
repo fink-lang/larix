@@ -5,5 +5,4 @@
 
 add_import = fn ctx:
   pipe ctx:
-    # TODO: 'import' 'prefix' ?
-    add_keyword prefix 'import', 'import'
+    add_keyword prefix 'import', 'prefix'
