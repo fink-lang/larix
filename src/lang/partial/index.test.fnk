@@ -3,57 +3,57 @@
 {parse_expr, parse} = import '../../'
 
 
-describe:: 'partial', fn:
+describe 'partial', fn:
 
-  it:: 'parses call', fn:
-    expect::
-      parse_expr:: `? foo`
+  it 'parses call', fn:
+    expect
+      parse_expr `? foo`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `?()`
-      to_match_snapshot
-
-
-  it:: 'parses call arg', fn:
-    expect::
-      parse_expr:: `foo ?`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `foo.bar ?`
+    expect
+      parse_expr `?()`
       to_match_snapshot
 
 
-  it:: 'parses with member', fn:
-    expect::
-      parse_expr:: `?.bar()`
+  it 'parses call arg', fn:
+    expect
+      parse_expr `foo ?`
+      to_match_snapshot
+
+    expect
+      parse_expr `foo.bar ?`
       to_match_snapshot
 
 
-  it:: 'parses binary', fn:
-    expect::
-      parse_expr:: `? > 1`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `1 < ?`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `1 + ? * 3`
+  it 'parses with member', fn:
+    expect
+      parse_expr `?.bar()`
       to_match_snapshot
 
 
-  it:: 'parses str', fn:
-    expect::
-      parse_expr:: `'foo \${?} bar'`
+  it 'parses binary', fn:
+    expect
+      parse_expr `? > 1`
+      to_match_snapshot
+
+    expect
+      parse_expr `1 < ?`
+      to_match_snapshot
+
+    expect
+      parse_expr `1 + ? * 3`
       to_match_snapshot
 
 
-  it:: 'parses multiple', fn:
-    expect::
-      parse:: `
+  it 'parses str', fn:
+    expect
+      parse_expr `'foo \${?} bar'`
+      to_match_snapshot
+
+
+  it 'parses multiple', fn:
+    expect
+      parse `
         pipe spam:
           ? foo
           ? bar

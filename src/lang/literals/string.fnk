@@ -9,21 +9,21 @@
 
 
 get_expr_part = fn ctx:
-  expr_ctx = advance_expected:: ctx, '{'
+  expr_ctx = advance_expected ctx, '{'
 
-  [{exprs: [expr]}, next_ctx] = terminated_block:: expr_ctx, '}'
+  [{exprs: [expr]}, next_ctx] = terminated_block expr_ctx, '}'
   # TODO: just use block or assert there is only one expr
   [expr, next_ctx]
 
 
 get_str_part = fn ctx, op:
   [{value: text, loc: {start, end}}, next_ctx] = match op:
-    '"': collect_text:: ctx, rx/"|\${/
-    '`': collect_text:: ctx, rx/`|\${/
-    else: collect_text:: ctx, rx/'|\${/
+    '"': collect_text ctx, rx/"|\${/
+    '`': collect_text ctx, rx/`|\${/
+    else: collect_text ctx, rx/'|\${/
 
   # TODO: can we do the escapeing check in the regex above?
-  [escaped] = text.match:: rx/\\*$/
+  [escaped] = text.match rx/\\*$/
 
   match true:
     escaped.length % 2 == 0:
@@ -31,8 +31,8 @@ get_str_part = fn ctx, op:
 
     else:
       # TODO: stop_value should come from prattler
-      stop_value = curr_value:: next_ctx
-      [str_part, final_ctx] = get_str_part:: next_ctx, op
+      stop_value = curr_value next_ctx
+      [str_part, final_ctx] = get_str_part next_ctx, op
 
       [{
         type: 'string:text',
@@ -42,11 +42,11 @@ get_str_part = fn ctx, op:
 
 
 get_parts = fn ctx, op:
-  [str_part, next_ctx] = get_str_part:: ctx, op
-  match curr_value:: next_ctx:
+  [str_part, next_ctx] = get_str_part ctx, op
+  match curr_value next_ctx:
     '$':
-      [expr_part, parts_ctx] = get_expr_part:: next_ctx
-      [parts, final_ctx] = get_parts:: parts_ctx, op
+      [expr_part, parts_ctx] = get_expr_part next_ctx
+      [parts, final_ctx] = get_parts parts_ctx, op
       [[str_part, expr_part, ...parts], final_ctx]
     else:
       [[str_part], next_ctx]
@@ -54,21 +54,21 @@ get_parts = fn ctx, op:
 
 get_str_ind = fn str, min_ind:
   # TODO: fix regex space removal
-  # pipe str.matchAll:: rx/\n([ ]+)/g:
+  # pipe str.matchAll rx/\n([ ]+)/g:
 
-  matched = str.matchAll:: new RegExp:: '\\n([ ]{${min_ind},})', 'g'
+  matched = str.matchAll new RegExp '\\n([ ]{${min_ind},})', 'g'
   pipe matched:
     map [, spaces]: spaces.length
 
 
 min = fn [...items]:
   match items:
-    {length: ? > 0}: Math.min:: ...items
+    {length: ? > 0}: Math.min ...items
     else: 0
 
 
 get_unindent = fn ctx, parts:
-  min_ind = 1 + curr_indentation:: ctx
+  min_ind = 1 + curr_indentation ctx
 
   ind = pipe parts:
     filter part:
@@ -77,52 +77,52 @@ get_unindent = fn ctx, parts:
         else: false
 
     map part:
-      ...get_str_ind:: part.value, min_ind
+      ...get_str_ind part.value, min_ind
 
     min
 
-  rx = new RegExp:: '\\n[ ]{0,${ind}}', 'g'
+  rx = new RegExp '\\n[ ]{0,${ind}}', 'g'
 
-  fn str: str.replace:: rx, '\n'
+  fn str: str.replace rx, '\n'
 
 
 get_unindented_text = fn ctx, op:
-  {start} = curr_loc:: ctx
+  {start} = curr_loc ctx
 
-  [parts, next_ctx] = get_parts:: ctx, op
+  [parts, next_ctx] = get_parts ctx, op
 
-  unindent = get_unindent:: ctx, parts
+  unindent = get_unindent ctx, parts
 
   [first, ...rest] = pipe parts:
     map part:
       match part:
         {type: 'string:text'}:
-          value = unindent:: part.value
+          value = unindent part.value
           {...part, value}
         else:
           part
 
   # remove first empty line
   exprs = match first.value:
-    ?.startsWith:: '\n':
-      [{...first, value: first.value.slice:: 1}, ...rest]
+    ?.startsWith '\n':
+      [{...first, value: first.value.slice 1}, ...rest]
     else:
       [first, ...rest]
 
-  {end} = curr_loc:: next_ctx
+  {end} = curr_loc next_ctx
   [{type: 'string', op, exprs, loc: {start, end}}, next_ctx]
 
 
 string = fn op:
   {
-    ...prefix:: op
+    ...prefix op
 
     lbp: fn lbp: fn ctx, left:
-      {start: {column: next_start_col}} = next_loc:: ctx
+      {start: {column: next_start_col}} = next_loc ctx
 
       match true:
         # default indentation behaviour
-        next_is_new_expr:: ctx: 0
+        next_is_new_expr ctx: 0
         left.loc.end.column != next_start_col: 0
         left.type == 'ident': lbp
         else:
@@ -133,18 +133,18 @@ string = fn op:
     led: fn: fn ctx, left:
       {loc: {start}} = left
 
-      [{loc: {end}, ...str}, next_ctx] = get_unindented_text:: ctx, op
+      [{loc: {end}, ...str}, next_ctx] = get_unindented_text ctx, op
 
       # TODO: use `left` rather than `tag`?
       [{...str, tag: left, loc: {start, end}}, next_ctx]
 
     nud: fn: fn ctx:
-      get_unindented_text:: ctx, op
+      get_unindented_text ctx, op
   }
 
 
 add_string = fn ctx:
   pipe ctx:
-    add_operator:: string:: '`'
-    add_operator:: string:: `'`
-    add_operator:: string:: `"`
+    add_operator string '`'
+    add_operator string `'`
+    add_operator string `"`

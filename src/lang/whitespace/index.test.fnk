@@ -5,23 +5,23 @@
 {init_language} = import '..'
 
 
-describe:: 'whitespace', fn:
+describe 'whitespace', fn:
   init_test_parser = fn code:
     pipe {code}:
       init_parser
       init_language
       start_parser
 
-  it:: 'ignores whitespace', fn:
-    ctx = init_test_parser:: ` \t\n`
+  it 'ignores whitespace', fn:
+    ctx = init_test_parser ` \t\n`
 
-    expect::
-      next_is_end:: ctx
-      to_equal:: true
+    expect
+      next_is_end ctx
+      to_equal true
 
-    expect::
-      next_loc:: ctx
-      to_equal:: {
+    expect
+      next_loc ctx
+      to_equal {
         start: {pos: 3, line: 2, column: 0},
         end: {pos: 3, line: 2, column: 0}
       }

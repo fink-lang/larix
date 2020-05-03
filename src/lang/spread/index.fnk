@@ -7,19 +7,19 @@
 
 spread = fn op, type:
   {
-    ...prefix:: op
+    ...prefix op
 
     nud: fn lbp: fn ctx:
-      {start} = curr_loc:: ctx
+      {start} = curr_loc ctx
 
       [right, next_ctx] = match ctx:
-        next_is:: ?, ',':
+        next_is ?, ',':
           [{}, ctx]
         else:
-          [expr, next_ctx] = single_expression:: ctx, lbp
+          [expr, next_ctx] = single_expression ctx, lbp
           [{right: expr}, next_ctx]
 
-      {end} = curr_loc:: next_ctx
+      {end} = curr_loc next_ctx
 
       [{type, op, ...right, loc: {start, end}}, next_ctx]
   }
@@ -27,4 +27,4 @@ spread = fn op, type:
 
 add_spread_operator = fn ctx:
   pipe ctx:
-    add_operator:: spread:: '...', 'spread'
+    add_operator spread '...', 'spread'

@@ -2,9 +2,9 @@
 {infix_right} = import '../symbols'
 
 
-assign = fn op: infix_right:: op, 'assign'
+assign = fn op: infix_right op, 'assign'
 
 
 add_assignment_operators = fn ctx:
   pipe ctx:
-    add_operator:: assign:: '='
+    add_operator assign '='

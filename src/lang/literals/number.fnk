@@ -3,24 +3,24 @@
 
 
 number = fn ctx:
-  int_value = curr_value:: ctx
-  {start} = curr_loc:: ctx
+  int_value = curr_value ctx
+  {start} = curr_loc ctx
 
   [value, next_ctx] = match true:
-    next_is:: ctx, '.':
-      float_ctx = advance:: advance:: ctx
-      float_value = `${int_value}.${curr_value:: float_ctx}`
+    next_is ctx, '.':
+      float_ctx = advance advance ctx
+      float_value = `${int_value}.${curr_value float_ctx}`
 
       match true:
-        float_value.endsWith:: 'e':
+        float_value.endsWith 'e':
           # TODO cleanup
-          e_ctx = advance:: float_ctx
-          e_value = `${float_value}${curr_value:: e_ctx}`
-          curr_val = curr_value:: e_ctx
+          e_ctx = advance float_ctx
+          e_value = `${float_value}${curr_value e_ctx}`
+          curr_val = curr_value e_ctx
           match true:
             curr_val == '+' || curr_val == '-':
-              n_ctx = advance:: e_ctx
-              [`${e_value}${curr_value:: n_ctx}`, n_ctx]
+              n_ctx = advance e_ctx
+              [`${e_value}${curr_value n_ctx}`, n_ctx]
             else:
               # TODO use advance_expected
               [, err_ctx] = add_error e_ctx,
@@ -35,5 +35,5 @@ number = fn ctx:
     else:
       [int_value, ctx]
 
-  {end} = curr_loc:: next_ctx
+  {end} = curr_loc next_ctx
   [{type: 'number', value, loc: {start, end}}, next_ctx]

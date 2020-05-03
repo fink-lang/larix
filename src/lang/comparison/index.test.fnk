@@ -3,88 +3,88 @@
 {parse_expr} = import '../../'
 
 
-describe:: 'comparison', fn:
+describe 'comparison', fn:
 
-  it:: 'parses ==', fn:
-    expect::
-      parse_expr:: `a == b`
+  it 'parses ==', fn:
+    expect
+      parse_expr `a == b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a + b == c`
+    expect
+      parse_expr `a + b == c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a == b == c`
-      to_match_snapshot
-
-
-  it:: 'parses !=', fn:
-    expect::
-      parse_expr:: `a != b`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a != b != c`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a + b != c`
+    expect
+      parse_expr `a == b == c`
       to_match_snapshot
 
 
-  it:: 'parses <=', fn:
-    expect::
-      parse_expr:: `a <= b`
+  it 'parses !=', fn:
+    expect
+      parse_expr `a != b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a <= b <= c`
+    expect
+      parse_expr `a != b != c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a + b <= c`
-      to_match_snapshot
-
-
-  it:: 'parses >=', fn:
-    expect::
-      parse_expr:: `a >= b`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a >= b >= c`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a + b >= c`
+    expect
+      parse_expr `a + b != c`
       to_match_snapshot
 
 
-  it:: 'parses >', fn:
-    expect::
-      parse_expr:: `a > b`
+  it 'parses <=', fn:
+    expect
+      parse_expr `a <= b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a > b > c`
+    expect
+      parse_expr `a <= b <= c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a + b > c`
+    expect
+      parse_expr `a + b <= c`
       to_match_snapshot
 
 
-  it:: 'parses <', fn:
-    expect::
-      parse_expr:: `a < b`
+  it 'parses >=', fn:
+    expect
+      parse_expr `a >= b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a < b < c`
+    expect
+      parse_expr `a >= b >= c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a + b < c`
+    expect
+      parse_expr `a + b >= c`
+      to_match_snapshot
+
+
+  it 'parses >', fn:
+    expect
+      parse_expr `a > b`
+      to_match_snapshot
+
+    expect
+      parse_expr `a > b > c`
+      to_match_snapshot
+
+    expect
+      parse_expr `a + b > c`
+      to_match_snapshot
+
+
+  it 'parses <', fn:
+    expect
+      parse_expr `a < b`
+      to_match_snapshot
+
+    expect
+      parse_expr `a < b < c`
+      to_match_snapshot
+
+    expect
+      parse_expr `a + b < c`
       to_match_snapshot
 

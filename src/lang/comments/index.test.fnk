@@ -3,11 +3,11 @@
 {parse} = import '../../'
 
 
-describe:: 'comments', fn:
+describe 'comments', fn:
 
-  it:: 'parses line comments', fn:
-    expect::
-      parse:: `
+  it 'parses line comments', fn:
+    expect
+      parse `
         # leading expression
         # multi line
         spam = ni
@@ -24,9 +24,9 @@ describe:: 'comments', fn:
       to_match_snapshot
 
 
-  it:: 'parses doc-comment', fn:
-    expect::
-      parse:: `
+  it 'parses doc-comment', fn:
+    expect
+      parse `
         ---
         foobar spam ham
         ---

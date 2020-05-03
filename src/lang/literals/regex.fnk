@@ -8,33 +8,33 @@
 
 
 curr_next_adjecent = fn ctx:
-  curr = curr_loc:: ctx
-  next = next_loc:: ctx
+  curr = curr_loc ctx
+  next = next_loc ctx
 
   curr.end.line == next.start.line && curr.end.column == next.start.column
 
 
 get_text = fn ctx, op:
-  [{value: text, loc: {start, end}}, next_ctx] = collect_text:: ctx, op
+  [{value: text, loc: {start, end}}, next_ctx] = collect_text ctx, op
 
-  [escaped] = text.match:: rx/\\*$/
+  [escaped] = text.match rx/\\*$/
 
   match true:
     escaped.length % 2 == 0:
       [{text, loc: {start, end}}, next_ctx]
     else:
-      [{text: new_text, loc: {end}}, final_ctx] = get_text:: next_ctx, op
+      [{text: new_text, loc: {end}}, final_ctx] = get_text next_ctx, op
       [{text: `${text}${op}${new_text}`, loc: {start, end}}, final_ctx]
 
 
 get_flags = fn ctx:
-  could_be_flag = curr_next_adjecent:: ctx
+  could_be_flag = curr_next_adjecent ctx
 
   match true:
-    could_be_flag && next_matches:: ctx, rx/[gimsuy]/:
-      next_ctx = advance:: ctx
+    could_be_flag && next_matches ctx, rx/[gimsuy]/:
+      next_ctx = advance ctx
       # TODO use next_value ctx
-      flags = curr_value:: next_ctx
+      flags = curr_value next_ctx
       [flags, next_ctx]
     else:
       ['', ctx]
@@ -42,26 +42,26 @@ get_flags = fn ctx:
 
 regex = fn op:
   {
-    ...prefix:: op
+    ...prefix op
 
     nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
+      {start} = curr_loc ctx
 
-      [{text}, flags_ctx] = get_text:: ctx, '/'
+      [{text}, flags_ctx] = get_text ctx, '/'
 
       pattern = match text:
-        ?.startsWith:: '\n':
-          [, spaces] = text.match:: rx/^\n+(\s+)/
+        ?.startsWith '\n':
+          [, spaces] = text.match rx/^\n+(\s+)/
           ind = spaces.length
-          unindent_text::
-            text.slice:: 1 + ind
+          unindent_text
+            text.slice 1 + ind
             ind
         else:
           text
 
-      [flags, end_ctx] = get_flags:: flags_ctx
+      [flags, end_ctx] = get_flags flags_ctx
 
-      {end} = curr_loc:: end_ctx
+      {end} = curr_loc end_ctx
       # TODO: use `right` instead of flags?
       [{type: 'regex', value: pattern, flags, loc: {start, end}}, end_ctx]
   }
@@ -69,4 +69,4 @@ regex = fn op:
 
 add_regex = fn ctx:
   pipe ctx:
-    add_operator:: regex:: 'rx/'
+    add_operator regex 'rx/'

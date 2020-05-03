@@ -4,4 +4,4 @@
 
 add_partial = fn ctx:
   pipe ctx:
-    add_operator:: literal:: '?', 'partial'
+    add_operator literal '?', 'partial'

@@ -9,13 +9,13 @@
 
 member_expr = fn ctx, lbp:
   match ctx:
-    next_matches:: ?, rx/[`'"(]/:
-      single_expression:: ctx, lbp
+    next_matches ?, rx/[`'"(]/:
+      single_expression ctx, lbp
 
-    next_matches:: ?, rx/^\w+/:
+    next_matches ?, rx/^\w+/:
       # TODO: reuse ../identifier
-      # key_ctx = advance:: ctx
-      identifier:: advance:: ctx
+      # key_ctx = advance ctx
+      identifier advance ctx
 
     else:
       # TODO use advance_expected ctx, ...
@@ -26,11 +26,11 @@ member_expr = fn ctx, lbp:
 
 prop_access = fn op, type:
   {
-    ...infix:: op
+    ...infix op
 
     led: fn lbp: fn ctx, left:
       {loc: {start}} = left
-      [right, next_ctx] = member_expr:: ctx, lbp
+      [right, next_ctx] = member_expr ctx, lbp
 
       match next_ctx:
         has_errors ?:
@@ -45,5 +45,5 @@ prop_access = fn op, type:
 
 add_prop_access = fn ctx:
   pipe ctx:
-    add_operator:: prop_access:: '.', 'member'
+    add_operator prop_access '.', 'member'
 

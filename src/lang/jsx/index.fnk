@@ -6,7 +6,7 @@
 
 add_jsx = fn ctx:
   pipe ctx:
-    add_operator:: jsx:: '<'
-    add_separator:: terminator:: '/>'
+    add_operator jsx '<'
+    add_separator terminator '/>'
     # TODO: use prefix?
-    add_separator:: terminator:: '</'
+    add_separator terminator '</'

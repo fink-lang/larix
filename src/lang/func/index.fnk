@@ -3,4 +3,4 @@
 
 add_func = fn ctx:
   pipe ctx:
-    add_named_block:: 'fn'
+    add_named_block 'fn'

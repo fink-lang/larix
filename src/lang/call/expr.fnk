@@ -2,7 +2,7 @@
 call_expr = fn ctx, callee, op, arg_block:
   {start} = callee.loc
 
-  [{exprs: args, comments, loc}, next_ctx] = arg_block:: ctx
+  [{exprs: args, comments, loc}, next_ctx] = arg_block ctx
 
   # TODO: left, right instead of callee, args
   [{type: 'call', callee, args, op, comments, loc: {...loc, start}}, next_ctx]

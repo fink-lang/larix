@@ -3,6 +3,6 @@
 
 
 parse_module = fn ctx:
-  [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, end_token
+  [{exprs, comments, loc}, next_ctx] = terminated_block ctx, end_token
   [{type: 'module', exprs, comments, loc}, next_ctx]
 

@@ -7,25 +7,25 @@
 
 
 looks_like_num = fn ctx:
-  value = curr_value:: ctx
-  match value.match:: rx/^[0-9]+.*/:
+  value = curr_value ctx
+  match value.match rx/^[0-9]+.*/:
     {}: true
     else: false
 
 
 other = fn:
   {
-    ...literal:: other_token
+    ...literal other_token
 
     nud: fn: fn ctx:
       match ctx:
-        looks_like_num:: ?:
-          number:: ctx
+        looks_like_num ?:
+          number ctx
         else:
-          identifier:: ctx
+          identifier ctx
   }
 
 add_other = fn ctx:
   pipe ctx:
-    add_identifier:: other()
+    add_identifier other()
 

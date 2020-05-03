@@ -5,11 +5,11 @@
 
 doc_comment = fn op:
   {
-    ...prefix:: op
+    ...prefix op
 
     nud: fn: fn ctx:
-      [text, expr_ctx] = collect_text:: ctx, op
+      [text, expr_ctx] = collect_text ctx, op
       comment = {op, ...text}
-      [{comments, ...expr}, next_ctx] = expression:: expr_ctx, 0
+      [{comments, ...expr}, next_ctx] = expression expr_ctx, 0
       [{...expr, comments: {...comments, leading: [comment]}}, next_ctx]
   }

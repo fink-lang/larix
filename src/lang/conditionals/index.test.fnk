@@ -3,11 +3,11 @@
 {parse} = import '../../'
 
 
-describe:: 'match ...:', fn:
+describe 'match ...:', fn:
 
-  it:: 'parses simple', fn:
-    expect::
-      parse:: `
+  it 'parses simple', fn:
+    expect
+      parse `
         match item:
           test_pattern: result
 
@@ -19,9 +19,9 @@ describe:: 'match ...:', fn:
       to_match_snapshot
 
 
-  it:: 'parses complex: {foo}: bar', fn:
-    expect::
-      parse:: `
+  it 'parses complex: {foo}: bar', fn:
+    expect
+      parse `
         match item:
           # nested object pattern
           {foo, spam: {ni}}: bar
@@ -39,9 +39,9 @@ describe:: 'match ...:', fn:
       to_match_snapshot
 
 
-  it:: 'parses partials', fn:
-    expect::
-      parse:: `
+  it 'parses partials', fn:
+    expect
+      parse `
         match foo:
           {length: ? > 1}: bar
 

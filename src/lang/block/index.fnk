@@ -8,27 +8,27 @@
 
 
 terminated_block = fn ctx, end_symbol, block_expr=single_expression:
-  expressions:: ctx, end_symbol, block_expr
+  expressions ctx, end_symbol, block_expr
 
 
 indented_block = fn ctx, block_expr=single_expression:
-  terminated_block:: ctx, end_of_block_indent, block_expr
+  terminated_block ctx, end_of_block_indent, block_expr
 
 
 named_block = fn op, type, block_expr:
   {
-    ...prefix:: op
+    ...prefix op
 
     nud: fn: fn ctx:
-      {start} = curr_loc:: ctx
+      {start} = curr_loc ctx
 
-      [{exprs: args}, body_ctx] = terminated_block:: ctx, ':'
-      [{exprs, comments, loc}, next_ctx] = indented_block:: body_ctx, block_expr
+      [{exprs: args}, body_ctx] = terminated_block ctx, ':'
+      [{exprs, comments, loc}, next_ctx] = indented_block body_ctx, block_expr
       [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
   }
 
 
 add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
   pipe ctx:
-    add_keyword:: named_block:: op, type, block_expr
-    add_separator:: terminator:: ':'
+    add_keyword named_block op, type, block_expr
+    add_separator terminator ':'

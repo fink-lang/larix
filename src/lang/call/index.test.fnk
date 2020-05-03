@@ -3,29 +3,29 @@
 {parse_expr, parse} = import '../..'
 
 
-describe:: 'call()', fn:
+describe 'call()', fn:
 
-  it:: 'parses empty: foobar()', fn:
-    expect::
-      parse_expr:: `foobar()`
+  it 'parses empty: foobar()', fn:
+    expect
+      parse_expr `foobar()`
       to_match_snapshot
 
 
-  it:: 'parses single arg: foobar(1)', fn:
-    expect::
-      parse_expr:: `foobar(1)`
+  it 'parses single arg: foobar(1)', fn:
+    expect
+      parse_expr `foobar(1)`
       to_match_snapshot
 
 
-  it:: 'parses multiple args: foobar(1, 2)', fn:
-    expect::
-      parse_expr:: `foobar(1, 2)`
+  it 'parses multiple args: foobar(1, 2)', fn:
+    expect
+      parse_expr `foobar(1, 2)`
       to_match_snapshot
 
 
-  it:: 'parses multiline args', fn:
-    expect::
-      parse_expr:: `
+  it 'parses multiline args', fn:
+    expect
+      parse_expr `
         foobar(
           1
           2
@@ -34,19 +34,19 @@ describe:: 'call()', fn:
       to_match_snapshot
 
 
-describe:: 'call() - parsing failures', fn:
+describe 'call() - parsing failures', fn:
 
-  it:: `errors when missing ')'`, fn:
-    expect::
+  it `errors when missing ')'`, fn:
+    expect
       parse `foobar(`, 'test.fnk'
       to_match_snapshot
 
 
-describe:: 'pipe foo: ...', fn:
+describe 'pipe foo: ...', fn:
 
-  it:: 'pipes', fn:
-    expect::
-      parse_expr:: `
+  it 'pipes', fn:
+    expect
+      parse_expr `
         pipe foo:
           bar shrub
           ni

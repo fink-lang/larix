@@ -23,7 +23,7 @@ print = fn ast:
           serialize expr
 
     else:
-      serialize:: ast
+      serialize ast
 
 
 test = fn val:

@@ -5,7 +5,7 @@
 
 
 get_condition = fn ctx:
-  [left, next_ctx] = single_expression:: ctx, 0
+  [left, next_ctx] = single_expression ctx, 0
   match left:
     # TODO: single_expression should handle comments
     {type: 'comment'}:
@@ -15,18 +15,18 @@ get_condition = fn ctx:
 
 
 get_result = fn ctx:
-  [{exprs, comments, loc}, next_ctx] = indented_block:: ctx
+  [{exprs, comments, loc}, next_ctx] = indented_block ctx
   [{type: 'block', exprs, comments, loc}, next_ctx]
 
 
 cond_result_expr = fn ctx:
-  [left, result_ctx] = get_condition:: ctx
+  [left, result_ctx] = get_condition ctx
 
   match left:
     {type: 'comment'}:
       [left, result_ctx]
     else:
-      [right, next_ctx] = get_result:: result_ctx
+      [right, next_ctx] = get_result result_ctx
       {start} = left.loc
       {end} = right.loc
       [{type: 'match:expr', left, right, loc: {start, end}}, next_ctx]
@@ -34,4 +34,4 @@ cond_result_expr = fn ctx:
 
 add_conditionals = fn ctx:
   pipe ctx:
-    add_named_block:: 'match', 'block', cond_result_expr
+    add_named_block 'match', 'block', cond_result_expr

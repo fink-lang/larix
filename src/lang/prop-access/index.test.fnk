@@ -3,38 +3,38 @@
 {parse, parse_expr} = import '../../'
 
 
-describe:: 'prop access', fn:
+describe 'prop access', fn:
 
-  it:: 'parses single line', fn:
-    expect::
-      parse_expr:: `foo.bar`
+  it 'parses single line', fn:
+    expect
+      parse_expr `foo.bar`
       to_match_snapshot
 
 
-  it:: 'parses with taken keywords', fn:
-    expect::
-      parse_expr:: `foo.match`
+  it 'parses with taken keywords', fn:
+    expect
+      parse_expr `foo.match`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `foo.fn`
-      to_match_snapshot
-
-
-  it:: `parses member expr: foo.'bar spam'`, fn:
-    expect::
-      parse_expr:: `foo.'bar spam'`
+    expect
+      parse_expr `foo.fn`
       to_match_snapshot
 
 
-  it:: 'parses member expr: foo.(Symbol.iterator)', fn:
-    expect::
-      parse_expr:: 'foo.(Symbol.iterator)'
+  it `parses member expr: foo.'bar spam'`, fn:
+    expect
+      parse_expr `foo.'bar spam'`
       to_match_snapshot
 
 
-  it:: 'errors with invalid member)', fn:
-    expect::
+  it 'parses member expr: foo.(Symbol.iterator)', fn:
+    expect
+      parse_expr 'foo.(Symbol.iterator)'
+      to_match_snapshot
+
+
+  it 'errors with invalid member)', fn:
+    expect
       parse 'foo.[bar]', 'test.fnk'
       to_match_snapshot
 

@@ -7,10 +7,10 @@
 group = fn op:
   # TOOD: should be prefix, but overloaded with call op
   {
-    ...terminator:: op
+    ...terminator op
 
     nud: fn: fn ctx:
-      [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, ')'
+      [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'
 
       [{type: 'group', exprs, comments, loc}, next_ctx]
   }
@@ -18,6 +18,6 @@ group = fn op:
 
 add_group = fn ctx:
   pipe ctx:
-    add_operator:: group:: '('
-    add_separator:: terminator:: ','
-    add_separator:: terminator:: ')'
+    add_operator group '('
+    add_separator terminator ','
+    add_separator terminator ')'

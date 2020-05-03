@@ -3,22 +3,22 @@
 {parse} = import '../..'
 
 
-describe:: 'expression block', fn:
-  it:: 'parses empty', fn:
-    expect::
-      parse:: ``
+describe 'expression block', fn:
+  it 'parses empty', fn:
+    expect
+      parse ``
       to_match_snapshot
 
 
-  it:: 'parses single expr', fn:
-    expect::
-      parse:: `1`
+  it 'parses single expr', fn:
+    expect
+      parse `1`
       to_match_snapshot
 
 
-  it:: 'parses multiple', fn:
-    expect::
-      parse:: `
+  it 'parses multiple', fn:
+    expect
+      parse `
         1
         2
         3
@@ -26,18 +26,18 @@ describe:: 'expression block', fn:
       to_match_snapshot
 
 
-  it:: 'ignores trailing comma before newline', fn:
-    expect::
-      parse:: `
+  it 'ignores trailing comma before newline', fn:
+    expect
+      parse `
         1,
         2
       `
       to_match_snapshot
 
 
-  it:: 'parses with leading empty expressions', fn:
-    expect::
-      parse:: `
+  it 'parses with leading empty expressions', fn:
+    expect
+      parse `
         1
         ,,2
         3
@@ -45,9 +45,9 @@ describe:: 'expression block', fn:
       to_match_snapshot
 
 
-  it:: 'parses with trailing empty expressions', fn:
-    expect::
-      parse:: `
+  it 'parses with trailing empty expressions', fn:
+    expect
+      parse `
         1
         2,,
         3,
@@ -55,9 +55,9 @@ describe:: 'expression block', fn:
       to_match_snapshot
 
 
-  it:: 'parses with empty expressions', fn:
-    expect::
-      parse:: `
+  it 'parses with empty expressions', fn:
+    expect
+      parse `
         ,
         2
         ,
@@ -65,39 +65,39 @@ describe:: 'expression block', fn:
       to_match_snapshot
 
 
-describe:: 'single line expressions', fn:
+describe 'single line expressions', fn:
 
-  it:: 'parses multiple', fn:
-    expect::
-      parse:: `1, 2`
+  it 'parses multiple', fn:
+    expect
+      parse `1, 2`
       to_match_snapshot
 
 
-  it:: 'parses leading empty', fn:
-    expect::
-      parse:: `,1, 2`
+  it 'parses leading empty', fn:
+    expect
+      parse `,1, 2`
       to_match_snapshot
 
-    expect::
-      parse:: `,,1, 2`
-      to_match_snapshot
-
-
-  it:: 'parses trailing empty', fn:
-    expect::
-      parse:: `1,`
-      to_match_snapshot
-
-    expect::
-      parse:: `2,,`
+    expect
+      parse `,,1, 2`
       to_match_snapshot
 
 
+  it 'parses trailing empty', fn:
+    expect
+      parse `1,`
+      to_match_snapshot
 
-describe:: 'nesting', fn:
-  it:: 'parses nested', fn:
-    expect::
-      parse:: `
+    expect
+      parse `2,,`
+      to_match_snapshot
+
+
+
+describe 'nesting', fn:
+  it 'parses nested', fn:
+    expect
+      parse `
         (
           foo
 
@@ -118,17 +118,17 @@ describe:: 'nesting', fn:
       to_match_snapshot
 
 
-  it:: 'parses indentation', fn:
-    expect::
-      parse:: `
+  it 'parses indentation', fn:
+    expect
+      parse `
         foo = fn: fn: fn:
           a + b
         spam
         `
       to_match_snapshot
 
-    expect::
-      parse:: `
+    expect
+      parse `
         foo = fn:
           shrub = fn: fn:
             a + b
@@ -137,8 +137,8 @@ describe:: 'nesting', fn:
         `
       to_match_snapshot
 
-    expect::
-      parse:: `
+    expect
+      parse `
         foo = fn:
           shrub = fn:
             fn: a + b
@@ -148,9 +148,9 @@ describe:: 'nesting', fn:
       to_match_snapshot
 
 
-describe:: 'parse failures', fn:
-  it:: 'errors due to end of indentation', fn:
-    expect::
+describe 'parse failures', fn:
+  it 'errors due to end of indentation', fn:
+    expect
       parse `
           foo = (
             bar
@@ -160,8 +160,8 @@ describe:: 'parse failures', fn:
       to_match_snapshot
 
 
-  it:: 'errors due to end of indentation', fn:
-    expect::
+  it 'errors due to end of indentation', fn:
+    expect
       parse `
         foo = (
           bar = (
@@ -171,11 +171,11 @@ describe:: 'parse failures', fn:
 
 
 
-  it:: 'errors due to missing closing symbol', fn:
+  it 'errors due to missing closing symbol', fn:
     [expr, {error}] = parse `(1,2`, 'test.fnk'
 
     # TODO: snapshot expr?
-    expect::
+    expect
       parse `(1,2`, 'test.fnk'
       to_match_snapshot
 
