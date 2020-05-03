@@ -115,12 +115,12 @@ exports[`nesting parses nested 1`] = `
 module (1:0-17:1)
   group (1:0-17:1)
     ident (2:2-2:5) foo
-    group (4:2-4:24)
+    group (4:2-4:22)
       ident (4:3-4:6) foo
-      call :: (4:8-4:23)
+      call (4:8-4:21)
         ident (4:8-4:11) foo
-        ident (4:14-4:17) bar
-        ident (4:19-4:23) spam
+        ident (4:12-4:15) bar
+        ident (4:17-4:21) spam
     # leading group comment
     group (7:2-10:3)
       ident (8:4-8:7) bar

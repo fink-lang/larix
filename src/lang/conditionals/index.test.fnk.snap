@@ -64,12 +64,12 @@ module (1:0-7:0)
             number (2:15-2:16) 1
       block (2:17-2:22)
         ident (2:19-2:22) bar
-    match:expr (4:2-4:17)
-      call :: (4:2-4:12)
+    match:expr (4:2-4:15)
+      call (4:2-4:10)
         ident (4:2-4:8) is_str
-        partial (4:11-4:12) ?
-      block (4:12-4:17)
-        ident (4:14-4:17) foo
+        partial (4:9-4:10) ?
+      block (4:10-4:15)
+        ident (4:12-4:15) foo
     match:expr (6:2-7:0)
       comp > (6:2-6:18)
         array (6:2-6:10)

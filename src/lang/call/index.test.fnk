@@ -42,33 +42,13 @@ describe:: 'call() - parsing failures', fn:
       to_match_snapshot
 
 
-describe:: 'call:: ...', fn:
-
-  it:: 'parses single line', fn:
-    expect::
-      parse_expr:: `foobar:: spam, ni`
-      to_match_snapshot
-
-
-  it:: 'parses multiline', fn:
-    expect::
-      parse_expr:: `
-        foo::
-          fn bar:
-            spam
-          ni
-          # trailing comment
-      `
-      to_match_snapshot
-
-
 describe:: 'pipe foo: ...', fn:
 
   it:: 'pipes', fn:
     expect::
       parse_expr:: `
         pipe foo:
-          bar:: shrub
+          bar shrub
           ni
       `
       to_match_snapshot

@@ -45,7 +45,7 @@ describe:: 'match ...:', fn:
         match foo:
           {length: ? > 1}: bar
 
-          is_str:: ?: foo
+          is_str ?: foo
 
           [..., ?] > shrub: ni
       `

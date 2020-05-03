@@ -100,7 +100,7 @@ describe:: 'strings', fn:
 
   it:: 'parses nested template strings', fn:
     expect::
-      parse_expr:: '`\\n\${foo:: bar, `  \${spam}`}\\n`'
+      parse_expr:: '`\\n\${foo bar, `  \${spam}`}\\n`'
       to_match_snapshot
 
 

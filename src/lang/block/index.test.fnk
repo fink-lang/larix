@@ -101,7 +101,7 @@ describe:: 'nesting', fn:
         (
           foo
 
-          (foo, foo:: bar, spam)
+          (foo, foo bar, spam)
 
           # leading group comment
           (
