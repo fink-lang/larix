@@ -14,13 +14,14 @@ spread = fn op, type:
 
       [right, next_ctx] = match ctx:
         next_is:: ?, ',':
-          [null, ctx]
+          [{}, ctx]
         else:
-          single_expression:: ctx, lbp
+          [expr, next_ctx] = single_expression:: ctx, lbp
+          [{right: expr}, next_ctx]
 
       {end} = curr_loc:: next_ctx
 
-      [{type, op, right, loc: {start, end}}, next_ctx]
+      [{type, op, ...right, loc: {start, end}}, next_ctx]
   }
 
 

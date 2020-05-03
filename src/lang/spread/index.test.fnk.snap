@@ -17,6 +17,5 @@ exports[`spread parses standalone 1`] = `
 array (1:0-1:11)
   ident (1:1-1:2) a
   spread ... (1:4-1:7)
-    null
   ident (1:9-1:10) b
 `;
