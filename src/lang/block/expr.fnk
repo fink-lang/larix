@@ -1,5 +1,8 @@
-{advance, expression, next_is, next_is_end, curr_loc, next_loc} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{inspect} = import 'util'
+
+{advance, expression, next_is, next_is_end, has_errors} = import '@fink/prattler'
+{curr_loc, next_loc} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 
 {collect_single_comment} = import '../comments/collect'
 {next_is_call_arg} = import '../call/opless'
@@ -21,8 +24,8 @@ get_end_symb = fn {blocks: [block, ...blocks]}:
 
 
 end_symb_str = fn ctx:
-  symb = get_end_symb:: ctx
-  symb.toString()
+  symb = get_end_symb ctx
+  inspect symb
 
 
 next_is_end_of_block = fn ctx:
@@ -46,6 +49,9 @@ get_all = fn ctx, single_expr:
   pipe [[], ctx, true, false]:
     unfold [exprs, ctx, at_start, was_comma]:
       [done, next] = match ctx:
+        has_errors ?:
+          [true, [exprs, ctx]]
+
         next_is_indented:: ?:
           next_ctx = update_indentation:: ctx
           [false, [exprs, next_ctx, true, was_comma]]
@@ -65,6 +71,7 @@ get_all = fn ctx, single_expr:
             true:
               expr = empty_expr:: ctx.next_token
               [false, [[...exprs, expr], next_ctx, true, false]]
+
             else:
               match next_ctx:
                 next_is:: ?, ',':
@@ -76,17 +83,18 @@ get_all = fn ctx, single_expr:
         else:
           match at_start:
             false:
-              throw token_error::
-                `Expected ',' or indented new line or '${end_symb_str:: ctx}'.`
+              [, err_ctx] = add_error ctx,
+                `Expected ',' or indented new line or ${end_symb_str ctx}.`
                 ctx.next_token
-                ctx
 
-          # TODO: check if next is actially a start of an expr.
-          [expr, next_ctx] = single_expr:: ctx
-          # new line at end of expr is a separator
-          next_is_start = next_is_nl:: next_ctx
+              [true, [exprs, err_ctx]]
+            else:
+              # TODO: check if next is actially a start of an expr.
+              [expr, next_ctx] = single_expr:: ctx
+              # new line at end of expr is a separator
+              next_is_start = next_is_nl:: next_ctx
 
-          [false, [[...exprs, expr], next_ctx, next_is_start, false]]
+              [false, [[...exprs, expr], next_ctx, next_is_start, false]]
 
       ([done, next], next)
 
@@ -143,6 +151,9 @@ single_expression = fn ctx, lbp=0:
   [expr, next_ctx] = expression_with_comment:: ctx, lbp
 
   match next_ctx:
+    has_errors ?:
+      [expr, next_ctx]
+
     next_is:: ?, ',':
       [expr, next_ctx]
 

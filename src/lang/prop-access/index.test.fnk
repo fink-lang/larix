@@ -1,6 +1,6 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse, parse_expr} = import '../../'
 
 
 describe:: 'prop access', fn:
@@ -33,13 +33,8 @@ describe:: 'prop access', fn:
       to_match_snapshot
 
 
-  it:: 'throws with invalid member)', fn:
+  it:: 'errors with invalid member)', fn:
     expect::
-      fn: parse_expr:: 'foo.[bar]', 'test.fnk'
-      to_throw:: `
-        test.fnk:1:4
-        1| foo.[bar]
-               ^
-
-        Expected member key to be an ident, string or group expr.`
+      parse 'foo.[bar]', 'test.fnk'
+      to_match_snapshot
 

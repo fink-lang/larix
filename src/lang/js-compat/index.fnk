@@ -1,4 +1,4 @@
-{add_non_separating} = import '@fink/prattler/symbols'
+{add_keyword} = import '@fink/prattler/symbols'
 
 {prefix} = import '../symbols'
 
@@ -9,6 +9,6 @@ js_op = fn op, type: prefix:: op, type
 add_js_ops = fn ctx:
   pipe ctx:
     # TODO: 'new' 'prefix' ?
-    add_non_separating:: js_op:: 'new', 'new'
+    add_keyword:: js_op:: 'new', 'new'
     # TODO: 'throw' 'prefix' ?
-    add_non_separating:: js_op:: 'throw', 'throw'
+    add_keyword:: js_op:: 'throw', 'throw'

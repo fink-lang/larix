@@ -1,4 +1,4 @@
-{add_operator, add_non_separating} = import  '@fink/prattler/symbols'
+{add_operator, add_keyword} = import  '@fink/prattler/symbols'
 
 {infix_right} = import  '../symbols'
 {prefix} = import  '../symbols'
@@ -15,6 +15,6 @@ add_logical_operators = fn ctx:
     add_operator:: logical:: '&&'
     add_operator:: prefix_logical:: '!'
 
-    add_non_separating:: logical:: 'and'
-    add_non_separating:: logical:: 'or'
-    add_non_separating:: prefix_logical:: 'not'
+    add_keyword:: logical:: 'and'
+    add_keyword:: logical:: 'or'
+    add_keyword:: prefix_logical:: 'not'

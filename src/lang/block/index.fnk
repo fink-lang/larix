@@ -1,5 +1,5 @@
 {curr_loc} = import '@fink/prattler'
-{add_separator, add_non_separating} = import '@fink/prattler/symbols'
+{add_separator, add_keyword} = import '@fink/prattler/symbols'
 
 {prefix, terminator} = import '../symbols'
 
@@ -30,5 +30,5 @@ named_block = fn op, type, block_expr:
 
 add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
   pipe ctx:
-    add_non_separating:: named_block:: op, type, block_expr
+    add_keyword:: named_block:: op, type, block_expr
     add_separator:: terminator:: ':'

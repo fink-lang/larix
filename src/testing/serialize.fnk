@@ -156,6 +156,9 @@ serialize = fn node, indent='':
   result = match node:
     null: `${indent}null`
 
+    {error: {}}:
+      `${indent}::error::`
+
     {type: 'empty'}:
       str_type_op:: node, indent
 
@@ -187,7 +190,8 @@ serialize = fn node, indent='':
       serialize_other:: node, serialize, indent
 
     else:
+      console.log '==========', node
       head = str_type_op:: node, indent
-      throw new Error:: `cannot serialize ${head}`
+      `Error: cannot serialize ${head}`
 
   '${result}${trailing_comment:: '${indent}  ', node}'

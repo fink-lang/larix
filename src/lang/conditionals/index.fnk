@@ -1,4 +1,4 @@
-{assert_advance} = import '@fink/prattler'
+{advance_expected} = import '@fink/prattler'
 
 {add_named_block, indented_block} = import '../block'
 {single_expression} = import '../block/expr'
@@ -11,7 +11,7 @@ get_condition = fn ctx:
     {type: 'comment'}:
       [left, next_ctx]
     else:
-      [left, assert_advance:: next_ctx, ':']
+      [left, advance_expected next_ctx, ':']
 
 
 get_result = fn ctx:

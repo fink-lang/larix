@@ -1,4 +1,4 @@
-{add_operator, add_separator, add_non_separating} = import '@fink/prattler/symbols'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {infix, terminator} = import '../symbols'
 

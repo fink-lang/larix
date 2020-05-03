@@ -1,4 +1,4 @@
-{describe, it, expect, to_throw, to_match_snapshot} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
 {parse_expr, parse} = import '../../'
 
@@ -115,25 +115,14 @@ describe:: 'strings', fn:
 
 describe:: 'string - parsing failures', fn:
 
-  it:: 'throws when missing end', fn:
+  it:: 'errors when missing end', fn:
     expect::
-      fn: parse_expr:: '"foo bar,', 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:9
-        1| "foo bar,
-                    ^
-
-        Unexpected end of code.`
+      parse:: '"foo bar,', 'test.fnk'
+      to_match_snapshot
 
 
-  it:: 'throws when not tagged with identifier', fn:
+  it:: 'errors when not tagged with identifier', fn:
     expect::
-      fn: parse_expr:: `12'bar spam'`, 'test.fnk'
+      parse:: `12'bar spam'`, 'test.fnk'
+      to_match_snapshot
 
-      to_throw:: `
-        test.fnk:1:2
-        1| 12'bar spam'
-             ^
-
-        Expected identifier before tagged string.`

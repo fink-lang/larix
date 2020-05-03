@@ -57,3 +57,20 @@ jsx-elem (1:0-1:20) Foobar
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem: <Foobar /> 1`] = `jsx-elem (1:0-1:10) Foobar`;
+
+exports[`JSX parse failures errors with invalid attr value 1`] = `
+module (1:0-1:19)
+  jsx-elem (1:0-1:19) Foobar
+    jsx-attr (1:8-1:16) spam
+            ::error::
+
+error:
+test.fnk:1:13
+1| <Foobar spam=123 />
+                ^
+
+Expected attr starting with '{', '"', "'" but found '123'.
+
+
+
+`;

@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`call() - parsing failures errors when missing ')' 1`] = `
+module (1:0-1:7)
+  call ( (1:0-1:7)
+    ident (1:0-1:6) foobar
+
+
+error:
+test.fnk:1:7
+1| foobar(
+          ^
+
+Expected ',' or indented new line or ')'.
+
+
+
+`;
+
 exports[`call() parses empty: foobar() 1`] = `
 call ( (1:0-1:8)
   ident (1:0-1:6) foobar

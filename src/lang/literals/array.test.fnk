@@ -1,6 +1,6 @@
-{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, only, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
 describe:: 'array [...]', fn:
@@ -204,27 +204,15 @@ describe:: 'list', fn:
 
 
 describe:: 'array [...] - parsing failures', fn:
-  it:: `throws when missing ']'`, fn:
+  it:: `errors when missing ']'`, fn:
     expect::
-      fn: parse_expr:: `[`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:1
-        1| [
-            ^
-
-        Expected ',' or indented new line or ']'.`
+      parse `[`, 'test.fnk'
+      to_match_snapshot
 
 
-  it:: `throws when missing ']'`, fn:
+  it:: `errors when missing ','`, fn:
     expect::
-      fn: parse_expr:: `[1)]`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:2
-        1| [1)]
-             ^
-
-        Expected ',' or indented new line or ']'.`
+      parse `[1)]`, 'test.fnk'
+      to_match_snapshot
 
 

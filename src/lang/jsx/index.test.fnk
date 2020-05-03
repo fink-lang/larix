@@ -1,6 +1,6 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
 describe:: 'JSX <Foobar>...</Foobar>', fn:
@@ -61,14 +61,8 @@ describe:: 'JSX <Foobar>...</Foobar>', fn:
       to_match_snapshot
 
 
-describe:: 'JSX parse errors', fn:
-  it:: 'throws with invalid attr value', fn:
+describe:: 'JSX parse failures', fn:
+  it:: 'errors with invalid attr value', fn:
     expect::
-      fn: parse_expr:: '<Foobar spam=123 />', 'test.fnk'
-      to_throw:: `
-        test.fnk:1:13
-        1| <Foobar spam=123 />
-                        ^
-
-        Expected one of [ '{', '\"', \"'\" ] but found '123'.
-      `
+      parse '<Foobar spam=123 />', 'test.fnk'
+      to_match_snapshot

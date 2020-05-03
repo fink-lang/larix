@@ -1,7 +1,7 @@
 {curr_is, curr_value, curr_loc} = import '@fink/prattler'
-{next_is, next_is_end, assert_next} = import '@fink/prattler'
-{assert_advance, advance, collect_text} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{next_is, next_is_end} = import '@fink/prattler'
+{advance_expected, advance, collect_text} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 
 {prefix} = import '../symbols'
 {terminated_block} = import '../block'
@@ -43,8 +43,9 @@ get_children = fn ctx:
 
 jsx_body = fn name, ctx:
   [children, name_ctx] = get_children:: ctx
-  end_ctx = assert_advance:: name_ctx, name
-  [children, assert_advance:: end_ctx, '>']
+
+  end_ctx = advance_expected:: name_ctx, name
+  [children, advance_expected:: end_ctx, '>']
 
 
 jsx_string_val = fn ctx:
@@ -54,18 +55,26 @@ jsx_string_val = fn ctx:
 
 
 jsx_attr_value = fn ctx:
-  match true:
-    next_is:: ctx, '{':
+  match ctx:
+    next_is:: ?, '{':
       jsx_expr_container:: advance:: ctx
 
-    next_is:: ctx, `"`:
+    # TODO use next_is_any ? `'`, '"', '`'
+    next_is:: ?, `"`:
       jsx_string_val:: advance:: ctx
 
-    next_is:: ctx, `'`:
+    # TODO use next_is_any ? `'`, '"', '`'
+    next_is:: ?, `'`:
       jsx_string_val:: advance:: ctx
 
     else:
-      assert_next:: ctx, '{', '"', "'"
+      # TODO: use advance_expected?
+      [error, err_ctx] = add_error ctx,
+        `Expected attr starting with '{', '"', "'" but found '${ctx.next_token.value}'.`
+        ctx.next_token
+        ctx
+
+      [error, advance:: err_ctx]
 
 
 jsx_attr = fn ctx:
@@ -114,7 +123,7 @@ body_or_end_elem = fn ctx, name:
       [children, next_ctx] = jsx_body:: name, advance:: ctx
       [false, children, next_ctx]
     else:
-      [true, [], assert_advance:: ctx, '/>']
+      [true, [], advance_expected:: ctx, '/>']
 
 
 jsx_elem = fn ctx:
@@ -129,10 +138,9 @@ jsx_elem = fn ctx:
   {end} = curr_loc:: next_ctx
 
   # TODO: all other types use foo:bar to denote sub-types
-  [
-    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}},
+  list:
+    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}}
     next_ctx
-  ]
 
 
 jsx = fn op:

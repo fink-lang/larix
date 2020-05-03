@@ -1,6 +1,8 @@
-{curr_loc, next_loc, next_is, next_is_end} = import '@fink/prattler'
-{advance, assert_advance} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{inspect} = import 'util'
+
+{curr_loc, next_loc, next_is, next_is_end, has_errors} = import '@fink/prattler'
+{advance} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 {end_token} = import '@fink/prattler/tokenizer'
 
 
@@ -50,15 +52,18 @@ pop_block = fn ctx:
     else:
       match ctx:
         next_is:: ?, end_symbol:
-          assert_advance:: next_ctx, end_symbol
+          advance:: next_ctx, end_symbol
+
+        has_errors ?:
+          ctx
 
         else:
           # TODO: use curr block's min indentation in msg
-          throw token_error::
-            `Expected ',' or indented new line or '${end_symbol.toString()}'.`
+          [, err_ctx] = add_error ctx,
+            `Expected ',' or indented new line or ${inspect end_symbol}.`
             ctx.next_token
-            ctx
 
+          err_ctx
 
 push_block = fn ctx, end_symbol:
   {blocks} = ctx

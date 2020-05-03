@@ -1,4 +1,4 @@
-{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, only, expect, to_match_snapshot} = import '@fink/jest'
 
 {parse} = import '../..'
 
@@ -148,52 +148,34 @@ describe:: 'nesting', fn:
       to_match_snapshot
 
 
-describe:: 'errors', fn:
-  it:: 'throws due to end of indentation', fn:
+describe:: 'parse failures', fn:
+  it:: 'errors due to end of indentation', fn:
     expect::
-      fn: parse::
-        `
+      parse `
           foo = (
             bar
             spam
           shrub`
         'test.fnk'
-      to_throw:: `
-        test.fnk:4:0
-        1| foo = (
-        2|   bar
-        3|   spam
-        4| shrub
-           ^
-
-        Expected ',' or indented new line or ')'.`
+      to_match_snapshot
 
 
-  it:: 'throws due to end of indentation', fn:
+  it:: 'errors due to end of indentation', fn:
     expect::
-      fn: parse::
-        `
-          foo = (
-            bar = (
-          spam`
+      parse `
+        foo = (
+          bar = (
+        spam`
         'test.fnk'
-      to_throw:: `
-        test.fnk:3:0
-        1| foo = (
-        2|   bar = (
-        3| spam
-           ^
-
-        Expected ',' or indented new line or ')'.`
+      to_match_snapshot
 
 
-  it:: 'throws due to missing closing symbol', fn:
+
+  it:: 'errors due to missing closing symbol', fn:
+    [expr, {error}] = parse `(1,2`, 'test.fnk'
+
+    # TODO: snapshot expr?
     expect::
-      fn: parse:: `(1,2`, 'test.fnk'
-      to_throw:: `
-        test.fnk:1:4
-        1| (1,2
-               ^
-
-        Expected ',' or indented new line or ')'.`
+      parse `(1,2`, 'test.fnk'
+      to_match_snapshot
 

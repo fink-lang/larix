@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`array [...] - parsing failures errors when missing ',' 1`] = `
+module (1:0-1:2)
+  array (1:0-1:2)
+    number (1:1-1:2) 1
+
+error:
+test.fnk:1:2
+1| [1)]
+     ^
+
+Expected ',' or indented new line or ']'.
+
+
+
+`;
+
+exports[`array [...] - parsing failures errors when missing ']' 1`] = `
+module (1:0-1:1)
+  array (1:0-1:1)
+
+
+error:
+test.fnk:1:1
+1| [
+    ^
+
+Expected ',' or indented new line or ']'.
+
+
+
+`;
+
 exports[`array [...] parses empty: [] 1`] = `
 array (1:0-1:2)
 

@@ -1,5 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`string - parsing failures errors when missing end 1`] = `
+module (1:0-1:9)
+  string " (1:0-1:9)
+    'foo bar,'
+
+error:
+test.fnk:1:9
+1| "foo bar,
+            ^
+
+Unexpected end of code.
+
+
+
+`;
+
+exports[`string - parsing failures errors when not tagged with identifier 1`] = `
+module (1:0-1:2)
+  number (1:0-1:2) 12
+
+error:
+test.fnk:1:2
+1| 12'bar spam'
+     ^
+
+Expected ',' or indented new line or Symbol(end).
+
+
+
+`;
+
 exports[`strings handles default indentation for lbp 1`] = `
 module (1:0-3:0)
   string ' (1:0-1:8)

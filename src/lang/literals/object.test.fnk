@@ -1,6 +1,6 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
 describe:: 'object {...}', fn:
@@ -80,47 +80,26 @@ describe:: 'dict', fn:
 
 
 describe:: 'object {...} - parsing failures', fn:
-  it:: `throws when missing '}'`, fn:
+  it:: `errors when missing '}'`, fn:
     expect::
-      fn: parse_expr:: `{`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:1
-        1| {
-            ^
-
-        Expected ',' or indented new line or '}'.`
+      parse:: `{`, 'test.fnk'
+      to_match_snapshot
 
 
-  it:: `throws when encountering bad end of prop`, fn:
+  it:: `errors when encountering bad end of prop`, fn:
     expect::
-      fn: parse_expr:: `{foo) bar}`, 'test.fnk'
+      parse:: `{foo) bar}`, 'test.fnk'
+      to_match_snapshot
 
-      to_throw:: `
-        test.fnk:1:4
-        1| {foo) bar}
-               ^
 
-        Expected ',' or indented new line or '}'.`
+  it:: `errors when encountering bad key`, fn:
+    expect::
+      parse:: `{2*3: bar}`, 'test.fnk'
+      to_match_snapshot
+
+
+  it:: `errors when encountering bad start of prop key`, fn:
 
     expect::
-      fn: parse_expr:: `{2*3: bar}`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:1
-        1| {2*3: bar}
-            ^
-
-        Expected prop-key but found '2'.`
-
-
-  it:: `throws when encountering bad start of prop key`, fn:
-    expect::
-      fn: parse_expr:: `{foo, [bar]: spam}`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:6
-        1| {foo, [bar]: spam}
-                 ^
-
-        Expected prop-key but found '['.`
+      parse:: `{foo, [bar]: spam}`, 'test.fnk'
+      to_match_snapshot

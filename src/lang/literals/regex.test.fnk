@@ -1,4 +1,4 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
 {parse, parse_expr} = import '../../'
 
@@ -41,27 +41,13 @@ describe:: 'regex rx/.../', fn:
 
 describe:: 'regex - parsing failures', fn:
 
-  it:: 'throws when missing end', fn:
+  it:: 'errors when missing end', fn:
     expect::
-      fn: parse:: `rx/foo.bar`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:10
-        1| rx/foo.bar
-                     ^
-
-        Unexpected end of code.
-      `
+      parse `rx/foo.bar`, 'test.fnk'
+      to_match_snapshot
 
 
-  it:: 'throws unssupported flags', fn:
+  it:: 'errors unssupported flags', fn:
     expect::
-      fn: parse:: `rx/foo.bar/n`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:11
-        1| rx/foo.bar/n
-                      ^
-
-        Expected ',' or indented new line or 'Symbol(end)'.
-      `
+      parse `rx/foo.bar/n`, 'test.fnk'
+      to_match_snapshot

@@ -1,6 +1,6 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../..'
+{parse_expr, parse} = import '../..'
 
 
 describe:: 'call()', fn:
@@ -36,15 +36,10 @@ describe:: 'call()', fn:
 
 describe:: 'call() - parsing failures', fn:
 
-  it:: `throws when missing ')'`, fn:
+  it:: `errors when missing ')'`, fn:
     expect::
-      fn: parse_expr:: `foobar(`, 'test.fnk'
-      to_throw:: `
-        test.fnk:1:7
-        1| foobar(
-                  ^
-
-        Expected ',' or indented new line or ')'.`
+      parse `foobar(`, 'test.fnk'
+      to_match_snapshot
 
 
 describe:: 'call:: ...', fn:
