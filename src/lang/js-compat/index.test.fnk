@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../..'
+{parse_expr, parse} = import '../..'
 
 
 describe:: 'js-compat operators', fn:
@@ -30,4 +30,15 @@ describe:: 'js-compat operators', fn:
 
     expect::
       parse_expr:: `throw_foo = foo || throw err 'foobar'`
+      to_match_snapshot
+
+
+describe:: 'attempt ...:', fn:
+
+  it:: 'parses', fn:
+    expect::
+      parse:: `
+        [err, result] = attempt item:
+          throw new Error 'foobar'
+      `
       to_match_snapshot

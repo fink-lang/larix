@@ -6,6 +6,7 @@ add_keywords = fn ctx:
   pipe ctx:
     add_keyword:: literal:: 'true', 'literal'
     add_keyword:: literal:: 'false', 'literal'
+    # TODO: should this live in js-compat?
     add_keyword:: literal:: 'null', 'literal'
     # TODO: should that live under conditional?
     add_keyword:: literal:: 'else', 'literal'

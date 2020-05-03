@@ -35,4 +35,3 @@ cond_result_expr = fn ctx:
 add_conditionals = fn ctx:
   pipe ctx:
     add_named_block:: 'match', 'block', cond_result_expr
-    add_named_block:: 'attempt', 'block'

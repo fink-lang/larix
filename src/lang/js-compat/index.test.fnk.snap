@@ -1,9 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`attempt ...: parses 1`] = `
+module (1:0-3:0)
+  assign = (1:0-3:0)
+    array (1:0-1:13)
+      ident (1:1-1:4) err
+      ident (1:6-1:12) result
+    js-compat attempt (1:16-3:0)
+      ident (1:24-1:28) item
+      :
+      js-compat throw (2:2-3:0)
+        js-compat new (2:8-3:0)
+          call (2:12-3:0)
+            ident (2:12-2:17) Error
+            string ' (2:18-2:26)
+              'foobar'
+`;
+
 exports[`js-compat operators parses new 1`] = `
 assign = (1:0-1:30)
   ident (1:0-1:7) new_foo
-  new (1:10-1:30)
+  js-compat new (1:10-1:30)
     call ( (1:14-1:30)
       ident (1:14-1:20) Foobar
       ident (1:21-1:25) spam
@@ -13,7 +30,7 @@ assign = (1:0-1:30)
 exports[`js-compat operators parses new 2`] = `
 assign = (1:0-1:31)
   ident (1:0-1:7) new_foo
-  new (1:10-1:31)
+  js-compat new (1:10-1:31)
     call :: (1:14-1:31)
       ident (1:14-1:20) Foobar
       ident (1:23-1:27) spam
@@ -23,7 +40,7 @@ assign = (1:0-1:31)
 exports[`js-compat operators parses new 3`] = `
 assign = (1:0-1:29)
   ident (1:0-1:7) new_foo
-  new (1:10-1:29)
+  js-compat new (1:10-1:29)
     call (1:14-1:29)
       ident (1:14-1:20) Foobar
       ident (1:21-1:25) spam
@@ -35,7 +52,7 @@ assign = (1:0-1:38)
   ident (1:0-1:9) throw_foo
   logical || (1:12-1:38)
     ident (1:12-1:15) foo
-    throw (1:19-1:38)
+    js-compat throw (1:19-1:38)
       call ( (1:25-1:38)
         ident (1:25-1:28) err
         string ' (1:29-1:37)
@@ -47,7 +64,7 @@ assign = (1:0-1:39)
   ident (1:0-1:9) throw_foo
   logical || (1:12-1:39)
     ident (1:12-1:15) foo
-    throw (1:19-1:39)
+    js-compat throw (1:19-1:39)
       call :: (1:25-1:39)
         ident (1:25-1:28) err
         string ' (1:31-1:39)
@@ -59,7 +76,7 @@ assign = (1:0-1:37)
   ident (1:0-1:9) throw_foo
   logical || (1:12-1:37)
     ident (1:12-1:15) foo
-    throw (1:19-1:37)
+    js-compat throw (1:19-1:37)
       call (1:25-1:37)
         ident (1:25-1:28) err
         string ' (1:29-1:37)
