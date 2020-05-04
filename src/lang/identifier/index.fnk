@@ -2,7 +2,7 @@
 
 
 identifier = fn ctx:
-  value = curr_value:: ctx
-  loc = curr_loc:: ctx
+  value = curr_value ctx
+  loc = curr_loc ctx
 
   [{type: 'ident', value, loc}, ctx]

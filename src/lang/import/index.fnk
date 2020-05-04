@@ -1,9 +1,8 @@
-{add_non_separating} = import '@fink/prattler/symbols'
+{add_keyword} = import '@fink/prattler/symbols'
 
 {prefix} = import '../symbols'
 
 
 add_import = fn ctx:
   pipe ctx:
-    # TODO: 'import' 'prefix' ?
-    add_non_separating:: prefix:: 'import', 'import'
+    add_keyword prefix 'import', 'prefix'

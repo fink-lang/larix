@@ -6,5 +6,5 @@
 
 add_comments = fn ctx:
   pipe ctx:
-    add_separator:: comment:: '#'
-    add_separator:: doc_comment:: '---'
+    add_separator comment '#'
+    add_separator doc_comment '---'

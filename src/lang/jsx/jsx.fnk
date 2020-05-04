@@ -1,40 +1,40 @@
 {curr_is, curr_value, curr_loc} = import '@fink/prattler'
-{next_is, next_is_end, assert_next} = import '@fink/prattler'
-{assert_advance, advance, collect_text} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{next_is, next_is_end} = import '@fink/prattler'
+{advance_expected, advance, collect_text} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 
 {prefix} = import '../symbols'
 {terminated_block} = import '../block'
 
 
 jsx_expr_container = fn ctx:
-  [block, next_ctx] = terminated_block:: ctx, '}'
+  [block, next_ctx] = terminated_block ctx, '}'
   expr = {...block, type: 'block'}
   # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-expr-container', expr, loc: expr.loc}, next_ctx]
 
 
 jsx_txt = fn ctx:
-  [{value: text, loc}, next_ctx] = collect_text:: ctx, rx/'<\/|<|{/
+  [{value: text, loc}, next_ctx] = collect_text ctx, rx/'<\/|<|{/
   # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-text', value: text, loc}, next_ctx]
 
 
 get_children = fn ctx:
-  [txt, next_ctx] = jsx_txt:: ctx
+  [txt, next_ctx] = jsx_txt ctx
   txt_children = match txt:
     {value: ''}: []
     else: [txt]
 
-  match true:
-    curr_is:: next_ctx, '<':
-      [expr, children_ctx] = jsx_elem:: next_ctx
-      [children, end_ctx] = get_children:: children_ctx
+  match next_ctx:
+    curr_is ?, '<':
+      [expr, children_ctx] = jsx_elem next_ctx
+      [children, end_ctx] = get_children children_ctx
       [[...txt_children, expr, ...children], end_ctx]
 
-    curr_is:: next_ctx, '{':
-      [expr, children_ctx] = jsx_expr_container:: next_ctx
-      [children, end_ctx] = get_children:: children_ctx
+    curr_is ?, '{':
+      [expr, children_ctx] = jsx_expr_container next_ctx
+      [children, end_ctx] = get_children children_ctx
       [[...txt_children, expr, ...children], end_ctx]
 
     else:
@@ -42,63 +42,74 @@ get_children = fn ctx:
 
 
 jsx_body = fn name, ctx:
-  [children, name_ctx] = get_children:: ctx
-  end_ctx = assert_advance:: name_ctx, name
-  [children, assert_advance:: end_ctx, '>']
+  [children, name_ctx] = get_children ctx
+
+  end_ctx = advance_expected name_ctx, name
+  [children, advance_expected end_ctx, '>']
 
 
 jsx_string_val = fn ctx:
-  [{value, loc}, next_ctx] = collect_text:: ctx, curr_value:: ctx
+  [{value, loc}, next_ctx] = collect_text ctx, curr_value ctx
 
   [{type: 'jsx-string', value, loc}, next_ctx]
 
 
 jsx_attr_value = fn ctx:
-  match true:
-    next_is:: ctx, '{':
-      jsx_expr_container:: advance:: ctx
+  match ctx:
+    next_is ?, '{':
+      jsx_expr_container advance ctx
 
-    next_is:: ctx, `"`:
-      jsx_string_val:: advance:: ctx
+    # TODO use next_is_any ? `'`, '"', '`'
+    next_is ?, `"`:
+      jsx_string_val advance ctx
 
-    next_is:: ctx, `'`:
-      jsx_string_val:: advance:: ctx
+    # TODO use next_is_any ? `'`, '"', '`'
+    next_is ?, `'`:
+      jsx_string_val advance ctx
 
     else:
-      assert_next:: ctx, '{', '"', "'"
+      # TODO: use advance_expected?
+      [error, err_ctx] = add_error ctx,
+        `Expected attr starting with '{', '"', "'" but found '${ctx.next_token.value}'.`
+        ctx.next_token
+        ctx
+
+      [error, advance err_ctx]
 
 
 jsx_attr = fn ctx:
-  name = curr_value:: ctx
-  {start} = curr_loc:: ctx
+  name = curr_value ctx
+  {start} = curr_loc ctx
 
-  [value, next_ctx] = match true:
-    next_is:: ctx, '=':
-      jsx_attr_value:: advance:: ctx
+  [value, next_ctx] = match ctx:
+    next_is ?, '=':
+      [value, next_ctx] = jsx_attr_value advance ctx
+      [{value}, next_ctx]
     else:
-      [null, ctx]
+      [{}, ctx]
 
-  {end} = curr_loc:: next_ctx
-  [{type: 'jsx-attr', name, value, loc: {start, end}}, next_ctx]
+  {end} = curr_loc next_ctx
+  [{type: 'jsx-attr', name, ...value, loc: {start, end}}, next_ctx]
 
+
+done = true
 
 jsx_props = fn ctx:
   [props, next_ctx] = pipe ctx:
     unfold prop_ctx:
       [prop, next_ctx] = match prop_ctx:
-        next_is_end:: ?, '/>':
-          [null, prop_ctx]
+        next_is_end ?, '/>':
+          [done, prop_ctx]
 
-        next_is_end:: ?, '>':
-          [null, prop_ctx]
+        next_is_end ?, '>':
+          [done, prop_ctx]
 
         else:
-          jsx_attr:: advance:: prop_ctx
+          jsx_attr advance prop_ctx
 
       ([prop, next_ctx], next_ctx)
 
-    while [prop]:
-      prop != null
+    while [prop]: prop != done
 
     fold [prop, next_ctx], [props]=[[]]:
       [[...props, prop], next_ctx]
@@ -109,38 +120,36 @@ jsx_props = fn ctx:
 
 
 body_or_end_elem = fn ctx, name:
-  match true:
-    next_is:: ctx, '>':
-      [children, next_ctx] = jsx_body:: name, advance:: ctx
+  match ctx:
+    next_is ?, '>':
+      [children, next_ctx] = jsx_body name, advance ctx
       [false, children, next_ctx]
     else:
-      [true, [], assert_advance:: ctx, '/>']
+      [true, [], advance_expected ctx, '/>']
 
 
 jsx_elem = fn ctx:
-  {start} = curr_loc:: ctx
+  {start} = curr_loc ctx
 
-  elem_ctx = advance:: ctx
-  name = curr_value:: elem_ctx
+  elem_ctx = advance ctx
+  name = curr_value elem_ctx
 
-  [props, body_ctx] = jsx_props:: elem_ctx
+  [props, body_ctx] = jsx_props elem_ctx
 
-  [self_closing, children, next_ctx] = body_or_end_elem:: body_ctx, name
-  {end} = curr_loc:: next_ctx
+  [self_closing, children, next_ctx] = body_or_end_elem body_ctx, name
+  {end} = curr_loc next_ctx
 
   # TODO: all other types use foo:bar to denote sub-types
-  [
-    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}},
+  list:
+    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}}
     next_ctx
-  ]
 
 
 jsx = fn op:
   # TODO overloaded with comp
-  {
-    ...prefix:: op
+  dict:
+    ...prefix op
 
     nud: fn: fn ctx:
-      jsx_elem:: ctx
-  }
+      jsx_elem ctx
 

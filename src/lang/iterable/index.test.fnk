@@ -3,11 +3,11 @@
 {parse_expr} = import '../../'
 
 
-describe:: 'fold item, accu: ...', fn:
+describe 'fold item, accu: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         fold item, accu=0:
           item + accu
           # trailing comment
@@ -15,27 +15,27 @@ describe:: 'fold item, accu: ...', fn:
       to_match_snapshot
 
 
-describe:: 'unfold accu: ...', fn:
+describe 'unfold accu: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         unfold curr=start:
           start + accu
       `
       to_match_snapshot
 
-  it:: 'parses with item, accu result', fn:
-    expect::
-      parse_expr:: `
+  it 'parses with item, accu result', fn:
+    expect
+      parse_expr `
         unfold prev=0:
           (prev * 2, prev + 1)
       `
       to_match_snapshot
 
-  it:: 'parses no args', fn:
-    expect::
-      parse_expr:: `
+  it 'parses no args', fn:
+    expect
+      parse_expr `
         unfold:
           foo
           # trailing comment
@@ -43,11 +43,11 @@ describe:: 'unfold accu: ...', fn:
       to_match_snapshot
 
 
-describe:: 'map item: ...', fn:
+describe 'map item: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         map item:
           item * 2
           # trailing comment
@@ -55,11 +55,11 @@ describe:: 'map item: ...', fn:
       to_match_snapshot
 
 
-describe:: 'filter item: ...', fn:
+describe 'filter item: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         filter item:
           item % 2 == 0
           # trailing comment
@@ -67,11 +67,11 @@ describe:: 'filter item: ...', fn:
       to_match_snapshot
 
 
-describe:: 'while item: ...', fn:
+describe 'while item: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         while item:
           item % 2 == 0
           # trailing comment
@@ -79,11 +79,11 @@ describe:: 'while item: ...', fn:
       to_match_snapshot
 
 
-describe:: 'find item: ...', fn:
+describe 'find item: ...', fn:
 
-  it:: 'parses', fn:
-    expect::
-      parse_expr:: `
+  it 'parses', fn:
+    expect
+      parse_expr `
         find item:
           item % 2 == 0
           # trailing comment

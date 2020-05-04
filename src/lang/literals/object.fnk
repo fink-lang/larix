@@ -1,5 +1,6 @@
-{next_is, next_matches, curr_loc, curr_value, advance} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{next_is, next_matches, has_errors, advance} = import '@fink/prattler'
+{curr_loc, curr_value} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
 {prefix, terminator} = import '../symbols'
@@ -10,89 +11,93 @@
 next_is_key = fn ctx:
   {next_token: {value}} = ctx
   match ctx:
-    next_matches:: ?, rx/^[0-9].*/: false
-    next_matches:: ?, rx/^\w+$/: true
+    next_matches ?, rx/^[0-9].*/: false
+    next_matches ?, rx/^\w+$/: true
     {tokenizer: {tokens: {(value): {}}}}: false
     else: true
 
 
 value_expr = fn ctx, key:
   match ctx:
-    next_is:: ?, ':':
-      next_ctx = advance:: ctx
-      single_expression:: next_ctx, 0
+    next_is ?, ':':
+      next_ctx = advance ctx
+      single_expression next_ctx, 0
     else:
       [key, ctx]
 
 
 default_assignment = fn ctx, left:
-  expr_ctx = advance:: ctx
+  expr_ctx = advance ctx
 
-  [right, next_ctx] = single_expression:: expr_ctx, 0
+  [right, next_ctx] = single_expression expr_ctx, 0
   {loc: {end}} = right
 
   # TODO use ../assign?
-  [
-    {type: 'assign', op: '=', left, right, loc: {...left.loc, end}},
-    next_ctx
-  ]
+  [{type: 'assign', op: '=', left, right, loc: {...left.loc, end}}, next_ctx]
 
 
 key_expr = fn ctx:
   match ctx:
-    next_matches:: ?, rx/^[`'"(]|\.\.\.$/:
-      single_expression:: ctx, 0
+    next_matches ?, rx/^[`'"(]|\.\.\.$/:
+      single_expression ctx, 0
 
-    next_is_key:: ?:
-      key_ctx = advance:: ctx
-      loc = curr_loc:: key_ctx
-      value = curr_value:: key_ctx
+    next_is_key ?:
+      key_ctx = advance ctx
+      loc = curr_loc key_ctx
+      value = curr_value key_ctx
       key = {type: 'ident', value, loc}
 
       match key_ctx:
-        next_is:: ?, '=':
-          default_assignment:: key_ctx, key
+        next_is ?, '=':
+          default_assignment key_ctx, key
         else: [
           key, key_ctx]
 
     else:
-      throw token_error::
+      # TODO advance_expected ctx, '`', '"', `'`, '(', '...', 'word-pattern'
+      add_error ctx,
         `Expected prop-key but found '${ctx.next_token.value}'.`
         ctx.next_token
-        ctx
 
 
 prop_expr = fn ctx:
-  [key_or_default, value_ctx] = key_expr:: ctx
-  [value, next_ctx] = value_expr:: value_ctx, key_or_default
+  [key_or_default, value_ctx] = key_expr ctx
 
-  key = match key_or_default.type:
-    'assign': key_or_default.left
-    else: key_or_default
+  match value_ctx:
+    has_errors ?:
+      left = key_or_default
+      loc = curr_loc ctx
+      [left, value_ctx]
 
-  {start} = key.loc
-  {end} = value.loc
+    else:
+      [value, next_ctx] = value_expr value_ctx, key_or_default
 
-  [{type: 'object:prop', left: key, right: value, loc: {start, end}}, next_ctx]
+      key = match key_or_default.type:
+        'assign': key_or_default.left
+        else: key_or_default
+
+      {start} = key.loc
+      {end} = value.loc
+
+      [{type: 'object:prop', left: key, right: value, loc: {start, end}}, next_ctx]
 
 
 object = fn op:
-  {
-    ...prefix:: op
+  dict:
+    ...prefix op
 
     nud: fn: fn ctx:
-      # {start} = curr_loc:: ctx
-      [{exprs, comments, loc}, next_ctx] = terminated_block:: ctx, '}', prop_expr
+      # {start} = curr_loc ctx
+      [{exprs, comments, loc}, next_ctx] = terminated_block ctx, '}', prop_expr
 
       [{type: 'object', exprs, loc}, next_ctx]
-  }
 
 
 add_object = fn ctx:
   pipe ctx:
-    add_operator:: object:: '{'
-    add_separator:: terminator:: ','
-    add_separator:: terminator:: ':'
-    add_separator:: terminator:: '}'
+    add_operator object '{'
+    add_separator terminator ','
+    add_separator terminator ':'
+    add_separator terminator '}'
 
-    add_named_block:: 'dict', 'object', prop_expr
+    add_named_block 'dict', 'object', prop_expr

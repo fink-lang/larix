@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`dict parses 1`] = `
-object dict (1:0-5:0)
-
-  :
+object dict (1:0-5:0):
   object:prop (2:2-2:5)
     ident (2:2-2:5) foo
     ident (2:2-2:5) foo
@@ -16,6 +14,75 @@ object dict (1:0-5:0)
   object:prop (4:2-4:6)
     ident (4:2-4:6) spam
     ident (4:2-4:6) spam
+`;
+
+exports[`object {...} - parsing failures errors when encountering bad end of prop 1`] = `
+module (1:0-1:4)
+  object (1:0-1:4)
+    object:prop (1:1-1:4)
+      ident (1:1-1:4) foo
+      ident (1:1-1:4) foo
+
+error:
+test.fnk:1:4
+1| {foo) bar}
+       ^
+
+Expected ',' or indented new line or '}'.
+
+
+
+`;
+
+exports[`object {...} - parsing failures errors when encountering bad key 1`] = `
+module (1:0-1:1)
+  object (1:0-1:1)
+    ::error::
+
+error:
+test.fnk:1:1
+1| {2*3: bar}
+    ^
+
+Expected prop-key but found '2'.
+
+
+
+`;
+
+exports[`object {...} - parsing failures errors when encountering bad start of prop key 1`] = `
+module (1:0-1:5)
+  object (1:0-1:5)
+    object:prop (1:1-1:4)
+      ident (1:1-1:4) foo
+      ident (1:1-1:4) foo
+    ::error::
+
+error:
+test.fnk:1:6
+1| {foo, [bar]: spam}
+         ^
+
+Expected prop-key but found '['.
+
+
+
+`;
+
+exports[`object {...} - parsing failures errors when missing '}' 1`] = `
+module (1:0-1:1)
+  object (1:0-1:1)
+
+
+error:
+test.fnk:1:1
+1| {
+    ^
+
+Expected ',' or indented new line or '}'.
+
+
+
 `;
 
 exports[`object {...} parses calculated prop 1`] = `

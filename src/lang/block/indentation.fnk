@@ -1,10 +1,12 @@
-{curr_loc, next_loc, next_is, next_is_end} = import '@fink/prattler'
-{advance, assert_advance} = import '@fink/prattler'
-{token_error} = import '@fink/prattler/errors'
+{inspect} = import 'util'
+
+{curr_loc, next_loc, next_is, next_is_end, has_errors} = import '@fink/prattler'
+{advance} = import '@fink/prattler'
+{add_error} = import '@fink/prattler/errors'
 {end_token} = import '@fink/prattler/tokenizer'
 
 
-end_of_block_indent = Symbol:: 'end-of-block-indentation'
+end_of_block_indent = Symbol 'end-of-block-indentation'
 
 
 curr_indentation = fn {blocks}:
@@ -13,16 +15,16 @@ curr_indentation = fn {blocks}:
 
 
 next_is_new_expr = fn ctx:
-  {start: {column}} = next_loc:: ctx
-  column <= curr_indentation:: ctx
+  {start: {column}} = next_loc ctx
+  column <= curr_indentation ctx
 
 
 next_is_unindented = fn ctx:
   {blocks: [block]} = ctx
   {min_ind} = block
 
-  {start: {column}} = next_loc:: ctx
-  match next_loc:: ctx:
+  {start: {column}} = next_loc ctx
+  match next_loc ctx:
     {start: {column: ? < min_ind}}:
       true
     else:
@@ -30,9 +32,9 @@ next_is_unindented = fn ctx:
 
 
 next_is_indented = fn ctx:
-  curr_ind = curr_indentation:: ctx
-  {end: {line: curr_line}} = curr_loc:: ctx
-  {start: {line: next_line, column: next_ind}} = next_loc:: ctx
+  curr_ind = curr_indentation ctx
+  {end: {line: curr_line}} = curr_loc ctx
+  {start: {line: next_line, column: next_ind}} = next_loc ctx
 
   curr_line < next_line && curr_ind < next_ind
 
@@ -44,25 +46,28 @@ pop_block = fn ctx:
   match end_symbol:
     end_of_block_indent:
       match next_ctx:
-        next_is_end:: ?: advance:: next_ctx
+        next_is_end ?: advance next_ctx
         else: next_ctx
 
     else:
       match ctx:
-        next_is:: ?, end_symbol:
-          assert_advance:: next_ctx, end_symbol
+        next_is ?, end_symbol:
+          advance next_ctx, end_symbol
+
+        has_errors ?:
+          ctx
 
         else:
           # TODO: use curr block's min indentation in msg
-          throw token_error::
-            `Expected ',' or indented new line or '${end_symbol.toString()}'.`
+          [, err_ctx] = add_error ctx,
+            `Expected ',' or indented new line or ${inspect end_symbol}.`
             ctx.next_token
-            ctx
 
+          err_ctx
 
 push_block = fn ctx, end_symbol:
   {blocks} = ctx
-  curr_ind = curr_indentation:: ctx
+  curr_ind = curr_indentation ctx
 
   block = match end_symbol:
     end_token:
@@ -74,7 +79,7 @@ push_block = fn ctx, end_symbol:
 
 
 update_indentation = fn ctx:
-  {start: {column}} = next_loc:: ctx
+  {start: {column}} = next_loc ctx
   {blocks: [block, ...blocks]} = ctx
 
   indented_block = {...block, curr_ind: column, min_ind: column}

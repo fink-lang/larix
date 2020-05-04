@@ -1,12 +1,12 @@
-{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
 {parse} = import '../..'
 
 
-describe:: 'call expr', fn:
-  it:: `parses call expr`, fn:
-    expect::
-      parse:: `
+describe 'call expr', fn:
+  it `parses call expr`, fn:
+    expect
+      parse `
         foo bar
         foo bar, spam
         foo 123
@@ -18,14 +18,14 @@ describe:: 'call expr', fn:
         foo await bar
         foo match:
           bar: spam
-
+        'foo \${bar spam} ni'
       `
       to_match_snapshot
 
 
-  it:: `parses member call expr`, fn:
-    expect::
-      parse:: `
+  it `parses member call expr`, fn:
+    expect
+      parse `
         foo.bar spam
         foo.(bar) spam
         foo.bar.spam shrub
@@ -33,18 +33,18 @@ describe:: 'call expr', fn:
       to_match_snapshot
 
 
-  it:: `parses other call expr`, fn:
-    expect::
-      parse:: `
+  it `parses other call expr`, fn:
+    expect
+      parse `
         (foo bar) spam
         [...foo bar]
       `
       to_match_snapshot
 
 
-  it:: 'parses with left to right precendence', fn:
-    expect::
-      parse:: `
+  it 'parses with left to right precendence', fn:
+    expect
+      parse `
         foo bar, spam, shrub
         foo bar, spam shrub
         foo
@@ -62,9 +62,9 @@ describe:: 'call expr', fn:
       to_match_snapshot
 
 
-  it:: 'parses non-calls', fn:
-    expect::
-      parse:: `
+  it 'parses non-calls', fn:
+    expect
+      parse `
          match foo:
            bar : (a , b )
            false: [a , b ]
@@ -72,8 +72,8 @@ describe:: 'call expr', fn:
       `
       to_match_snapshot
 
-    expect::
-      parse:: `
+    expect
+      parse `
         (foo , bar )
         [foo , bar ]
         {foo : spam }

@@ -1,18 +1,18 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr, parse} = import '../../'
+{parse, parse_expr} = import '../../'
 
 
-describe:: 'numbers', fn:
-  it:: 'parses int 12345', fn:
-    expect::
-      parse_expr:: ` 12345  `
+describe 'numbers', fn:
+  it 'parses int 12345', fn:
+    expect
+      parse_expr ` 12345  `
       to_match_snapshot
 
 
-  it:: 'parses hex, oct, bin', fn:
-    expect::
-      parse:: `
+  it 'parses hex, oct, bin', fn:
+    expect
+      parse `
         0x123456789abcdef0
         0x123456789abcde
         0o12345670
@@ -21,15 +21,15 @@ describe:: 'numbers', fn:
       to_match_snapshot
 
 
-  it:: 'parses float 123.456', fn:
-    expect::
-      parse_expr:: `  123.456  `
+  it 'parses float 123.456', fn:
+    expect
+      parse_expr `  123.456  `
       to_match_snapshot
 
 
-  it:: 'parses float 123.456e10', fn:
-    expect::
-      parse:: `
+  it 'parses float 123.456e10', fn:
+    expect
+      parse `
         123.456e78
         123.456e+78
         123.456e-78
@@ -37,14 +37,7 @@ describe:: 'numbers', fn:
       to_match_snapshot
 
 
-  it:: 'throws when missing exponent', fn:
-    expect::
-      fn: parse_expr:: `123.456e * 78`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:9
-        1| 123.456e * 78
-                    ^
-
-        Expected exponent.
-      `
+  it 'errors when missing exponent', fn:
+    expect
+      parse `123.456e * 78`, 'test.fnk'
+      to_match_snapshot

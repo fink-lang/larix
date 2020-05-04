@@ -1,6 +1,6 @@
-{advance, curr_loc, curr_value, next_matches} = import '@fink/prattler'
+{advance, curr_loc, curr_value, next_matches, has_errors} = import '@fink/prattler'
 {add_operator} = import '@fink/prattler/symbols'
-{token_error} = import '@fink/prattler/errors'
+{add_error} = import '@fink/prattler/errors'
 
 {infix} = import '../symbols'
 {single_expression} = import '../block/expr'
@@ -9,36 +9,40 @@
 
 member_expr = fn ctx, lbp:
   match ctx:
-    next_matches:: ?, rx/[`'"(]/:
-      single_expression:: ctx, lbp
+    next_matches ?, rx/[`'"(]/:
+      single_expression ctx, lbp
 
-    next_matches:: ?, rx/^\w+/:
+    next_matches ?, rx/^\w+/:
       # TODO: reuse ../identifier
-      # key_ctx = advance:: ctx
-      identifier:: advance:: ctx
-
+      # key_ctx = advance ctx
+      identifier advance ctx
 
     else:
-      throw token_error::
+      # TODO use advance_expected ctx, ...
+      add_error ctx,
         'Expected member key to be an ident, string or group expr.'
         ctx.next_token
-        ctx
 
 
 prop_access = fn op, type:
-  {
-    ...infix:: op
+  dict:
+    ...infix op
 
     led: fn lbp: fn ctx, left:
       {loc: {start}} = left
-      [right, next_ctx] = member_expr:: ctx, lbp
-      {loc: {end}} = right
+      [right, next_ctx] = member_expr ctx, lbp
 
-      [{type, op, left, right, loc: {start, end}}, next_ctx]
-  }
+      match next_ctx:
+        has_errors ?:
+          [left, next_ctx]
+
+        else:
+          {loc: {end}} = right
+
+          [{type, op, left, right, loc: {start, end}}, next_ctx]
 
 
 add_prop_access = fn ctx:
   pipe ctx:
-    add_operator:: prop_access:: '.', 'member'
+    add_operator prop_access '.', 'member'
 

@@ -3,28 +3,28 @@
 {parse_expr, parse} = import '../../'
 
 
-describe:: 'keywords', fn:
-  it:: 'parses true', fn:
-    expect::
-      parse:: `
+describe 'keywords', fn:
+  it 'parses true', fn:
+    expect
+      parse `
         foo = true
         bar = trueish
       `
       to_match_snapshot
 
 
-  it:: 'parses false', fn:
-    expect::
-      parse:: `
+  it 'parses false', fn:
+    expect
+      parse `
         foo = false
         bar = falseish
       `
       to_match_snapshot
 
 
-  it:: 'parses null', fn:
-    expect::
-      parse:: `
+  it 'parses null', fn:
+    expect
+      parse `
         foo = null
         bar = nullish
       `

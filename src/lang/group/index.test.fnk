@@ -3,11 +3,11 @@
 {parse_expr} = import '../..'
 
 
-describe:: 'group: (...)', fn:
+describe 'group: (...)', fn:
 
-  it:: 'parses single line: (foo, bar)', fn:
-    expect::
-      parse_expr:: `(foo, bar)`
+  it 'parses single line: (foo, bar)', fn:
+    expect
+      parse_expr `(foo, bar)`
       to_match_snapshot
 
 

@@ -3,11 +3,11 @@
 {parse_expr} = import '../../'
 
 
-describe:: 'async', fn:
+describe 'async', fn:
 
-  it:: 'parses async: await foobar', fn:
+  it 'parses async: await foobar', fn:
 
-    expect::
-      parse_expr:: `await foobar`
+    expect
+      parse_expr `await foobar`
       to_match_snapshot
 

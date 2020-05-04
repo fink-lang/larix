@@ -1,139 +1,128 @@
-{describe, it, expect, to_throw, to_match_snapshot} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
 {parse_expr, parse} = import '../../'
 
 
-describe:: 'strings', fn:
+describe 'strings', fn:
 
-  it:: 'parses empty strings', fn:
-    expect::
-      parse_expr:: '``'
+  it 'parses empty strings', fn:
+    expect
+      parse_expr '``'
       to_match_snapshot
 
-    expect::
-      parse_expr:: '""'
+    expect
+      parse_expr '""'
       to_match_snapshot
 
-    expect::
-      parse_expr:: `''`
-      to_match_snapshot
-
-
-  it:: 'parses single line strings', fn:
-    expect::
-      parse_expr:: '`foo bar`'
-      to_match_snapshot
-
-    expect::
-      parse_expr:: '"foo bar"'
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `'foo bar'`
+    expect
+      parse_expr `''`
       to_match_snapshot
 
 
-  it:: 'parses multi line strings', fn:
-    expect::
-      parse_expr:: `'\n  foobar\n    spam shrub\n   ni'`
+  it 'parses single line strings', fn:
+    expect
+      parse_expr '`foo bar`'
       to_match_snapshot
 
-    expect::
-      parse_expr:: `fn:\n  '\n    foobar\n     spam shrub\n    ni\n  '`
+    expect
+      parse_expr '"foo bar"'
       to_match_snapshot
 
-
-  it:: 'parses escape characters', fn:
-
-    expect::
-      parse_expr:: '` $ \\n \\t \\` \\\\`'
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `' $ \\n \\t \\' \\\\'`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `" $ \\n \\t \\" \\\\"`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `'foo \\\${bar + spam}'`
+    expect
+      parse_expr `'foo bar'`
       to_match_snapshot
 
 
-  it:: 'parses tagged strings', fn:
-    expect::
-      parse_expr:: 'foo`bar spam`'
+  it 'parses multi line strings', fn:
+    expect
+      parse_expr `'\n  foobar\n    spam shrub\n   ni'`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `foo'bar spam'`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `foo"bar spam"`
+    expect
+      parse_expr `fn:\n  '\n    foobar\n     spam shrub\n    ni\n  '`
       to_match_snapshot
 
 
-  it:: 'parses template strings with expressions', fn:
-    expect::
-      parse_expr:: '`foo \${bar + spam} spam`'
+  it 'parses escape characters', fn:
+
+    expect
+      parse_expr '` $ \\n \\t \\` \\\\`'
       to_match_snapshot
 
-    expect::
-      parse_expr:: `'foo \${bar + spam} spam'`
+    expect
+      parse_expr `' $ \\n \\t \\' \\\\'`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `"foo \${bar + spam} spam"`
+    expect
+      parse_expr `" $ \\n \\t \\" \\\\"`
+      to_match_snapshot
+
+    expect
+      parse_expr `'foo \\\${bar + spam}'`
       to_match_snapshot
 
 
-  it:: 'parses multiline template strings', fn:
-    expect::
-      parse_expr:: `
+  it 'parses tagged strings', fn:
+    expect
+      parse_expr 'foo`bar spam`'
+      to_match_snapshot
+
+    expect
+      parse_expr `foo'bar spam'`
+      to_match_snapshot
+
+    expect
+      parse_expr `foo"bar spam"`
+      to_match_snapshot
+
+
+  it 'parses template strings with expressions', fn:
+    expect
+      parse_expr '`foo \${bar + spam} spam`'
+      to_match_snapshot
+
+    expect
+      parse_expr `'foo \${bar + spam} spam'`
+      to_match_snapshot
+
+    expect
+      parse_expr `"foo \${bar + spam} spam"`
+      to_match_snapshot
+
+
+  it 'parses multiline template strings', fn:
+    expect
+      parse_expr `
         '\n  \${foo}:\${bar}:\${spam + ni}\n\n  ni\n'
         `
       to_match_snapshot
 
 
-  it:: 'parses nested template strings', fn:
-    expect::
-      parse_expr:: '`\\n\${foo:: bar, `  \${spam}`}\\n`'
+  it 'parses nested template strings', fn:
+    expect
+      parse_expr '`\\n\${foo bar, `  \${spam}`}\\n`'
       to_match_snapshot
 
 
-  it:: `handles default indentation for lbp`, fn:
-    expect::
-      parse:: `
+  it `handles default indentation for lbp`, fn:
+    expect
+      parse `
         'foobar'
         'spam'
         `
       to_match_snapshot
 
 
-describe:: 'string - parsing failures', fn:
+describe 'string - parsing failures', fn:
 
-  it:: 'throws when missing end', fn:
-    expect::
-      fn: parse_expr:: '"foo bar,', 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:9
-        1| "foo bar,
-                    ^
-
-        Unexpected end of code.`
+  it 'errors when missing end', fn:
+    expect
+      parse '"foo bar,', 'test.fnk'
+      to_match_snapshot
 
 
-  it:: 'throws when not tagged with identifier', fn:
-    expect::
-      fn: parse_expr:: `12'bar spam'`, 'test.fnk'
+  it 'errors when not tagged with identifier', fn:
+    expect
+      parse `12'bar spam'`, 'test.fnk'
+      to_match_snapshot
 
-      to_throw:: `
-        test.fnk:1:2
-        1| 12'bar spam'
-             ^
-
-        Expected identifier before tagged string.`

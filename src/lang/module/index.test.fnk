@@ -3,11 +3,11 @@
 {parse} = import '../../'
 
 
-describe:: 'module', fn:
+describe 'module', fn:
 
-  it:: 'parses module', fn:
-    expect::
-      parse:: `
+  it 'parses module', fn:
+    expect
+      parse `
         # leading module comment
 
         # expr comment

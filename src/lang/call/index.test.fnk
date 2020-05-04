@@ -1,31 +1,31 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../..'
+{parse_expr, parse} = import '../..'
 
 
-describe:: 'call()', fn:
+describe 'call()', fn:
 
-  it:: 'parses empty: foobar()', fn:
-    expect::
-      parse_expr:: `foobar()`
+  it 'parses empty: foobar()', fn:
+    expect
+      parse_expr `foobar()`
       to_match_snapshot
 
 
-  it:: 'parses single arg: foobar(1)', fn:
-    expect::
-      parse_expr:: `foobar(1)`
+  it 'parses single arg: foobar(1)', fn:
+    expect
+      parse_expr `foobar(1)`
       to_match_snapshot
 
 
-  it:: 'parses multiple args: foobar(1, 2)', fn:
-    expect::
-      parse_expr:: `foobar(1, 2)`
+  it 'parses multiple args: foobar(1, 2)', fn:
+    expect
+      parse_expr `foobar(1, 2)`
       to_match_snapshot
 
 
-  it:: 'parses multiline args', fn:
-    expect::
-      parse_expr:: `
+  it 'parses multiline args', fn:
+    expect
+      parse_expr `
         foobar(
           1
           2
@@ -34,46 +34,21 @@ describe:: 'call()', fn:
       to_match_snapshot
 
 
-describe:: 'call() - parsing failures', fn:
+describe 'call() - parsing failures', fn:
 
-  it:: `throws when missing ')'`, fn:
-    expect::
-      fn: parse_expr:: `foobar(`, 'test.fnk'
-      to_throw:: `
-        test.fnk:1:7
-        1| foobar(
-                  ^
-
-        Expected ',' or indented new line or ')'.`
-
-
-describe:: 'call:: ...', fn:
-
-  it:: 'parses single line', fn:
-    expect::
-      parse_expr:: `foobar:: spam, ni`
+  it `errors when missing ')'`, fn:
+    expect
+      parse `foobar(`, 'test.fnk'
       to_match_snapshot
 
 
-  it:: 'parses multiline', fn:
-    expect::
-      parse_expr:: `
-        foo::
-          fn bar:
-            spam
-          ni
-          # trailing comment
-      `
-      to_match_snapshot
+describe 'pipe foo: ...', fn:
 
-
-describe:: 'pipe foo: ...', fn:
-
-  it:: 'pipes', fn:
-    expect::
-      parse_expr:: `
+  it 'pipes', fn:
+    expect
+      parse_expr `
         pipe foo:
-          bar:: shrub
+          bar shrub
           ni
       `
       to_match_snapshot

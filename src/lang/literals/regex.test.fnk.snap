@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`regex - parsing failures errors unssupported flags 1`] = `
+module (1:0-1:11)
+  regex (1:0-1:11)
+    /foo.bar/
+
+error:
+test.fnk:1:11
+1| rx/foo.bar/n
+              ^
+
+Expected ',' or indented new line or Symbol(end).
+
+
+
+`;
+
+exports[`regex - parsing failures errors when missing end 1`] = `
+module (1:0-1:10)
+  regex (1:0-1:10)
+    /foo.bar/
+
+error:
+test.fnk:1:10
+1| rx/foo.bar
+             ^
+
+Unexpected end of code.
+
+
+
+`;
+
 exports[`regex rx/.../ parses empty: rx// 1`] = `
 regex (1:0-1:4)
   //

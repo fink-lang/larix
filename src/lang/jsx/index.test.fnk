@@ -1,49 +1,49 @@
-{describe, it, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
-describe:: 'JSX <Foobar>...</Foobar>', fn:
+describe 'JSX <Foobar>...</Foobar>', fn:
 
-  it:: 'parses self closing elem: <Foobar />', fn:
-    expect::
-      parse_expr:: `<Foobar />`
+  it 'parses self closing elem: <Foobar />', fn:
+    expect
+      parse_expr `<Foobar />`
       to_match_snapshot
 
 
-  it:: 'parses self closing elem with short attr: <Foobar spam />', fn:
-    expect::
-      parse_expr:: `<Foobar spam />`
+  it 'parses self closing elem with short attr: <Foobar spam />', fn:
+    expect
+      parse_expr `<Foobar spam />`
       to_match_snapshot
 
 
-  it:: 'parses self closing elem with str attr: <Foobar spam="ni" />', fn:
-    expect::
-      parse_expr:: `<Foobar spam="ni" />`
+  it 'parses self closing elem with str attr: <Foobar spam="ni" />', fn:
+    expect
+      parse_expr `<Foobar spam="ni" />`
       to_match_snapshot
 
 
-  it:: 'parses self closing elem with str attr: <Foobar spam=\'ni\' />', fn:
-    expect::
-      parse_expr:: `<Foobar spam='ni' />`
+  it 'parses self closing elem with str attr: <Foobar spam=\'ni\' />', fn:
+    expect
+      parse_expr `<Foobar spam='ni' />`
       to_match_snapshot
 
 
-  it:: 'parses self closing elem with expr attr: <Foobar spam={ni} />', fn:
-    expect::
-      parse_expr:: `<Foobar spam={ni} />`
+  it 'parses self closing elem with expr attr: <Foobar spam={ni} />', fn:
+    expect
+      parse_expr `<Foobar spam={ni} />`
       to_match_snapshot
 
 
-  it:: 'parses empty elem: <Foobar></Foobar>', fn:
-    expect::
-      parse_expr:: `<Foobar></Foobar>`
+  it 'parses empty elem: <Foobar></Foobar>', fn:
+    expect
+      parse_expr `<Foobar></Foobar>`
       to_match_snapshot
 
 
-  it:: 'parses elem with children: <Foobar><Spam /></Foobar>', fn:
-    expect::
-      parse_expr:: `
+  it 'parses elem with children: <Foobar><Spam /></Foobar>', fn:
+    expect
+      parse_expr `
         <Foobar ni>
           <Spam />
         </Foobar>
@@ -51,9 +51,9 @@ describe:: 'JSX <Foobar>...</Foobar>', fn:
       to_match_snapshot
 
 
-  it:: 'parses elem with expr in body: <Foobar> {...} </Foobar>', fn:
-    expect::
-      parse_expr:: `
+  it 'parses elem with expr in body: <Foobar> {...} </Foobar>', fn:
+    expect
+      parse_expr `
         <Foobar>
           {1 + 2}
         </Foobar>
@@ -61,14 +61,8 @@ describe:: 'JSX <Foobar>...</Foobar>', fn:
       to_match_snapshot
 
 
-describe:: 'JSX parse errors', fn:
-  it:: 'throws with invalid attr value', fn:
-    expect::
-      fn: parse_expr:: '<Foobar spam=123 />', 'test.fnk'
-      to_throw:: `
-        test.fnk:1:13
-        1| <Foobar spam=123 />
-                        ^
-
-        Expected one of [ '{', '\"', \"'\" ] but found '123'.
-      `
+describe 'JSX parse failures', fn:
+  it 'errors with invalid attr value', fn:
+    expect
+      parse '<Foobar spam=123 />', 'test.fnk'
+      to_match_snapshot

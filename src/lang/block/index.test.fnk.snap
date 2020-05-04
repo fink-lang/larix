@@ -52,15 +52,9 @@ exports[`nesting parses indentation 1`] = `
 module (1:0-4:0)
   assign = (1:0-2:7)
     ident (1:0-1:3) foo
-    block fn (1:6-2:7)
-
-      :
-      block fn (1:10-2:7)
-
-        :
-        block fn (1:14-2:7)
-
-          :
+    block fn (1:6-2:7):
+      block fn (1:10-2:7):
+        block fn (1:14-2:7):
           arithm + (2:2-2:7)
             ident (2:2-2:3) a
             ident (2:6-2:7) b
@@ -71,17 +65,11 @@ exports[`nesting parses indentation 2`] = `
 module (1:0-6:0)
   assign = (1:0-4:7)
     ident (1:0-1:3) foo
-    block fn (1:6-4:7)
-
-      :
+    block fn (1:6-4:7):
       assign = (2:2-3:9)
         ident (2:2-2:7) shrub
-        block fn (2:10-3:9)
-
-          :
-          block fn (2:14-3:9)
-
-            :
+        block fn (2:10-3:9):
+          block fn (2:14-3:9):
             arithm + (3:4-3:9)
               ident (3:4-3:5) a
               ident (3:8-3:9) b
@@ -93,17 +81,11 @@ exports[`nesting parses indentation 3`] = `
 module (1:0-6:0)
   assign = (1:0-4:7)
     ident (1:0-1:3) foo
-    block fn (1:6-4:7)
-
-      :
+    block fn (1:6-4:7):
       assign = (2:2-3:13)
         ident (2:2-2:7) shrub
-        block fn (2:10-3:13)
-
-          :
-          block fn (3:4-3:13)
-
-            :
+        block fn (2:10-3:13):
+          block fn (3:4-3:13):
             arithm + (3:8-3:13)
               ident (3:8-3:9) a
               ident (3:12-3:13) b
@@ -115,12 +97,12 @@ exports[`nesting parses nested 1`] = `
 module (1:0-17:1)
   group (1:0-17:1)
     ident (2:2-2:5) foo
-    group (4:2-4:24)
+    group (4:2-4:22)
       ident (4:3-4:6) foo
-      call :: (4:8-4:23)
+      call (4:8-4:21)
         ident (4:8-4:11) foo
-        ident (4:14-4:17) bar
-        ident (4:19-4:23) spam
+        ident (4:12-4:15) bar
+        ident (4:17-4:21) spam
     # leading group comment
     group (7:2-10:3)
       ident (8:4-8:7) bar
@@ -130,6 +112,68 @@ module (1:0-17:1)
     ident (14:2-14:6) spam
       # trailing same line comment
     # trailing block comment
+`;
+
+exports[`parse failures errors due to end of indentation 1`] = `
+module (1:0-3:6)
+  assign = (1:0-3:6)
+    ident (1:0-1:3) foo
+    group (1:6-3:6)
+      ident (2:2-2:5) bar
+      ident (3:2-3:6) spam
+
+error:
+test.fnk:4:0
+1| foo = (
+2|   bar
+3|   spam
+4| shrub
+   ^
+
+Expected ',' or indented new line or ')'.
+
+
+
+`;
+
+exports[`parse failures errors due to end of indentation 2`] = `
+module (1:0-2:9)
+  assign = (1:0-2:9)
+    ident (1:0-1:3) foo
+    group (1:6-2:9)
+      assign = (2:2-2:9)
+        ident (2:2-2:5) bar
+        group (2:8-2:9)
+
+
+error:
+test.fnk:3:0
+1| foo = (
+2|   bar = (
+3| spam
+   ^
+
+Expected ',' or indented new line or ')'.
+
+
+
+`;
+
+exports[`parse failures errors due to missing closing symbol 1`] = `
+module (1:0-1:4)
+  group (1:0-1:4)
+    number (1:1-1:2) 1
+    number (1:3-1:4) 2
+
+error:
+test.fnk:1:4
+1| (1,2
+       ^
+
+Expected ',' or indented new line or ')'.
+
+
+
 `;
 
 exports[`single line expressions parses leading empty 1`] = `

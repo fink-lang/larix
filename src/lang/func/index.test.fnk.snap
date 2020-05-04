@@ -28,9 +28,7 @@ block fn (4:0-8:0)
 `;
 
 exports[`func: fn ...: ... parses no arg: fn: foo 1`] = `
-block fn (1:0-1:7)
-
-  :
+block fn (1:0-1:7):
   ident (1:4-1:7) foo
 `;
 

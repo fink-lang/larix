@@ -3,78 +3,78 @@
 {parse_expr} = import '../../'
 
 
-describe:: 'logical', fn:
+describe 'logical', fn:
 
-  it:: 'parses &&', fn:
-    expect::
-      parse_expr:: `a && b`
+  it 'parses &&', fn:
+    expect
+      parse_expr `a && b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a && b && c`
+    expect
+      parse_expr `a && b && c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a && b || c`
-      to_match_snapshot
-
-
-  it:: 'parses ||', fn:
-    expect::
-      parse_expr:: `a || b`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a || b || c`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a || b && c`
+    expect
+      parse_expr `a && b || c`
       to_match_snapshot
 
 
-  it:: 'parses !', fn:
-    expect::
-      parse_expr:: `!a`
+  it 'parses ||', fn:
+    expect
+      parse_expr `a || b`
+      to_match_snapshot
+
+    expect
+      parse_expr `a || b || c`
+      to_match_snapshot
+
+    expect
+      parse_expr `a || b && c`
+      to_match_snapshot
+
+
+  it 'parses !', fn:
+    expect
+      parse_expr `!a`
       to_match_snapshot
 
 
 describe 'logical keywords:', fn:
-  it:: 'parses and', fn:
-    expect::
-      parse_expr:: `a and b`
+  it 'parses and', fn:
+    expect
+      parse_expr `a and b`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a and b and c`
+    expect
+      parse_expr `a and b and c`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `a and b or c`
-      to_match_snapshot
-
-
-  it:: 'parses or', fn:
-    expect::
-      parse_expr:: `a or b`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a or b or c`
-      to_match_snapshot
-
-    expect::
-      parse_expr:: `a or b and c`
+    expect
+      parse_expr `a and b or c`
       to_match_snapshot
 
 
-  it:: 'parses not', fn:
-    expect::
-      parse_expr:: `not a`
+  it 'parses or', fn:
+    expect
+      parse_expr `a or b`
+      to_match_snapshot
+
+    expect
+      parse_expr `a or b or c`
+      to_match_snapshot
+
+    expect
+      parse_expr `a or b and c`
       to_match_snapshot
 
 
-  it:: 'parses as non-seperating', fn:
-    expect::
-      parse_expr:: `andornot`
+  it 'parses not', fn:
+    expect
+      parse_expr `not a`
+      to_match_snapshot
+
+
+  it 'parses as non-seperating', fn:
+    expect
+      parse_expr `andornot`
       to_match_snapshot

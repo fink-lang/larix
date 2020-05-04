@@ -1,33 +1,36 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../..'
+{parse_expr, parse} = import '../..'
 
 
-describe:: 'js-compat operators', fn:
+describe 'js-compat operators', fn:
 
-  it:: 'parses new', fn:
-    expect::
-      parse_expr:: 'new_foo = new Foobar(spam, ni)'
+  it 'parses new', fn:
+    expect
+      parse_expr 'new_foo = new Foobar(spam, ni)'
       to_match_snapshot
 
-    expect::
-      parse_expr:: 'new_foo = new Foobar:: spam, ni'
-      to_match_snapshot
-
-    expect::
-      parse_expr:: 'new_foo = new Foobar spam, ni'
+    expect
+      parse_expr 'new_foo = new Foobar spam, ni'
       to_match_snapshot
 
 
-  it:: 'parses throw', fn:
-    expect::
-      parse_expr:: `throw_foo = foo || throw err('foobar')`
+  it 'parses throw', fn:
+    expect
+      parse_expr `throw_foo = foo || throw err('foobar')`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `throw_foo = foo || throw err:: 'foobar'`
+    expect
+      parse_expr `throw_foo = foo || throw err 'foobar'`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `throw_foo = foo || throw err 'foobar'`
+
+describe 'try ...:', fn:
+
+  it 'parses', fn:
+    expect
+      parse `
+        [err, result] = try:
+          throw new Error 'foobar'
+      `
       to_match_snapshot

@@ -1,97 +1,97 @@
-{describe, it, only, expect, to_match_snapshot, to_throw} = import '@fink/jest'
+{describe, it, only, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
-describe:: 'array [...]', fn:
+describe 'array [...]', fn:
 
-  it:: 'parses empty: []', fn:
-    expect::
-      parse_expr:: `[]`
+  it 'parses empty: []', fn:
+    expect
+      parse_expr `[]`
       to_match_snapshot
 
 
-  it:: 'parses single elemement: [1]', fn:
-    expect::
-      parse_expr:: `[1]`
+  it 'parses single elemement: [1]', fn:
+    expect
+      parse_expr `[1]`
       to_match_snapshot
 
 
-  it:: 'parses multiple elements: [1, 2]', fn:
-    expect::
-      parse_expr:: `[1, 2]`
+  it 'parses multiple elements: [1, 2]', fn:
+    expect
+      parse_expr `[1, 2]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `[1, 2, 3]`
-      to_match_snapshot
-
-
-  it:: 'parses leading commas: [,, foo]', fn:
-    expect::
-      parse_expr:: `[,, foo]`
+    expect
+      parse_expr `[1, 2, 3]`
       to_match_snapshot
 
 
-  it:: 'parses middle commas: [,, foo]', fn:
-    expect::
+  it 'parses leading commas: [,, foo]', fn:
+    expect
+      parse_expr `[,, foo]`
+      to_match_snapshot
+
+
+  it 'parses middle commas: [,, foo]', fn:
+    expect
       # [a, , ..., b, c]
-      parse_expr:: `[foo, ,bar]`
+      parse_expr `[foo, ,bar]`
       to_match_snapshot
 
 
-  it:: 'parses trailing commas: [...foo,,]', fn:
-    expect::
-      parse_expr:: `[...foo, ]`
+  it 'parses trailing commas: [...foo,,]', fn:
+    expect
+      parse_expr `[...foo, ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `[...foo, , ]`
+    expect
+      parse_expr `[...foo, , ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `[, ...foo, ]`
+    expect
+      parse_expr `[, ...foo, ]`
       to_match_snapshot
 
 
-describe:: 'array block', fn:
-  it:: 'parses empty', fn:
-    expect::
-      parse_expr:: `
+describe 'array block', fn:
+  it 'parses empty', fn:
+    expect
+      parse_expr `
         [
         ]`
       to_match_snapshot
 
 
-  it:: 'parses single elemement', fn:
-    expect::
-      parse_expr:: `
+  it 'parses single elemement', fn:
+    expect
+      parse_expr `
         [
           1
         ]`
       to_match_snapshot
 
 
-  it:: 'parses multiple elements', fn:
-    expect::
-      parse_expr:: `
+  it 'parses multiple elements', fn:
+    expect
+      parse_expr `
         [
           1
           2
         ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         [
           1, 2
         ]`
       to_match_snapshot
 
 
-  it:: 'parses leading commas', fn:
-    expect::
-      parse_expr:: `
+  it 'parses leading commas', fn:
+    expect
+      parse_expr `
         [
           ,
           ,
@@ -99,8 +99,8 @@ describe:: 'array block', fn:
         ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         [
           ,,
           foo
@@ -108,17 +108,17 @@ describe:: 'array block', fn:
       to_match_snapshot
 
 
-  it:: 'parses trailing commas', fn:
-    expect::
-      parse_expr:: `
+  it 'parses trailing commas', fn:
+    expect
+      parse_expr `
         [
           foo
           ,
         ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         [
           foo
           ,
@@ -126,8 +126,8 @@ describe:: 'array block', fn:
         ]`
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         [
           ,
           ...foo
@@ -136,19 +136,19 @@ describe:: 'array block', fn:
       to_match_snapshot
 
 
-describe:: 'list', fn:
-  it:: 'parses single elemement', fn:
-    expect::
-      parse_expr:: `
+describe 'list', fn:
+  it 'parses single elemement', fn:
+    expect
+      parse_expr `
         list:
           1
         `
       to_match_snapshot
 
 
-  it:: 'parses multiple elements', fn:
-    expect::
-      parse_expr:: `
+  it 'parses multiple elements', fn:
+    expect
+      parse_expr `
         list:
           1
           2
@@ -156,9 +156,9 @@ describe:: 'list', fn:
       to_match_snapshot
 
 
-  it:: 'parses leading commas', fn:
-    expect::
-      parse_expr:: `
+  it 'parses leading commas', fn:
+    expect
+      parse_expr `
         list:
           ,
           ,
@@ -166,8 +166,8 @@ describe:: 'list', fn:
         `
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         list:
           ,,
           foo
@@ -175,17 +175,17 @@ describe:: 'list', fn:
       to_match_snapshot
 
 
-  it:: 'parses trailing commas', fn:
-    expect::
-      parse_expr:: `
+  it 'parses trailing commas', fn:
+    expect
+      parse_expr `
         list:
           foo
           ,
         `
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         list:
           foo
           ,
@@ -193,8 +193,8 @@ describe:: 'list', fn:
         `
       to_match_snapshot
 
-    expect::
-      parse_expr:: `
+    expect
+      parse_expr `
         list:
           ,
           ...foo
@@ -203,28 +203,16 @@ describe:: 'list', fn:
       to_match_snapshot
 
 
-describe:: 'array [...] - parsing failures', fn:
-  it:: `throws when missing ']'`, fn:
-    expect::
-      fn: parse_expr:: `[`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:1
-        1| [
-            ^
-
-        Expected ',' or indented new line or ']'.`
+describe 'array [...] - parsing failures', fn:
+  it `errors when missing ']'`, fn:
+    expect
+      parse `[`, 'test.fnk'
+      to_match_snapshot
 
 
-  it:: `throws when missing ']'`, fn:
-    expect::
-      fn: parse_expr:: `[1)]`, 'test.fnk'
-
-      to_throw:: `
-        test.fnk:1:2
-        1| [1)]
-             ^
-
-        Expected ',' or indented new line or ']'.`
+  it `errors when missing ','`, fn:
+    expect
+      parse `[1)]`, 'test.fnk'
+      to_match_snapshot
 
 

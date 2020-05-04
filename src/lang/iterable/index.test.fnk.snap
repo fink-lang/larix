@@ -59,9 +59,7 @@ block unfold (1:0-3:0)
 `;
 
 exports[`unfold accu: ... parses no args 1`] = `
-block unfold (1:0-4:0)
-
-  :
+block unfold (1:0-4:0):
   ident (2:2-2:5) foo
   # trailing comment
 `;
