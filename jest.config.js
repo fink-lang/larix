@@ -9,7 +9,7 @@ module.exports = {
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
   snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot'],
-  snapshotResolver: '<rootDir>/build/test-helpers/resolver',
+  snapshotResolver: '@fink/jest/snapshot-resolver',
 
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 
