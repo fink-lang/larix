@@ -8,5 +8,4 @@ add_keywords = fn ctx:
     add_keyword literal 'false', 'literal'
     # TODO: should this live in js-compat?
     add_keyword literal 'null', 'literal'
-    # TODO: should that live under conditional?
-    add_keyword literal 'else', 'literal'
+

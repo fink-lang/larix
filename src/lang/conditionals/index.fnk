@@ -1,4 +1,4 @@
-{advance_expected} = import '@fink/prattler'
+{advance_expected, advance} = import '@fink/prattler'
 
 {add_named_block, indented_block} = import '../block'
 {single_expression} = import '../block/expr'
@@ -10,6 +10,10 @@ get_condition = fn ctx:
     # TODO: single_expression should handle comments
     {type: 'comment'}:
       [left, next_ctx]
+
+    {type: 'block', op: 'else'}:
+      [left, next_ctx]
+
     else:
       [left, advance_expected next_ctx, ':']
 
@@ -25,6 +29,10 @@ cond_result_expr = fn ctx:
   match left:
     {type: 'comment'}:
       [left, result_ctx]
+
+    {type: 'block', op: 'else'}:
+      [left, result_ctx]
+
     else:
       [right, next_ctx] = get_result result_ctx
       {start} = left.loc
@@ -35,3 +43,4 @@ cond_result_expr = fn ctx:
 add_conditionals = fn ctx:
   pipe ctx:
     add_named_block 'match', 'block', cond_result_expr
+    add_named_block 'else'

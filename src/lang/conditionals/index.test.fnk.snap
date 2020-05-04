@@ -43,11 +43,11 @@ module (1:0-14:0)
               number (9:31-9:34) 789
       block (9:37-9:41)
         ident (9:39-9:41) ni
-    match:expr (11:2-14:0)
-      literal (11:2-11:6) else
-      block (11:6-14:0)
-        # fallback for no match
-        ident (13:4-13:8) spam
+    block else (11:2-14:0)
+
+      :
+      # fallback for no match
+      ident (13:4-13:8) spam
 `;
 
 exports[`match ...: parses partials 1`] = `
@@ -89,11 +89,11 @@ module (1:0-8:0)
       ident (2:2-2:14) test_pattern
       block (2:14-2:22)
         ident (2:16-2:22) result
-    match:expr (5:2-5:12)
-      # fallback if no match
-      literal (5:2-5:6) else
-      block (5:6-5:12)
-        ident (5:8-5:12) spam
+    # fallback if no match
+    block else (5:2-5:12)
+
+      :
+      ident (5:8-5:12) spam
     # trailing comment
   ident (7:0-7:6) foobar
 `;
