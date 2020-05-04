@@ -150,59 +150,45 @@ array (1:0-5:1)
 `;
 
 exports[`list parses leading commas 1`] = `
-array list (1:0-5:0)
-
-  :
+array list (1:0-5:0):
   empty (2:3-2:3)
   empty (3:3-3:3)
   ident (4:2-4:5) foo
 `;
 
 exports[`list parses leading commas 2`] = `
-array list (1:0-4:0)
-
-  :
+array list (1:0-4:0):
   empty (2:3-2:3)
   empty (2:4-2:4)
   ident (3:2-3:5) foo
 `;
 
 exports[`list parses multiple elements 1`] = `
-array list (1:0-4:0)
-
-  :
+array list (1:0-4:0):
   number (2:2-2:3) 1
   number (3:2-3:3) 2
 `;
 
 exports[`list parses single elemement 1`] = `
-array list (1:0-3:0)
-
-  :
+array list (1:0-3:0):
   number (2:2-2:3) 1
 `;
 
 exports[`list parses trailing commas 1`] = `
-array list (1:0-4:0)
-
-  :
+array list (1:0-4:0):
   ident (2:2-2:5) foo
   empty (3:3-3:3)
 `;
 
 exports[`list parses trailing commas 2`] = `
-array list (1:0-5:0)
-
-  :
+array list (1:0-5:0):
   ident (2:2-2:5) foo
   empty (3:3-3:3)
   empty (4:3-4:3)
 `;
 
 exports[`list parses trailing commas 3`] = `
-array list (1:0-5:0)
-
-  :
+array list (1:0-5:0):
   empty (2:3-2:3)
   spread ... (3:2-3:8)
     ident (3:5-3:8) foo

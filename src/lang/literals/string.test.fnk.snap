@@ -82,9 +82,7 @@ string ' (1:0-4:6)
 `;
 
 exports[`strings parses multi line strings 2`] = `
-block fn (1:0-6:3)
-
-  :
+block fn (1:0-6:3):
   string ' (2:2-6:3)
     'foobar
      spam shrub

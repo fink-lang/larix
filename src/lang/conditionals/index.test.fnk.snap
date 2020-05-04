@@ -43,9 +43,7 @@ module (1:0-14:0)
               number (9:31-9:34) 789
       block (9:37-9:41)
         ident (9:39-9:41) ni
-    block else (11:2-14:0)
-
-      :
+    block else (11:2-14:0):
       # fallback for no match
       ident (13:4-13:8) spam
 `;
@@ -90,9 +88,7 @@ module (1:0-8:0)
       block (2:14-2:22)
         ident (2:16-2:22) result
     # fallback if no match
-    block else (5:2-5:12)
-
-      :
+    block else (5:2-5:12):
       ident (5:8-5:12) spam
     # trailing comment
   ident (7:0-7:6) foobar

@@ -40,9 +40,7 @@ module (1:0-13:0)
       ident (9:10-9:13) bar
   call (10:0-11:11)
     ident (10:0-10:3) foo
-    block match (10:4-11:11)
-
-      :
+    block match (10:4-11:11):
       match:expr (11:2-11:11)
         ident (11:2-11:5) bar
         block (11:5-11:11)
@@ -94,9 +92,7 @@ module (1:0-5:0)
         array (3:9-3:17)
           ident (3:10-3:11) a
           ident (3:14-3:15) b
-    block else (4:2-5:0)
-
-      :
+    block else (4:2-5:0):
       object (4:9-4:21)
         object:prop (4:10-4:19)
           ident (4:10-4:13) foo

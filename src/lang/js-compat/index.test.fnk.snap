@@ -50,9 +50,7 @@ module (1:0-3:0)
     array (1:0-1:13)
       ident (1:1-1:4) err
       ident (1:6-1:12) result
-    js-compat try (1:16-3:0)
-
-      :
+    js-compat try (1:16-3:0):
       js-compat throw (2:2-3:0)
         js-compat new (2:8-3:0)
           call (2:12-3:0)

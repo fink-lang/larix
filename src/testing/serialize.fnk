@@ -43,8 +43,12 @@ serialize_block = fn node, serialize, indent:
   match node:
     {args: {}}:
       args = node.args.map fn expr: serialize expr, `${indent}  `
-      arg_str = `${args.join '\n'}\n`
-      `${head}\n${arg_str}${indent}  :\n${exprs.join '\n'}`
+
+      arg_str = match args:
+        {length: 0}: ':'
+        else: `\n${args.join '\n'}\n${indent}  :`
+
+      `${head}${arg_str}\n${exprs.join '\n'}`
 
     else:
       exprs = node.exprs.map fn expr: serialize expr, `${indent}  `
