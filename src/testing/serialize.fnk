@@ -61,10 +61,10 @@ serialize_call = fn node, serialize, indent:
   callee = serialize node.callee, `${indent}  `
   args = node.args.map fn expr: serialize expr, `${indent}  `
   arg_str = match args:
-    ?.length > 0: `${args.join '\n'}`
+    ?.length > 0: `\n${args.join '\n'}`
     else: ''
 
-  `${head}\n${callee}\n${arg_str}`
+  `${head}\n${callee}${arg_str}`
 
 
 serialize_infix = fn node, serialize, indent:

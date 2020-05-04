@@ -29,7 +29,6 @@ call (1:0-1:5)
 exports[`partial parses call 2`] = `
 call ( (1:0-1:3)
   partial (1:0-1:1) ?
-
 `;
 
 exports[`partial parses call arg 1`] = `
@@ -71,5 +70,4 @@ call ( (1:0-1:7)
   member . (1:0-1:5)
     partial (1:0-1:1) ?
     ident (1:2-1:5) bar
-
 `;
