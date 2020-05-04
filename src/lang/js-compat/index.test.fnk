@@ -25,12 +25,12 @@ describe 'js-compat operators', fn:
       to_match_snapshot
 
 
-describe 'attempt ...:', fn:
+describe 'try ...:', fn:
 
   it 'parses', fn:
     expect
       parse `
-        [err, result] = attempt item:
+        [err, result] = try:
           throw new Error 'foobar'
       `
       to_match_snapshot
