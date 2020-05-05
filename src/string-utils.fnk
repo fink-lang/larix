@@ -2,10 +2,10 @@
 
 
 unindent_text = fn text, ind:
-  lines = text.split rx/\n/g
-  unindented_lines = lines.map(fn line, idx:
-    match idx:
-      0: line
-      else: line.slice ind
-  )
-  unindented_lines.join '\n'
+  [first, ...rest] = text.split rx/\n/g
+
+  [...lines] = pipe rest:
+    map line:
+      line.slice ind
+
+  [first, ...lines].join '\n'
