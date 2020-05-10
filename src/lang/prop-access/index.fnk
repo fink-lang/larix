@@ -1,4 +1,4 @@
-{advance, curr_loc, curr_value, next_matches, has_errors} = import '@fink/prattler'
+{advance, next_matches, has_errors} = import '@fink/prattler'
 {add_operator} = import '@fink/prattler/symbols'
 {add_error} = import '@fink/prattler/errors'
 
