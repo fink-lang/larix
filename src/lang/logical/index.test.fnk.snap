@@ -24,6 +24,16 @@ logical and (1:0-1:12)
 
 exports[`logical keywords: parses as non-seperating 1`] = `ident (1:0-1:8) andornot`;
 
+exports[`logical keywords: parses in 1`] = `
+logical or (1:0-1:16)
+  logical in (1:0-1:6)
+    ident (1:0-1:1) a
+    ident (1:5-1:6) b
+  logical in (1:10-1:16)
+    ident (1:10-1:11) a
+    ident (1:15-1:16) c
+`;
+
 exports[`logical keywords: parses not 1`] = `
 logical not (1:0-1:5)
   ident (1:4-1:5) a
