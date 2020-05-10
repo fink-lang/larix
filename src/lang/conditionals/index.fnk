@@ -1,4 +1,4 @@
-{advance_expected, advance} = import '@fink/prattler'
+{advance_expected} = import '@fink/prattler'
 
 {add_named_block, indented_block} = import '../block'
 {single_expression} = import '../block/expr'
