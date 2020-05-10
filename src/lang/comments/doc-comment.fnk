@@ -1,4 +1,4 @@
-{next_is, collect_text, expression} = import '@fink/prattler'
+{collect_text, expression} = import '@fink/prattler'
 
 {prefix} = import '../symbols'
 

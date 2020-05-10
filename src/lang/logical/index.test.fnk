@@ -67,6 +67,11 @@ describe 'logical keywords:', fn:
       parse_expr `a or b and c`
       to_match_snapshot
 
+  it 'parses in', fn:
+    expect
+      parse_expr `a in b or a in c`
+      to_match_snapshot
+
 
   it 'parses not', fn:
     expect

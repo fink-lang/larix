@@ -1,6 +1,3 @@
-{curr_loc, next_loc} = import '@fink/prattler'
-
-
 unindent_text = fn text, ind:
   [first, ...rest] = text.split rx/\n/g
 

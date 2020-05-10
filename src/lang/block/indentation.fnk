@@ -23,7 +23,6 @@ next_is_unindented = fn ctx:
   {blocks: [block]} = ctx
   {min_ind} = block
 
-  {start: {column}} = next_loc ctx
   match next_loc ctx:
     {start: {column: ? < min_ind}}:
       true

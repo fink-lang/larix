@@ -9,7 +9,7 @@ array = fn op:
     ...prefix op
 
     nud: fn: fn ctx:
-      [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ']'
+      [{exprs, loc}, next_ctx] = terminated_block ctx, ']'
       [{type: 'array', exprs, loc}, next_ctx]
 
 

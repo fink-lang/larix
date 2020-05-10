@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr, parse} = import '../../'
+{parse_expr} = import '../../'
 
 
 describe 'spread', fn:
