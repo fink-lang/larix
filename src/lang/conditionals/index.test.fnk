@@ -43,7 +43,7 @@ describe 'match ...:', fn:
     expect
       parse `
         match foo:
-          {length: ? > 1}: bar
+          {bar: ? > 1}: ni
 
           is_str ?: foo
 

@@ -3,33 +3,29 @@
 
 print = fn ast:
   match ast:
-    [{}, {tokenizer:{}}]:
-      [expr, {errors}] = ast
-      match errors:
-        {length: ? > 0}:
-          errors_text = pipe errors:
-            map {error}:
-              error
-            fold err, str='':
-              `${str}${err}\n`
+    {errors: [{}]}:
+      {errors} = ast
 
-          `
-            ${serialize expr}
+      errors_text = pipe errors:
+        map {error}:
+          error
+        fold err, str='':
+          `${str}${err}\n`
 
-            error:
-            ${errors_text}
-          `
-        else:
-          serialize expr
+      `
+        ${serialize ast}
 
+        error:
+        ${errors_text}
+      `
     else:
       serialize ast
 
 
 test = fn val:
   match val:
-    [{}, {tokenizer: {}}]: true
     {type: {}, loc: {}}: true
+    {type: {}, errors: []}: true
     else: false
 
 jest_serializer = {print, test}

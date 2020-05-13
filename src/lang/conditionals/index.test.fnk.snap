@@ -53,15 +53,15 @@ module (1:0-7:0)
   block match (1:0-7:0)
     ident (1:6-1:9) foo
     :
-    match:expr (2:2-2:22)
-      object (2:2-2:17)
-        object:prop (2:3-2:16)
-          ident (2:3-2:9) length
-          comp > (2:11-2:16)
-            partial (2:11-2:12) ?
-            number (2:15-2:16) 1
-      block (2:17-2:22)
-        ident (2:19-2:22) bar
+    match:expr (2:2-2:18)
+      object (2:2-2:14)
+        object:prop (2:3-2:13)
+          ident (2:3-2:6) bar
+          comp > (2:8-2:13)
+            partial (2:8-2:9) ?
+            number (2:12-2:13) 1
+      block (2:14-2:18)
+        ident (2:16-2:18) ni
     match:expr (4:2-4:15)
       call (4:2-4:10)
         ident (4:2-4:8) is_str

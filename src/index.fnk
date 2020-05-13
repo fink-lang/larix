@@ -14,7 +14,8 @@ init = fn ctx:
 
 parse_expr = fn code, filename:
   ctx = init {code, filename}
-  single_expression ctx, 0
+  [expr, {errors}] = single_expression ctx, 0
+  {...expr, errors}
 
 
 parse = fn code, filename:
