@@ -13,12 +13,9 @@ member_expr = fn ctx, lbp:
       single_expression ctx, lbp
 
     next_matches ?, rx/^\w+/:
-      # TODO: reuse ../identifier
-      # key_ctx = advance ctx
       identifier advance ctx
 
     else:
-      # TODO use advance_expected ctx, ...
       add_error ctx,
         'Expected member key to be an ident, string or group expr.'
         ctx.next_token

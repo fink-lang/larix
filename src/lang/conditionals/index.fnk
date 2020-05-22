@@ -7,7 +7,6 @@
 get_condition = fn ctx:
   [left, next_ctx] = single_expression ctx, 0
   match left:
-    # TODO: single_expression should handle comments
     {type: 'comment'}:
       [left, next_ctx]
 

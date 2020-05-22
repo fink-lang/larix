@@ -10,7 +10,7 @@ test.fnk:1:7
 1| foobar(
           ^
 
-Expected ',' or indented new line or ')'.
+Expected ',' or indented(>=1) new line or ')'.
 
 
 

@@ -3,15 +3,20 @@
 {curr_loc, next_loc, next_is, next_is_end, has_errors} = import '@fink/prattler'
 {advance} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
-{end_token} = import '@fink/prattler/tokenizer'
 
 
-end_of_block_indent = Symbol 'end-of-block-indentation'
+end_of_block_indent = {end_of_block_indent: true}
+end_of_code = {end_of_code: true}
 
 
 curr_indentation = fn {blocks}:
   [{curr_ind}] = blocks
   curr_ind
+
+
+min_indentation = fn {blocks}:
+  [{min_ind}] = blocks
+  min_ind
 
 
 next_is_new_expr = fn ctx:
@@ -20,8 +25,7 @@ next_is_new_expr = fn ctx:
 
 
 next_is_unindented = fn ctx:
-  {blocks: [block]} = ctx
-  {min_ind} = block
+  min_ind = min_indentation ctx
 
   match next_loc ctx:
     {start: {column: ? < min_ind}}:
@@ -35,7 +39,7 @@ next_is_indented = fn ctx:
   {end: {line: curr_line}} = curr_loc ctx
   {start: {line: next_line, column: next_ind}} = next_loc ctx
 
-  curr_line < next_line && curr_ind < next_ind
+  curr_line < next_line and curr_ind < next_ind
 
 
 pop_block = fn ctx:
@@ -48,28 +52,34 @@ pop_block = fn ctx:
         next_is_end ?: advance next_ctx
         else: next_ctx
 
+    end_of_code:
+      match next_ctx:
+        next_is_end ?: advance next_ctx
+        else: next_ctx
+
     else:
       match ctx:
         next_is ?, end_symbol:
-          advance next_ctx, end_symbol
+          advance next_ctx
 
         has_errors ?:
           ctx
 
         else:
-          # TODO: use curr block's min indentation in msg
+          ind = min_indentation ctx
           [, err_ctx] = add_error ctx,
-            `Expected ',' or indented new line or ${inspect end_symbol}.`
+            `Expected ',' or indented(>=${ind}) new line or ${inspect end_symbol}.`
             ctx.next_token
 
           err_ctx
+
 
 push_block = fn ctx, end_symbol:
   {blocks} = ctx
   curr_ind = curr_indentation ctx
 
   block = match end_symbol:
-    end_token:
+    end_of_code:
       {end_symbol, curr_ind, min_ind: curr_ind}
     else:
       {end_symbol, curr_ind, min_ind: curr_ind + 1}
@@ -87,4 +97,4 @@ update_indentation = fn ctx:
 
 
 init_indentation = fn ctx:
-  {...ctx, blocks: [{end_symbol: end_token, min_ind: 0, curr_ind: 0}]}
+  {...ctx, blocks: [{end_symbol: end_of_code, min_ind: 0, curr_ind: 0}]}

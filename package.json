@@ -3,7 +3,7 @@
   "version": "0.0.0-semantically-released",
   "license": "MIT",
   "engines": {
-    "node": ">=13.0.0"
+    "node": ">=14.0.0"
   },
   "private": false,
   "publishConfig": {
@@ -30,13 +30,14 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@fink/prattler": "^4.0.0"
+    "@fink/prattler": "^5.0.0",
+    "@fink/std-lib": "^2.0.0"
   },
   "devDependencies": {
-    "@fink/cli": "^4.0.1",
-    "@fink/jest": "^4.0.0",
-    "@fink/larix": "^8.1.0",
-    "@fink/loxia": "^7.4.0",
+    "@fink/cli": "^5.0.0",
+    "@fink/jest": "^5.0.0",
+    "@fink/larix": "^9.0.0",
+    "@fink/loxia": "^8.0.0",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
     "jest-cli": "^26.0.0",

@@ -1,6 +1,6 @@
 {add_keyword} = import '@fink/prattler/symbols'
 
-{prefix} = import '../symbols'
+{prefix, literal} = import '../symbols'
 {add_named_block} = import '../block'
 
 
@@ -12,3 +12,4 @@ add_js_ops = fn ctx:
     add_keyword js_op 'new', 'js-compat'
     add_keyword js_op 'throw', 'js-compat'
     add_named_block 'try', 'js-compat'
+    add_keyword literal 'null', 'literal'

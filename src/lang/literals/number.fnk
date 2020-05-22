@@ -1,5 +1,6 @@
-{curr_value, next_value, curr_loc, next_is, advance} = import '@fink/prattler'
+{curr_value, next_value, curr_loc, next_is, advance, advance_expected} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
+{ends_with} = import '@fink/std-lib/str'
 
 
 exponent = fn ctx:
@@ -7,10 +8,9 @@ exponent = fn ctx:
   next_ctx = advance ctx
 
   match plus_minus:
-    ? == '+' || ? == '-':
+    ? == '+' or ? == '-':
       ['${plus_minus}${next_value next_ctx}', advance next_ctx]
     else:
-      # TODO use advance_expected
       [, err_ctx] = add_error next_ctx,
         'Expected exponent.'
         next_ctx.curr_token
@@ -25,12 +25,11 @@ float = fn ctx:
       value = '.${next_value float_ctx}'
 
       [exp, next_ctx] = match value:
-        ?.endsWith 'e':
+        ends_with ?, 'e':
           exponent advance float_ctx
         else:
           ['', advance float_ctx]
 
-      # TODO need to check if valid number
       ['${value}${exp}', next_ctx]
     else:
       ['', ctx]

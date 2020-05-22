@@ -25,7 +25,10 @@ get_end_symb = fn {blocks: [block, ...blocks]}:
 
 end_symb_str = fn ctx:
   symb = get_end_symb ctx
-  inspect symb
+  match symb:
+    # {end_of_block_indent: true}: 'end of block'
+    {end_of_code: true}: 'end of code'
+    else: inspect symb
 
 
 next_is_end_of_block = fn ctx:
@@ -46,6 +49,7 @@ next_is_nl = fn ctx:
 
 
 get_all = fn ctx, single_expr:
+  # TODO this is a monster, needs breakdown
   pipe [[], ctx, true, false]:
     unfold [exprs, ctx, at_start, was_comma]:
       [done, next] = match ctx:
@@ -89,7 +93,7 @@ get_all = fn ctx, single_expr:
 
               [true, [exprs, err_ctx]]
             else:
-              # TODO: check if next is actially a start of an expr.
+              # TODO: check if next is actually a start of an expr.
               [expr, next_ctx] = single_expr ctx
               # new line at end of expr is a separator
               next_is_start = next_is_nl next_ctx

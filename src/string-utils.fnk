@@ -1,8 +1,0 @@
-unindent_text = fn text, ind:
-  [first, ...rest] = text.split rx/\n/g
-
-  [...lines] = pipe rest:
-    map line:
-      line.slice ind
-
-  [first, ...lines].join '\n'

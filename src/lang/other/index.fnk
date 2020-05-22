@@ -1,21 +1,22 @@
 {curr_value} = import '@fink/prattler'
-{add_identifier, other_token} = import '@fink/prattler/symbols'
+{add_identifier, other_symbol} = import '@fink/prattler/symbols'
+{matches} = import '@fink/std-lib/regex'
 
-{literal} = import '../symbols'
+{non_binding} = import '../symbols'
 {identifier} = import '../identifier'
 {number} = import '../literals/number'
 
 
 looks_like_num = fn ctx:
   value = curr_value ctx
-  match value.match rx/^[0-9]+.*/:
-    {}: true
-    else: false
+  matches value, rx/^[0-9]+.*/
 
 
 other = fn:
   dict:
-    ...literal other_token
+    ...other_symbol
+
+    lbp: non_binding
 
     nud: fn: fn ctx:
       match ctx:

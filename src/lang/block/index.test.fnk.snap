@@ -130,7 +130,7 @@ test.fnk:4:0
 4| shrub
    ^
 
-Expected ',' or indented new line or ')'.
+Expected ',' or indented(>=2) new line or ')'.
 
 
 
@@ -153,7 +153,7 @@ test.fnk:3:0
 3| spam
    ^
 
-Expected ',' or indented new line or ')'.
+Expected ',' or indented(>=3) new line or ')'.
 
 
 
@@ -170,7 +170,7 @@ test.fnk:1:4
 1| (1,2
        ^
 
-Expected ',' or indented new line or ')'.
+Expected ',' or indented(>=1) new line or ')'.
 
 
 

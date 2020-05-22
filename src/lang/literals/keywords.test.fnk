@@ -20,12 +20,3 @@ describe 'keywords', fn:
         bar = falseish
       `
       to_match_snapshot
-
-
-  it 'parses null', fn:
-    expect
-      parse `
-        foo = null
-        bar = nullish
-      `
-      to_match_snapshot
