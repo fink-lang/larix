@@ -89,11 +89,18 @@ describe 'strings', fn:
       parse_expr `"foo \${bar + spam} spam"`
       to_match_snapshot
 
+    expect
+      parse_expr `"foo \${bar + spam} spam"`
+      to_match_snapshot
+
 
   it 'parses multiline template strings', fn:
     expect
       parse_expr `
-        '\n  \${foo}:\${bar}:\${spam + ni}\n\n  ni\n'
+        '\n  \${foo}:\${bar}:\${
+          shrub = 1234
+          shrub * 10
+        }\n\n  ni\n'
         `
       to_match_snapshot
 

@@ -2,18 +2,39 @@
 {curr_value, advance_expected} = import '@fink/prattler'
 {add_operator} = import '@fink/prattler/symbols'
 
+{rx, match_all, replace_all} = import '@fink/std-lib/regex'
+{starts_with, slice} = import '@fink/std-lib/str'
+{length} = import '@fink/std-lib/iter'
+{min} = import '@fink/std-lib/math'
+{max_int} = import '@fink/std-lib/num'
+
 {prefix} = import '../symbols'
+
+
+is_even = ? % 2 == 0
+
 
 {terminated_block} = import '../block'
 {next_is_new_expr, curr_indentation} = import '../block/indentation'
 
 
+curr_next_adjecent = fn ctx:
+  curr = curr_loc ctx
+  next = next_loc ctx
+
+  curr.end.line == next.start.line and curr.end.column == next.start.column
+
+
 get_expr_part = fn ctx:
   expr_ctx = advance_expected ctx, '{'
+  [block, next_ctx] = terminated_block expr_ctx, '}'
 
-  [{exprs: [expr]}, next_ctx] = terminated_block expr_ctx, '}'
-  # TODO: just use block or assert there is only one expr
-  [expr, next_ctx]
+  match block:
+    {exprs: 1 < length ?}:
+      [{...block, type: 'block'}, next_ctx]
+    else:
+      {exprs: [expr]} = block
+      [expr, next_ctx]
 
 
 get_str_part = fn ctx, op:
@@ -22,23 +43,20 @@ get_str_part = fn ctx, op:
     '`': collect_text ctx, rx/`|\${/
     else: collect_text ctx, rx/'|\${/
 
-  # TODO: can we do the escapeing check in the regex above?
-  [escaped] = text.match rx/\\*$/
+  [[escaped]] = match_all text, rx/\\*$/
 
-  match true:
-    escaped.length % 2 == 0:
+  match escaped:
+    is_even length ?:
       [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
 
     else:
-      # TODO: stop_value should come from prattler
       stop_value = curr_value next_ctx
       [str_part, final_ctx] = get_str_part next_ctx, op
 
-      [{
-        type: 'string:text',
-        value: `${text}${stop_value}${str_part.value}`,
-        loc: {start, end: str_part.loc.end}
-      }, final_ctx]
+      value = '${text}${stop_value}${str_part.value}'
+      {end} = str_part.loc
+
+      [{type: 'string:text', value, loc: {start, end}}, final_ctx]
 
 
 get_parts = fn ctx, op:
@@ -53,18 +71,9 @@ get_parts = fn ctx, op:
 
 
 get_str_ind = fn str, min_ind:
-  # TODO: fix regex space removal
-  # pipe str.matchAll rx/\n([ ]+)/g:
-
-  matched = str.matchAll new RegExp '\\n([ ]{${min_ind},})', 'g'
+  matched = match_all str, rx'\n([ ]{${min_ind},})'
   pipe matched:
-    map [, spaces]: spaces.length
-
-
-min = fn [...items]:
-  match items:
-    {length: ? > 0}: Math.min ...items
-    else: 0
+    map [, spaces]: length spaces
 
 
 get_unindent = fn ctx, parts:
@@ -79,11 +88,10 @@ get_unindent = fn ctx, parts:
     map part:
       ...get_str_ind part.value, min_ind
 
-    min
-  # TODO should use rx/.../
-  rx = new RegExp '\\n[ ]{0,${ind}}', 'g'
+    min max_int, ...?
 
-  fn str: str.replace rx, '\n'
+
+  fn str: replace_all str, rx'\n[ ]{0,${ind}}', '\n'
 
 
 get_unindented_text = fn ctx, op:
@@ -104,8 +112,8 @@ get_unindented_text = fn ctx, op:
 
   # remove first empty line
   exprs = match first.value:
-    ?.startsWith '\n':
-      [{...first, value: first.value.slice 1}, ...rest]
+    starts_with ?, '\n':
+      [{...first, value: slice first.value, 1}, ...rest]
     else:
       [first, ...rest]
 
@@ -118,17 +126,11 @@ string = fn op:
     ...prefix op
 
     lbp: fn lbp: fn ctx, left:
-      {start: {column: next_start_col}} = next_loc ctx
-
       match true:
         # default indentation behaviour
         next_is_new_expr ctx: 0
-        left.loc.end.column != next_start_col: 0
-        left.type == 'ident': lbp
-        else:
-          # TODO should error
-          0
-
+        left.type == 'ident' and curr_next_adjecent ctx: lbp
+        else: 0
 
     led: fn: fn ctx, left:
       {loc: {start}} = left
