@@ -1,5 +1,8 @@
+{starts_with} = import '@fink/std-lib/str'
+{split} = import '@fink/std-lib/regex'
+{join, length} = import '@fink/std-lib/iter'
+{obj_to_json} = import '@fink/std-lib/json'
 
-join = fn sep: fn [...items]: items.join sep
 
 get_comment = fn indent, comments:
   pipe comments:
@@ -7,7 +10,7 @@ get_comment = fn indent, comments:
       match op:
         '#': '${indent}#${value}'
         else:
-          lines = value.split '\n'
+          lines = split value, '\n'
           pipe lines:
             map line: `${indent}--- ${line}`
             join '\n'
@@ -16,21 +19,21 @@ get_comment = fn indent, comments:
 
 trailing_comment = fn indent, node:
   match node:
-    {comments: {trailing: {length: ? > 0}}}:
+    {comments: {trailing: 0 < length ?}}:
       comment = get_comment '${indent}', node.comments.trailing
       `\n${comment}`
     else: ''
 
 
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
-  head = match true:
-    (op && op != type):
+  head = match op:
+    op and ? != type:
       `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
     else:
       `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
 
   leading = match comments:
-    {leading: {length: ? > 0}}:
+    {leading: 0 < length ?}:
       comment = get_comment '${indent}', comments.leading
       `${comment}\n`
     else:  ''
@@ -51,7 +54,7 @@ serialize_block = fn node, serialize, indent:
         join '\n'
 
       arg_str = match node.args:
-        {length: 0}: ':'
+        0 == length ?: ':'
         else: `\n${args}\n${indent}  :`
 
       `${head}${arg_str}\n${exprs}`
@@ -69,7 +72,7 @@ serialize_call = fn node, serialize, indent:
     join '\n'
 
   arg_str = match node.args:
-    ?.length > 0: `\n${args}`
+    0 < length ?: `\n${args}`
     else: ''
 
   `${head}\n${callee}${arg_str}`
@@ -110,9 +113,8 @@ serialize_str = fn node, serialize, indent:
         else:
           value = serialize part, '${indent}  '
           `\n${value}\n`
-
-    fn [...items]: items.join ''
-    fn str: str.split '\n'
+    join ''
+    split ?, '\n'
 
   pipe lns: map ln: `${indent}  ${ln}`
 
@@ -149,11 +151,11 @@ serialize_jsx = fn node, serialize, indent:
         join '\n'
 
       props_str = match node.props:
-        ?.length > 0: `\n${props}`
+        0 < length ?: `\n${props}`
         else: ''
 
       children_str = match node.children:
-        ?.length > 0: `\n${indent}  :\n${children}`
+        0 < length ?: `\n${indent}  :\n${children}`
         else: ''
 
       `${head} ${node.name}${props_str}${children_str}`
@@ -166,7 +168,7 @@ serialize_jsx = fn node, serialize, indent:
       `${head} ${node.name}`
 
     {type: 'jsx-text'}:
-      `${head}\n${indent}  ${JSON.stringify node.value}`
+      `${head}\n${indent}  ${obj_to_json node.value}`
 
     {type: 'jsx-string'}:
       `${head}\n${indent}  '${node.value}'`
@@ -196,7 +198,7 @@ serialize = fn node, indent='':
     {type: 'spread'}:
       serialize_spread node, serialize, indent
 
-    {type: ?.startsWith 'jsx-'}:
+    {type: starts_with ?, 'jsx-'}:
       serialize_jsx node, serialize, indent
 
     {left: {}, right: {}}:

@@ -21,19 +21,19 @@ describe 'prop access', fn:
       to_match_snapshot
 
 
-  it `parses member expr: foo.'bar spam'`, fn:
+  it `parses member expr`, fn:
     expect
       parse_expr `foo.'bar spam'`
       to_match_snapshot
 
 
-  it 'parses member expr: foo.(Symbol.iterator)', fn:
+  it 'parses member expr', fn:
     expect
-      parse_expr 'foo.(Symbol.iterator)'
+      parse_expr 'foo.(key)'
       to_match_snapshot
 
 
-  it 'errors with invalid member)', fn:
+  it 'errors with invalid member', fn:
     expect
       parse 'foo.[bar]', 'test.fnk'
       to_match_snapshot

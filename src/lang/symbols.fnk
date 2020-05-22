@@ -22,7 +22,7 @@ left_binding = fn lbp: fn ctx:
       lbp
 
 
-non_bining = fn: fn: 0
+non_binding = fn: fn: 0
 
 
 infix = fn op, type:
@@ -43,12 +43,11 @@ infix_right = fn op, type:
     led: fn lbp: infix_led type, op, lbp - 1
 
 
-# TODO: why is this not type, op?
 prefix = fn op, type:
   dict:
     ...symbol op
 
-    lbp: non_bining
+    lbp: non_binding
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc ctx
@@ -62,7 +61,7 @@ literal = fn op, type:
   dict:
     ...symbol op
 
-    lbp: non_bining
+    lbp: non_binding
 
     nud: fn: fn ctx:
       loc = curr_loc ctx

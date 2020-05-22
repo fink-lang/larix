@@ -32,7 +32,6 @@ default_assignment = fn ctx, left:
   [right, next_ctx] = single_expression expr_ctx, 0
   {loc: {end}} = right
 
-  # TODO use ../assign?
   [{type: 'assign', op: '=', left, right, loc: {...left.loc, end}}, next_ctx]
 
 
@@ -54,7 +53,6 @@ key_expr = fn ctx:
           key, key_ctx]
 
     else:
-      # TODO advance_expected ctx, '`', '"', `'`, '(', '...', 'word-pattern'
       add_error ctx,
         `Expected prop-key but found '${ctx.next_token.value}'.`
         ctx.next_token

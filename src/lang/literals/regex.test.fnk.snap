@@ -10,14 +10,14 @@ test.fnk:1:11
 1| rx/foo.bar/n
               ^
 
-Expected ',' or indented new line or Symbol(end).
+Expected ',' or indented new line or end of code.
 
 
 
 `;
 
 exports[`regex - parsing failures errors when missing end 1`] = `
-module (1:0-1:10)
+module (1:0-1:11)
   regex (1:0-1:10)
     /foo.bar/
 

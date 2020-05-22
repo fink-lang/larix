@@ -1,40 +1,63 @@
-{advance, collect_text} = import '@fink/prattler'
+{advance, has_errors, collect_text} = import '@fink/prattler'
 {next_matches, next_loc} = import '@fink/prattler'
 {curr_value, curr_loc} = import '@fink/prattler'
 {add_operator} = import '@fink/prattler/symbols'
 
-{unindent_text} = import '../../string-utils'
+{join, length} = import '@fink/std-lib/iter'
+{starts_with, slice} = import '@fink/std-lib/str'
+{match_all, split} = import '@fink/std-lib/regex'
+
 {prefix} = import '../symbols'
+
+
+is_even = ? % 2 == 0
 
 
 curr_next_adjecent = fn ctx:
   curr = curr_loc ctx
   next = next_loc ctx
 
-  curr.end.line == next.start.line && curr.end.column == next.start.column
+  curr.end.line == next.start.line and curr.end.column == next.start.column
+
+
+unindent_text = fn text, ind:
+  [first, ...rest] = split text, rx/\n/
+
+  pipe rest:
+    map line:
+      slice line, ind
+    [first, ...?]
+    join '\n'
 
 
 get_text = fn ctx, op:
   [{value: text, loc: {start, end}}, next_ctx] = collect_text ctx, op
 
-  [escaped] = text.match rx/\\*$/
+  [[escaped]] = match_all text, rx/\\*$/
 
   match escaped:
-    ?.length % 2 == 0:
+    is_even length ?:
       [{text, loc: {start, end}}, next_ctx]
     else:
       [{text: new_text, loc: {end}}, final_ctx] = get_text next_ctx, op
       [{text: `${text}${op}${new_text}`, loc: {start, end}}, final_ctx]
 
 
-get_flags = fn ctx:
+next_is_flag = fn ctx:
   could_be_flag = curr_next_adjecent ctx
+  could_be_flag and next_matches ctx, rx/[gimsuy]/
 
+
+get_flags = fn ctx:
   match ctx:
-    could_be_flag && next_matches ?, rx/[gimsuy]/:
+    has_errors ?:
+      ['', ctx]
+
+    next_is_flag ?:
       next_ctx = advance ctx
       flags = curr_value next_ctx
       [flags, next_ctx]
+
     else:
       ['', ctx]
 
@@ -49,11 +72,11 @@ regex = fn op:
       [{text}, flags_ctx] = get_text ctx, '/'
 
       pattern = match text:
-        ?.startsWith '\n':
-          [, spaces] = text.match rx/^\n+(\s+)/
+        starts_with ?, '\n':
+          [[ ,spaces]] = match_all text, rx/^\n+(\s+)/
           ind = spaces.length
           unindent_text
-            text.slice 1 + ind
+            slice text, 1 + ind
             ind
         else:
           text

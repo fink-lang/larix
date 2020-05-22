@@ -17,11 +17,11 @@ describe 'js-compat operators', fn:
 
   it 'parses throw', fn:
     expect
-      parse_expr `throw_foo = foo || throw err('foobar')`
+      parse_expr `throw_foo = foo or throw err('foobar')`
       to_match_snapshot
 
     expect
-      parse_expr `throw_foo = foo || throw err 'foobar'`
+      parse_expr `throw_foo = foo or throw err 'foobar'`
       to_match_snapshot
 
 
@@ -32,5 +32,17 @@ describe 'try ...:', fn:
       parse `
         [err, result] = try:
           throw new Error 'foobar'
+      `
+      to_match_snapshot
+
+
+
+describe 'constants', fn:
+
+  it 'parses null', fn:
+    expect
+      parse `
+        foo = null
+        bar = nullish
       `
       to_match_snapshot

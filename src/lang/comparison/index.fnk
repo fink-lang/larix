@@ -5,7 +5,7 @@
 
 comp = fn op: infix op, 'comp'
 
-# TODO: support combining e.g. 0 < foo < 10
+
 add_comparison_operators = fn ctx:
   pipe ctx:
     add_operator comp '=='

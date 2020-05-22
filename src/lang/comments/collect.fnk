@@ -10,7 +10,6 @@ collect_comments = fn ctx, op:
   [comment, next_ctx] = collect_single_comment ctx, op
 
   match next_ctx:
-    # TODO: check not unindented?
     next_is ?, op:
       [comments, final_ctx] = collect_comments
         advance next_ctx

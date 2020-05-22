@@ -79,7 +79,7 @@ test.fnk:1:1
 1| {
     ^
 
-Expected ',' or indented new line or '}'.
+Expected ',' or indented(>=1) new line or '}'.
 
 
 
