@@ -9,4 +9,5 @@ add_iterables = fn ctx:
 
     add_named_block 'filter'
     add_named_block 'while'
+    add_named_block 'until'
     add_named_block 'find'

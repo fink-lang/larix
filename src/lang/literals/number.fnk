@@ -1,4 +1,4 @@
-{curr_value, next_value, curr_loc, next_is, advance, advance_expected} = import '@fink/prattler'
+{curr_value, next_value, curr_loc, next_is, advance} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
 {ends_with} = import '@fink/std-lib/str'
 
