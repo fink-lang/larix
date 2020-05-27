@@ -79,6 +79,17 @@ block unfold (1:0-3:0)
       number (2:20-2:21) 1
 `;
 
+exports[`until item: ... parses 1`] = `
+block until (1:0-3:0)
+  ident (1:6-1:10) item
+  :
+  comp == (2:2-2:15)
+    arithm % (2:2-2:10)
+      ident (2:2-2:6) item
+      number (2:9-2:10) 2
+    number (2:14-2:15) 0
+`;
+
 exports[`while item: ... parses 1`] = `
 block while (1:0-4:0)
   ident (1:6-1:10) item
