@@ -11,16 +11,6 @@ module (1:0-3:0)
 `;
 
 exports[`js-compat operators parses new 1`] = `
-assign = (1:0-1:30)
-  ident (1:0-1:7) new_foo
-  js-compat new (1:10-1:30)
-    call ( (1:14-1:30)
-      ident (1:14-1:20) Foobar
-      ident (1:21-1:25) spam
-      ident (1:27-1:29) ni
-`;
-
-exports[`js-compat operators parses new 2`] = `
 assign = (1:0-1:29)
   ident (1:0-1:7) new_foo
   js-compat new (1:10-1:29)
@@ -31,18 +21,6 @@ assign = (1:0-1:29)
 `;
 
 exports[`js-compat operators parses throw 1`] = `
-assign = (1:0-1:38)
-  ident (1:0-1:9) throw_foo
-  logical or (1:12-1:38)
-    ident (1:12-1:15) foo
-    js-compat throw (1:19-1:38)
-      call ( (1:25-1:38)
-        ident (1:25-1:28) err
-        string ' (1:29-1:37)
-          'foobar'
-`;
-
-exports[`js-compat operators parses throw 2`] = `
 assign = (1:0-1:37)
   ident (1:0-1:9) throw_foo
   logical or (1:12-1:37)

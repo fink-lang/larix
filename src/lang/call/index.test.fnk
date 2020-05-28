@@ -1,52 +1,13 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr, parse} = import '../..'
-
-
-describe 'call()', fn:
-
-  it 'parses empty: foobar()', fn:
-    expect
-      parse_expr `foobar()`
-      to_match_snapshot
-
-
-  it 'parses single arg: foobar(1)', fn:
-    expect
-      parse_expr `foobar(1)`
-      to_match_snapshot
-
-
-  it 'parses multiple args: foobar(1, 2)', fn:
-    expect
-      parse_expr `foobar(1, 2)`
-      to_match_snapshot
-
-
-  it 'parses multiline args', fn:
-    expect
-      parse_expr `
-        foobar(
-          1
-          2
-        )
-      `
-      to_match_snapshot
-
-
-describe 'call() - parsing failures', fn:
-
-  it `errors when missing ')'`, fn:
-    expect
-      parse `foobar(`, 'test.fnk'
-      to_match_snapshot
+{parse} = import '../..'
 
 
 describe 'pipe foo: ...', fn:
 
   it 'pipes', fn:
     expect
-      parse_expr `
+      parse `
         pipe foo:
           bar shrub
           ni

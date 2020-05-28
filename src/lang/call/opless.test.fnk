@@ -52,7 +52,7 @@ describe 'call expr', fn:
           spam
             1 + 23
             234
-          ni(na)
+          ni na
         foo bar,
           fn bar:
             spam

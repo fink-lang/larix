@@ -27,8 +27,10 @@ call (1:0-1:5)
 `;
 
 exports[`partial parses call 2`] = `
-call ( (1:0-1:3)
+call (1:0-1:4)
   partial (1:0-1:1) ?
+  group (1:2-1:4)
+
 `;
 
 exports[`partial parses call arg 1`] = `
@@ -66,8 +68,10 @@ string ' (1:0-1:14)
 `;
 
 exports[`partial parses with member 1`] = `
-call ( (1:0-1:7)
+call (1:0-1:8)
   member . (1:0-1:5)
     partial (1:0-1:1) ?
     ident (1:2-1:5) bar
+  group (1:6-1:8)
+
 `;

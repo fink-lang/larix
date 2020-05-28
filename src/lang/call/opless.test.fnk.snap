@@ -143,7 +143,7 @@ module (1:0-14:0)
     call (2:9-2:19)
       ident (2:9-2:13) spam
       ident (2:14-2:19) shrub
-  call (3:0-8:8)
+  call (3:0-8:7)
     ident (3:0-3:3) foo
     ident (4:2-4:5) bar
     call (5:2-7:7)
@@ -152,7 +152,7 @@ module (1:0-14:0)
         number (6:4-6:5) 1
         number (6:8-6:10) 23
       number (7:4-7:7) 234
-    call ( (8:2-8:8)
+    call (8:2-8:7)
       ident (8:2-8:4) ni
       ident (8:5-8:7) na
   call (9:0-14:0)

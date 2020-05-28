@@ -11,7 +11,7 @@ describe 'partial', fn:
       to_match_snapshot
 
     expect
-      parse_expr `?()`
+      parse_expr `? ()`
       to_match_snapshot
 
 
@@ -27,7 +27,7 @@ describe 'partial', fn:
 
   it 'parses with member', fn:
     expect
-      parse_expr `?.bar()`
+      parse_expr `?.bar ()`
       to_match_snapshot
 
 
