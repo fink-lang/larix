@@ -1,25 +1,4 @@
-{add_operator, add_separator} = import '@fink/prattler/symbols'
-
-{infix, terminator} = import '../symbols'
-{add_named_block, terminated_block} = import '../block'
-
-{call_expr} = import './expr'
-
-
-call = fn op, end_symbol:
-  dict:
-    ...infix op
-
-    led: fn: fn ctx, callee:
-      call_expr ctx, callee, op, fn ctx: terminated_block ctx, end_symbol
-
-
-
-add_call_with_parens = fn ctx:
-  pipe ctx:
-    add_operator call '(', ')'
-    add_separator terminator ','
-    add_separator terminator ')'
+{add_named_block} = import '../block'
 
 
 add_pipe = fn ctx:
@@ -29,5 +8,4 @@ add_pipe = fn ctx:
 
 add_call_operators = fn ctx:
   pipe ctx:
-    add_call_with_parens
     add_pipe

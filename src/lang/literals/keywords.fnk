@@ -6,5 +6,6 @@ add_keywords = fn ctx:
   pipe ctx:
     add_keyword literal 'true', 'literal'
     add_keyword literal 'false', 'literal'
+    add_keyword literal '_', 'empty'
 
 

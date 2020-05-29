@@ -1,13 +1,12 @@
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{terminator} = import '../symbols'
+{prefix, terminator} = import '../symbols'
 {terminated_block} = import '../block'
 
 
 group = fn op:
-  # TOOD: should be prefix, but overloaded with call op
   dict:
-    ...terminator op
+    ...prefix op
 
     nud: fn: fn ctx:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'

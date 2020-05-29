@@ -1,52 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`call() - parsing failures errors when missing ')' 1`] = `
-module (1:0-1:7)
-  call ( (1:0-1:7)
-    ident (1:0-1:6) foobar
-
-error:
-test.fnk:1:7
-1| foobar(
-          ^
-
-Expected ',' or indented(>=1) new line or ')'.
-
-
-
-`;
-
-exports[`call() parses empty: foobar() 1`] = `
-call ( (1:0-1:8)
-  ident (1:0-1:6) foobar
-`;
-
-exports[`call() parses multiline args 1`] = `
-call ( (1:0-4:1)
-  ident (1:0-1:6) foobar
-  number (2:2-2:3) 1
-  number (3:2-3:3) 2
-`;
-
-exports[`call() parses multiple args: foobar(1, 2) 1`] = `
-call ( (1:0-1:12)
-  ident (1:0-1:6) foobar
-  number (1:7-1:8) 1
-  number (1:10-1:11) 2
-`;
-
-exports[`call() parses single arg: foobar(1) 1`] = `
-call ( (1:0-1:9)
-  ident (1:0-1:6) foobar
-  number (1:7-1:8) 1
-`;
-
 exports[`pipe foo: ... pipes 1`] = `
-block pipe (1:0-4:0)
-  ident (1:5-1:8) foo
-  :
-  call (2:2-2:11)
-    ident (2:2-2:5) bar
-    ident (2:6-2:11) shrub
-  ident (3:2-3:4) ni
+module (1:0-4:0)
+  block pipe (1:0-4:0)
+    ident (1:5-1:8) foo
+    :
+    call (2:2-2:11)
+      ident (2:2-2:5) bar
+      ident (2:6-2:11) shrub
+    ident (3:2-3:4) ni
 `;
