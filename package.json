@@ -31,12 +31,12 @@
   },
   "dependencies": {
     "@fink/prattler": "^5.0.0",
-    "@fink/std-lib": "^2.0.0"
+    "@fink/std-lib": "^2.1.0"
   },
   "devDependencies": {
     "@fink/cli": "^5.0.0",
     "@fink/jest": "^5.0.2",
-    "@fink/larix": "^9.1.0",
+    "@fink/larix": "^9.2.0",
     "@fink/loxia": "^8.0.0",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",

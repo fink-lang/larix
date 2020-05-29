@@ -33,6 +33,28 @@ describe 'call expr', fn:
       to_match_snapshot
 
 
+  it `parses no args call expr`, fn:
+    expect
+      parse `
+        foo ()
+        [(foo ()), bar]
+        list:
+          foo ()
+          bar
+      `
+      to_match_snapshot
+
+    expect
+      parse `
+        foo _
+        [(foo _), bar]
+        list:
+          foo _
+          bar
+      `
+      to_match_snapshot
+
+
   it `parses other call expr`, fn:
     expect
       parse `
