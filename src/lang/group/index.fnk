@@ -1,6 +1,6 @@
-{add_keyword, add_operator, add_separator} = import '@fink/prattler/symbols'
+{add_operator, add_separator} = import '@fink/prattler/symbols'
 
-{prefix, literal, terminator} = import '../symbols'
+{prefix, terminator} = import '../symbols'
 {terminated_block} = import '../block'
 
 
@@ -19,5 +19,3 @@ add_group = fn ctx:
     add_operator group '('
     add_separator terminator ','
     add_separator terminator ')'
-
-    add_keyword literal '_', 'empty'
