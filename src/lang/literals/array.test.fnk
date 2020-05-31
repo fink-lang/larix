@@ -151,6 +151,7 @@ describe 'list', fn:
       parse_expr `
         list:
           1
+          # comment
           2
         `
       to_match_snapshot

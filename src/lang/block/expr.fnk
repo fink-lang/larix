@@ -142,6 +142,7 @@ add_trailing_comment = fn expr, ctx:
       comments = {...expr.comments, trailing: [item]}
 
       [{...expr, comments}, next_ctx]
+
     else:
       [expr, ctx]
 

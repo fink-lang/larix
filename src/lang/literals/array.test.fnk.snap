@@ -164,9 +164,10 @@ array list (1:0-4:0):
 `;
 
 exports[`list parses multiple elements 1`] = `
-array list (1:0-4:0):
+array list (1:0-5:0):
   number (2:2-2:3) 1
-  number (3:2-3:3) 2
+  # comment
+  number (4:2-4:3) 2
 `;
 
 exports[`list parses single elemement 1`] = `

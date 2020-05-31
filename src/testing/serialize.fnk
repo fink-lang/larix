@@ -127,12 +127,12 @@ serialize_str = fn node, serialize, indent:
   `${head}\n${indent}  ${tag}${str}`
 
 
-serialize_regex = fn node, serialize, indent:
+serialize_regex = fn node, indent:
   head = str_type_op node, indent
   `${head}\n${indent}  /${node.value}/${node.flags}`
 
 
-serialize_other = fn node, serialize, indent:
+serialize_other = fn node, indent:
   head = str_type_op node, indent
   `${head} ${node.value}`
 
@@ -193,7 +193,7 @@ serialize = fn node, indent='':
       serialize_call node, serialize, indent
 
     {type: 'regex'}:
-      serialize_regex node, serialize, indent
+      serialize_regex node, indent
 
     {type: 'spread'}:
       serialize_spread node, serialize, indent
@@ -211,7 +211,7 @@ serialize = fn node, indent='':
       serialize_block node, serialize, indent
 
     {value: {}}:
-      serialize_other node, serialize, indent
+      serialize_other node, indent
 
     else:
       head = str_type_op node, indent

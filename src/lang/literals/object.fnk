@@ -37,7 +37,7 @@ default_assignment = fn ctx, left:
 
 key_expr = fn ctx:
   match ctx:
-    next_matches ?, rx/^[`'"(]|\.\.\.$/:
+    next_matches ?, rx/^[`'"(#]|\.\.\.|---$/:
       single_expression ctx, 0
 
     next_is_key ?:
@@ -49,8 +49,8 @@ key_expr = fn ctx:
       match key_ctx:
         next_is ?, '=':
           default_assignment key_ctx, key
-        else: [
-          key, key_ctx]
+        else:
+          [key, key_ctx]
 
     else:
       add_error ctx,
@@ -58,16 +58,15 @@ key_expr = fn ctx:
         ctx.next_token
 
 
-prop_expr = fn ctx:
-  [key_or_default, value_ctx] = key_expr ctx
 
-  match value_ctx:
+get_prop = fn ctx, key_or_default:
+  match ctx:
     has_errors ?:
       left = key_or_default
-      [left, value_ctx]
+      [left, ctx]
 
     else:
-      [value, next_ctx] = value_expr value_ctx, key_or_default
+      [value, next_ctx] = value_expr ctx, key_or_default
 
       key = match key_or_default.type:
         'assign': key_or_default.left
@@ -79,6 +78,18 @@ prop_expr = fn ctx:
       [{type: 'object:prop', left: key, right: value, loc: {start, end}}, next_ctx]
 
 
+
+prop_expr = fn ctx:
+  [key_or_default, value_ctx] = key_expr ctx
+
+  match key_or_default:
+    {type: 'comment'}:
+      [key_or_default, value_ctx]
+    else:
+      get_prop value_ctx, key_or_default
+
+
+
 object = fn op:
   dict:
     ...prefix op
@@ -88,6 +99,7 @@ object = fn op:
       [{exprs, loc}, next_ctx] = terminated_block ctx, '}', prop_expr
 
       [{type: 'object', exprs, loc}, next_ctx]
+
 
 
 add_object = fn ctx:
