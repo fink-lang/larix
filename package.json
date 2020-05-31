@@ -34,10 +34,10 @@
     "@fink/std-lib": "^2.1.0"
   },
   "devDependencies": {
-    "@fink/cli": "^5.0.0",
+    "@fink/cli": "^6.0.0",
     "@fink/jest": "^5.0.2",
     "@fink/larix": "^10.0.0",
-    "@fink/loxia": "^9.2.0",
+    "@fink/loxia": "^10.0.1",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
     "jest-cli": "^26.0.0",

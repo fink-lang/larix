@@ -28,5 +28,5 @@ other = fn:
 
 add_other = fn ctx:
   pipe ctx:
-    add_identifier other()
+    add_identifier other ()
 
