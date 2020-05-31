@@ -73,8 +73,10 @@ describe 'dict', fn:
       parse_expr `
         dict:
           foo
+          # prop comment
           (bar+ni): 123
           spam
+          # trailing comment
       `
       to_match_snapshot
 
