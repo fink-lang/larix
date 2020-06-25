@@ -10,12 +10,11 @@
 
 {prefix} = import '../symbols'
 
-
-is_even = ? % 2 == 0
-
-
 {terminated_block} = import '../block'
 {next_is_new_expr, curr_indentation} = import '../block/indentation'
+
+
+is_even = ? % 2 == 0
 
 
 curr_next_adjecent = fn ctx:
