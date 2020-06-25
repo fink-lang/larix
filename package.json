@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@fink/prattler": "^5.0.0",
-    "@fink/std-lib": "^2.1.0"
+    "@fink/std-lib": "^2.2.0"
   },
   "devDependencies": {
     "@fink/cli": "^6.0.0",
@@ -39,9 +39,9 @@
     "@fink/loxia": "^10.1.1",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
-    "jest-cli": "^26.0.0",
+    "jest-cli": "^26.1.0",
     "npx-run": "^2.1.2",
-    "semantic-release": "^17.0.8"
+    "semantic-release": "^17.1.1"
   },
   "config": {
     "commitizen": {
