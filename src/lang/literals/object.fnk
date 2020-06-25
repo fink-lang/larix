@@ -2,6 +2,7 @@
 {curr_loc, curr_value} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
 {add_operator, add_separator} = import '@fink/prattler/symbols'
+{rx} = import '@fink/std-lib/regex'
 
 {prefix, terminator} = import '../symbols'
 {terminated_block, add_named_block} = import '../block'
@@ -11,8 +12,8 @@
 next_is_key = fn ctx:
   {next_token: {value}} = ctx
   match ctx:
-    next_matches ?, rx/^[0-9].*/: false
-    next_matches ?, rx/^\w+$/: true
+    next_matches ?, rx'^[0-9].*': false
+    next_matches ?, rx'^\w+$': true
     {tokenizer: {tokens: {(value): {}}}}: false
     else: true
 
@@ -37,7 +38,7 @@ default_assignment = fn ctx, left:
 
 key_expr = fn ctx:
   match ctx:
-    next_matches ?, rx/^[`'"(#]|\.\.\.|---$/:
+    next_matches ?, rx'^[`\'"(#]|\.\.\.|---$':
       single_expression ctx, 0
 
     next_is_key ?:
