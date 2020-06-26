@@ -1,4 +1,4 @@
-{add_operator, add_keyword} = import  '@fink/prattler/symbols'
+{add_keyword} = import  '@fink/prattler/symbols'
 
 {infix_right} = import  '../symbols'
 {prefix} = import  '../symbols'
@@ -10,11 +10,6 @@ prefix_logical = fn op: prefix op, 'logical'
 
 add_logical_operators = fn ctx:
   pipe ctx:
-    # TODO: deprecate?
-    add_operator logical '||'
-    add_operator logical '&&'
-    add_operator prefix_logical '!'
-
     add_keyword logical 'and'
     add_keyword logical 'or'
     add_keyword prefix_logical 'not'

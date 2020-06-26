@@ -3,41 +3,6 @@
 {parse_expr} = import '../../'
 
 
-describe 'logical', fn:
-
-  it 'parses &&', fn:
-    expect
-      parse_expr `a && b`
-      to_match_snapshot
-
-    expect
-      parse_expr `a && b && c`
-      to_match_snapshot
-
-    expect
-      parse_expr `a && b || c`
-      to_match_snapshot
-
-
-  it 'parses ||', fn:
-    expect
-      parse_expr `a || b`
-      to_match_snapshot
-
-    expect
-      parse_expr `a || b || c`
-      to_match_snapshot
-
-    expect
-      parse_expr `a || b && c`
-      to_match_snapshot
-
-
-  it 'parses !', fn:
-    expect
-      parse_expr `!a`
-      to_match_snapshot
-
 
 describe 'logical keywords:', fn:
   it 'parses and', fn:
