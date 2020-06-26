@@ -16,7 +16,7 @@ jsx_expr_container = fn ctx:
 
 
 jsx_txt = fn ctx:
-  [{value: text, loc}, next_ctx] = collect_text ctx, rx`'<\/|<|{`
+  [{value: text, loc}, next_ctx] = collect_text ctx, rx`'</|<|{`
   # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-text', value: text, loc}, next_ctx]
 
