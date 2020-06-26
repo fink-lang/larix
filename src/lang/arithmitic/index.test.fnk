@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest'
 
-{parse_expr} = import '../../'
+{parse_expr, parse} = import '../../'
 
 
 describe 'arithmitic', fn:
@@ -95,6 +95,13 @@ describe 'arithmitic', fn:
       parse_expr `foo -b`
       to_match_snapshot
 
+    expect
+      parse `
+        foo bar
+        -spam
+        `
+      to_match_snapshot
+
 
   it 'parses -', fn:
     expect
@@ -125,4 +132,6 @@ describe 'arithmitic', fn:
             + d
       `
       to_match_snapshot
+
+
 
