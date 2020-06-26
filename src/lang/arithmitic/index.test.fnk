@@ -91,6 +91,10 @@ describe 'arithmitic', fn:
       parse_expr `a * -b`
       to_match_snapshot
 
+    expect
+      parse_expr `foo -b`
+      to_match_snapshot
+
 
   it 'parses -', fn:
     expect
