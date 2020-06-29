@@ -38,9 +38,9 @@ get_expr_part = fn ctx:
 
 get_str_part = fn ctx, op:
   [{value: text, loc: {start, end}}, next_ctx] = match op:
-    '"': collect_text ctx, rx'"|\${'
-    '`': collect_text ctx, rx'`|\${'
-    else: collect_text ctx, rx`'|\${`
+    '"': collect_text ctx, rx'"|\$\{'
+    '`': collect_text ctx, rx'`|\$\{'
+    else: collect_text ctx, rx`'|\$\{`
 
   [[escaped]] = match_all text, rx'\\*$'
 
