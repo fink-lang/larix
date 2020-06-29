@@ -189,6 +189,13 @@ object (1:0-1:5)
     ident (1:1-1:4) foo
 `;
 
+exports[`object {...} parses single shorthand prop unicode letters 1`] = `
+object (1:0-1:3)
+  object:prop (1:1-1:2)
+    ident (1:1-1:2) π
+    ident (1:1-1:2) π
+`;
+
 exports[`object {...} parses single str prop} 1`] = `
 object (1:0-1:13)
   object:prop (1:1-1:12)

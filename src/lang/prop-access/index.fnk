@@ -13,7 +13,10 @@ member_expr = fn ctx, lbp:
     next_matches ?, rx'[`\'"(]':
       single_expression ctx, lbp
 
-    next_matches ?, rx'^\w+':
+    # TODO: object literal matches anything non-number and non-tokens
+    # for shorthands, and ident allows everything expect numbers
+    # should this be the same?
+    next_matches ?, rx'^[\p{L}\p{N}_]+':
       identifier advance ctx
 
     else:
