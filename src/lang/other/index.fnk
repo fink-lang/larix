@@ -1,6 +1,6 @@
 {curr_value} = import '@fink/prattler'
 {add_identifier, other_symbol} = import '@fink/prattler/symbols'
-{matches} = import '@fink/std-lib/regex'
+{matches, rx} = import '@fink/std-lib/regex'
 
 {non_binding} = import '../symbols'
 {identifier} = import '../identifier'
@@ -9,7 +9,7 @@
 
 looks_like_num = fn ctx:
   value = curr_value ctx
-  matches value, rx/^[0-9]+.*/
+  matches value, rx'^[0-9]+.*'
 
 
 other = fn:

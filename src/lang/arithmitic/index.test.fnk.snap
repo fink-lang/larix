@@ -158,6 +158,22 @@ arithm * (1:0-1:6)
     ident (1:5-1:6) b
 `;
 
+exports[`arithmitic parses - prefix 5`] = `
+call (1:0-1:6)
+  ident (1:0-1:3) foo
+  arithm:prefix - (1:4-1:6)
+    ident (1:5-1:6) b
+`;
+
+exports[`arithmitic parses - prefix 6`] = `
+module (1:0-3:0)
+  call (1:0-1:7)
+    ident (1:0-1:3) foo
+    ident (1:4-1:7) bar
+  arithm:prefix - (2:0-2:5)
+    ident (2:1-2:5) spam
+`;
+
 exports[`arithmitic parses grouped 1`] = `
 arithm * (1:0-1:11)
   group (1:0-1:7)

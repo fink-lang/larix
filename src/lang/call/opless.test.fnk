@@ -11,7 +11,7 @@ describe 'call expr', fn:
         foo bar, spam
         foo 123
         foo 'bar'
-        foo rx/spam/
+        foo rx'spam'
         foo []
         foo {}
         foo new Bar spam
@@ -19,6 +19,7 @@ describe 'call expr', fn:
         foo match:
           bar: spam
         'foo \${bar spam} ni'
+        foo -1
       `
       to_match_snapshot
 

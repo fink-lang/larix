@@ -10,12 +10,11 @@
 
 {prefix} = import '../symbols'
 
-
-is_even = ? % 2 == 0
-
-
 {terminated_block} = import '../block'
 {next_is_new_expr, curr_indentation} = import '../block/indentation'
+
+
+is_even = ? % 2 == 0
 
 
 curr_next_adjecent = fn ctx:
@@ -39,11 +38,11 @@ get_expr_part = fn ctx:
 
 get_str_part = fn ctx, op:
   [{value: text, loc: {start, end}}, next_ctx] = match op:
-    '"': collect_text ctx, rx/"|\${/
-    '`': collect_text ctx, rx/`|\${/
-    else: collect_text ctx, rx/'|\${/
+    '"': collect_text ctx, rx'"|\$\{'
+    '`': collect_text ctx, rx'`|\$\{'
+    else: collect_text ctx, rx`'|\$\{`
 
-  [[escaped]] = match_all text, rx/\\*$/
+  [[escaped]] = match_all text, rx'\\*$'
 
   match escaped:
     is_even length ?:
