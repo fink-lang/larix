@@ -13,7 +13,11 @@ next_is_key = fn ctx:
   {next_token: {value}} = ctx
   match ctx:
     next_matches ?, rx'^[0-9].*': false
+    # TODO is this not covered by the else part?
+    # TODO should we use unicode [\p{L}\p{N}_]+
+    # TODO ident allows everything expect numbers, should this be the same?
     next_matches ?, rx'^\w+$': true
+    # TODO: prattler internal
     {tokenizer: {tokens: {(value): {}}}}: false
     else: true
 

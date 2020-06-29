@@ -17,6 +17,12 @@ describe 'object {...}', fn:
       to_match_snapshot
 
 
+  it 'parses single shorthand prop unicode letters', fn:
+    expect
+      parse_expr `{π}`
+      to_match_snapshot
+
+
   it 'parses multiple shorthand exprs', fn:
     expect
       parse_expr `{foo, bar, π}`

@@ -10,6 +10,11 @@ describe 'prop access', fn:
       parse_expr `foo.bar`
       to_match_snapshot
 
+  it 'parses unicode', fn:
+    expect
+      parse_expr `foo.π`
+      to_match_snapshot
+
 
   it 'parses with taken keywords', fn:
     expect
