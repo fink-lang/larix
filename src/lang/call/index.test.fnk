@@ -7,10 +7,10 @@ describe 'pipe foo: ...', fn:
 
   it 'pipes', fn:
     expect
-      parse `
+      parse '
         pipe foo:
           bar shrub
           ni
-      `
+      '
       to_match_snapshot
 

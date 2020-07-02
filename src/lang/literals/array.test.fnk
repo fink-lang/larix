@@ -7,213 +7,213 @@ describe 'array [...]', fn:
 
   it 'parses empty: []', fn:
     expect
-      parse_expr `[]`
+      parse_expr '[]'
       to_match_snapshot
 
 
   it 'parses single elemement: [1]', fn:
     expect
-      parse_expr `[1]`
+      parse_expr '[1]'
       to_match_snapshot
 
 
   it 'parses multiple elements: [1, 2]', fn:
     expect
-      parse_expr `[1, 2]`
+      parse_expr '[1, 2]'
       to_match_snapshot
 
     expect
-      parse_expr `[1, 2, 3]`
+      parse_expr '[1, 2, 3]'
       to_match_snapshot
 
 
   it 'parses leading commas: [,, foo]', fn:
     expect
-      parse_expr `[,, foo]`
+      parse_expr '[,, foo]'
       to_match_snapshot
 
 
   it 'parses middle commas: [,, foo]', fn:
     expect
       # [a, , ..., b, c]
-      parse_expr `[foo, ,bar]`
+      parse_expr '[foo, ,bar]'
       to_match_snapshot
 
 
   it 'parses trailing commas: [...foo,,]', fn:
     expect
-      parse_expr `[...foo, ]`
+      parse_expr '[...foo, ]'
       to_match_snapshot
 
     expect
-      parse_expr `[...foo, , ]`
+      parse_expr '[...foo, , ]'
       to_match_snapshot
 
     expect
-      parse_expr `[, ...foo, ]`
+      parse_expr '[, ...foo, ]'
       to_match_snapshot
 
 
 describe 'array block', fn:
   it 'parses empty', fn:
     expect
-      parse_expr `
+      parse_expr '
         [
-        ]`
+        ]'
       to_match_snapshot
 
 
   it 'parses single elemement', fn:
     expect
-      parse_expr `
+      parse_expr '
         [
           1
-        ]`
+        ]'
       to_match_snapshot
 
 
   it 'parses multiple elements', fn:
     expect
-      parse_expr `
+      parse_expr '
         [
           1
           2
-        ]`
+        ]'
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         [
           1, 2
-        ]`
+        ]'
       to_match_snapshot
 
 
   it 'parses leading commas', fn:
     expect
-      parse_expr `
+      parse_expr '
         [
           ,
           ,
           foo
-        ]`
+        ]'
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         [
           ,,
           foo
-        ]`
+        ]'
       to_match_snapshot
 
 
   it 'parses trailing commas', fn:
     expect
-      parse_expr `
+      parse_expr '
         [
           foo
           ,
-        ]`
+        ]'
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         [
           foo
           ,
           ,
-        ]`
+        ]'
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         [
           ,
           ...foo
           ,
-        ]`
+        ]'
       to_match_snapshot
 
 
 describe 'list', fn:
   it 'parses single elemement', fn:
     expect
-      parse_expr `
+      parse_expr '
         list:
           1
-        `
+        '
       to_match_snapshot
 
 
   it 'parses multiple elements', fn:
     expect
-      parse_expr `
+      parse_expr '
         list:
           1
           # comment
           2
-        `
+        '
       to_match_snapshot
 
 
   it 'parses leading commas', fn:
     expect
-      parse_expr `
+      parse_expr '
         list:
           ,
           ,
           foo
-        `
+        '
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         list:
           ,,
           foo
-        `
+        '
       to_match_snapshot
 
 
   it 'parses trailing commas', fn:
     expect
-      parse_expr `
+      parse_expr '
         list:
           foo
           ,
-        `
+        '
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         list:
           foo
           ,
           ,
-        `
+        '
       to_match_snapshot
 
     expect
-      parse_expr `
+      parse_expr '
         list:
           ,
           ...foo
           ,
-        `
+        '
       to_match_snapshot
 
 
 describe 'array [...] - parsing failures', fn:
-  it `errors when missing ']'`, fn:
+  it "errors when missing ']'", fn:
     expect
-      parse `[`, 'test.fnk'
+      parse '[', 'test.fnk'
       to_match_snapshot
 
 
-  it `errors when missing ','`, fn:
+  it "errors when missing ','", fn:
     expect
-      parse `[1)]`, 'test.fnk'
+      parse '[1)]', 'test.fnk'
       to_match_snapshot
 
 

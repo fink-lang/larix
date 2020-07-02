@@ -1,5 +1,5 @@
 {curr_is, curr_value, curr_loc} = import '@fink/prattler'
-{next_is, next_is_end} = import '@fink/prattler'
+{next_is, next_matches, next_is_end} = import '@fink/prattler'
 {advance_expected, advance, collect_text} = import '@fink/prattler'
 {length} = import '@fink/std-lib/iter'
 {rx} = import '@fink/std-lib/regex'
@@ -16,7 +16,7 @@ jsx_expr_container = fn ctx:
 
 
 jsx_txt = fn ctx:
-  [{value: text, loc}, next_ctx] = collect_text ctx, rx`'</|<|\{`
+  [{value: text, loc}, next_ctx] = collect_text ctx, rx"'</|[<{]"
   # TODO: all other types use foo:bar to denote sub-types
   [{type: 'jsx-text', value: text, loc}, next_ctx]
 
@@ -60,10 +60,7 @@ jsx_attr_value = fn ctx:
     next_is ?, '{':
       jsx_expr_container advance ctx
 
-    next_is ?, `"`:
-      jsx_string_val advance ctx
-
-    next_is ?, `'`:
+    next_matches ?, rx'[\'"]':
       jsx_string_val advance ctx
 
     else:

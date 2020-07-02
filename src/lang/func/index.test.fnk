@@ -6,25 +6,25 @@
 describe 'func: fn ...: ...', fn:
   it 'parses no arg: fn: foo', fn:
     expect
-      parse_expr `fn: foo`
+      parse_expr 'fn: foo'
       to_match_snapshot
 
 
   it 'parses single arg: fn foo: bar', fn:
     expect
-      parse_expr `fn foo: bar`
+      parse_expr 'fn foo: bar'
       to_match_snapshot
 
 
   it 'parses single line: fn foo, bar: foo', fn:
     expect
-      parse_expr `fn foo, bar: foo`
+      parse_expr 'fn foo, bar: foo'
       to_match_snapshot
 
 
   it 'parses multi line: fn foo, bar=1: foo', fn:
     expect
-      parse_expr `
+      parse_expr '
         ---
         doc comment
         ---
@@ -32,17 +32,17 @@ describe 'func: fn ...: ...', fn:
           foo
           bar
           # trailing func comment
-      `
+      '
       to_match_snapshot
 
 
   it 'parses multi line args', fn:
     expect
-      parse_expr `
+      parse_expr '
         fn
           foo
           bar=ni
         :
           foo + bar
-      `
+      '
       to_match_snapshot

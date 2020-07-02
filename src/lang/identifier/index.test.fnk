@@ -6,11 +6,11 @@
 describe 'indentifiers', fn:
   it 'parses a word', fn:
     expect
-      parse_expr `  foobar  `
+      parse_expr '  foobar  '
       to_match_snapshot
 
 
   it 'parses a non-word', fn:
     expect
-      parse_expr `  π  `
+      parse_expr '  π  '
       to_match_snapshot

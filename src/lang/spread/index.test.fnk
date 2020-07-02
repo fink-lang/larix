@@ -7,22 +7,22 @@ describe 'spread', fn:
 
   it 'parses single line: ...foobar', fn:
     expect
-      parse_expr `...foobar`
+      parse_expr '...foobar'
       to_match_snapshot
 
 
   it 'parses standalone', fn:
     expect
-      parse_expr `[a, ..., b]`
+      parse_expr '[a, ..., b]'
       to_match_snapshot
 
 
   it 'parses multiple', fn:
     expect
-      parse_expr `
+      parse_expr '
         (
           ...a
           ...b
-        )`
+        )'
       to_match_snapshot
 

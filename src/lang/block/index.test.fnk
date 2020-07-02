@@ -6,62 +6,62 @@
 describe 'expression block', fn:
   it 'parses empty', fn:
     expect
-      parse ``
+      parse ''
       to_match_snapshot
 
 
   it 'parses single expr', fn:
     expect
-      parse `1`
+      parse '1'
       to_match_snapshot
 
 
   it 'parses multiple', fn:
     expect
-      parse `
+      parse '
         1
         2
         3
-      `
+      '
       to_match_snapshot
 
 
   it 'ignores trailing comma before newline', fn:
     expect
-      parse `
+      parse '
         1,
         2
-      `
+      '
       to_match_snapshot
 
 
   it 'parses with leading empty expressions', fn:
     expect
-      parse `
+      parse '
         1
         ,,2
         3
-      `
+      '
       to_match_snapshot
 
 
   it 'parses with trailing empty expressions', fn:
     expect
-      parse `
+      parse '
         1
         2,,
         3,
-      `
+      '
       to_match_snapshot
 
 
   it 'parses with empty expressions', fn:
     expect
-      parse `
+      parse '
         ,
         2
         ,
-      `
+      '
       to_match_snapshot
 
 
@@ -69,27 +69,27 @@ describe 'single line expressions', fn:
 
   it 'parses multiple', fn:
     expect
-      parse `1, 2`
+      parse '1, 2'
       to_match_snapshot
 
 
   it 'parses leading empty', fn:
     expect
-      parse `,1, 2`
+      parse ',1, 2'
       to_match_snapshot
 
     expect
-      parse `,,1, 2`
+      parse ',,1, 2'
       to_match_snapshot
 
 
   it 'parses trailing empty', fn:
     expect
-      parse `1,`
+      parse '1,'
       to_match_snapshot
 
     expect
-      parse `2,,`
+      parse '2,,'
       to_match_snapshot
 
 
@@ -97,7 +97,7 @@ describe 'single line expressions', fn:
 describe 'nesting', fn:
   it 'parses nested', fn:
     expect
-      parse `
+      parse '
         (
           foo
 
@@ -114,58 +114,58 @@ describe 'nesting', fn:
           spam # trailing same line comment
 
           # trailing block comment
-        )`
+        )'
       to_match_snapshot
 
 
   it 'parses indentation', fn:
     expect
-      parse `
+      parse '
         foo = fn: fn: fn:
           a + b
         spam
-        `
+        '
       to_match_snapshot
 
     expect
-      parse `
+      parse '
         foo = fn:
           shrub = fn: fn:
             a + b
           shrub
         spam
-        `
+        '
       to_match_snapshot
 
     expect
-      parse `
+      parse '
         foo = fn:
           shrub = fn:
             fn: a + b
           shrub
         spam
-        `
+        '
       to_match_snapshot
 
 
 describe 'parse failures', fn:
   it 'errors due to end of indentation', fn:
     expect
-      parse `
+      parse '
           foo = (
             bar
             spam
-          shrub`
+          shrub'
         'test.fnk'
       to_match_snapshot
 
 
   it 'errors due to end of indentation', fn:
     expect
-      parse `
+      parse '
         foo = (
           bar = (
-        spam`
+        spam'
         'test.fnk'
       to_match_snapshot
 
@@ -173,6 +173,6 @@ describe 'parse failures', fn:
 
   it 'errors due to missing closing symbol', fn:
     expect
-      parse `(1,2`, 'test.fnk'
+      parse '(1,2', 'test.fnk'
       to_match_snapshot
 

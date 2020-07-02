@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`import \`foobar\` parses import 1`] = `
+exports[`import parses import 1`] = `
 prefix import (1:0-1:17)
-  string \` (1:7-1:17)
+  string ' (1:7-1:17)
     './foobar'
 `;

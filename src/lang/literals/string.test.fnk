@@ -15,7 +15,7 @@ describe 'strings', fn:
       to_match_snapshot
 
     expect
-      parse_expr `''`
+      parse_expr "''"
       to_match_snapshot
 
 
@@ -29,17 +29,17 @@ describe 'strings', fn:
       to_match_snapshot
 
     expect
-      parse_expr `'foo bar'`
+      parse_expr "'foo bar'"
       to_match_snapshot
 
 
   it 'parses multi line strings', fn:
     expect
-      parse_expr `'\n  foobar\n    spam shrub\n   ni'`
+      parse_expr "'\n  foobar\n    spam shrub\n   ni'"
       to_match_snapshot
 
     expect
-      parse_expr `fn:\n  '\n    foobar\n     spam shrub\n    ni\n  '`
+      parse_expr "fn:\n  '\n    foobar\n     spam shrub\n    ni\n  '"
       to_match_snapshot
 
 
@@ -50,15 +50,15 @@ describe 'strings', fn:
       to_match_snapshot
 
     expect
-      parse_expr `' $ \\n \\t \\' \\\\'`
+      parse_expr "' $ \\n \\t \\' \\\\'"
       to_match_snapshot
 
     expect
-      parse_expr `" $ \\n \\t \\" \\\\"`
+      parse_expr '" $ \\n \\t \\" \\\\"'
       to_match_snapshot
 
     expect
-      parse_expr `'foo \\\${bar + spam}'`
+      parse_expr "'foo \\\${bar + spam}'"
       to_match_snapshot
 
 
@@ -68,11 +68,11 @@ describe 'strings', fn:
       to_match_snapshot
 
     expect
-      parse_expr `foo'bar spam'`
+      parse_expr "foo'bar spam'"
       to_match_snapshot
 
     expect
-      parse_expr `foo"bar spam"`
+      parse_expr 'foo"bar spam"'
       to_match_snapshot
 
 
@@ -82,26 +82,26 @@ describe 'strings', fn:
       to_match_snapshot
 
     expect
-      parse_expr `'foo \${bar + spam} spam'`
+      parse_expr "'foo \${bar + spam} spam'"
       to_match_snapshot
 
     expect
-      parse_expr `"foo \${bar + spam} spam"`
+      parse_expr '"foo \${bar + spam} spam"'
       to_match_snapshot
 
     expect
-      parse_expr `"foo \${bar + spam} spam"`
+      parse_expr '"foo \${bar + spam} spam"'
       to_match_snapshot
 
 
   it 'parses multiline template strings', fn:
     expect
-      parse_expr `
+      parse_expr "
         '\n  \${foo}:\${bar}:\${
           shrub = 1234
           shrub * 10
         }\n\n  ni\n'
-        `
+        "
       to_match_snapshot
 
 
@@ -111,12 +111,12 @@ describe 'strings', fn:
       to_match_snapshot
 
 
-  it `handles default indentation for lbp`, fn:
+  it 'handles default indentation for lbp', fn:
     expect
-      parse `
+      parse "
         'foobar'
         'spam'
-        `
+        "
       to_match_snapshot
 
 
@@ -130,6 +130,6 @@ describe 'string - parsing failures', fn:
 
   it 'errors when not tagged with identifier', fn:
     expect
-      parse `12'bar spam'`, 'test.fnk'
+      parse "12'bar spam'", 'test.fnk'
       to_match_snapshot
 

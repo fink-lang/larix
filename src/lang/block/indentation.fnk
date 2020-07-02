@@ -68,7 +68,7 @@ pop_block = fn ctx:
         else:
           ind = min_indentation ctx
           [, err_ctx] = add_error ctx,
-            `Expected ',' or indented(>=${ind}) new line or ${inspect end_symbol}.`
+            "Expected ',' or indented(>=${ind}) new line or ${inspect end_symbol}."
             ctx.next_token
 
           err_ctx
