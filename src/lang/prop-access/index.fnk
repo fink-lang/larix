@@ -10,19 +10,16 @@
 
 member_expr = fn ctx, lbp:
   match ctx:
-    next_matches ?, rx'[`\'"(]':
+    next_matches ?, rx'^[`\'"(]':
       single_expression ctx, lbp
 
-    # TODO: object literal matches anything non-number and non-tokens
-    # for shorthands, and ident allows everything expect numbers
-    # should this be the same?
-    next_matches ?, rx'^[\p{L}\p{N}_]+':
-      identifier advance ctx
-
-    else:
+    next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
       add_error ctx,
         'Expected member key to be an ident, string or group expr.'
         ctx.next_token
+
+    else:
+      identifier advance ctx
 
 
 prop_access = fn op, type:

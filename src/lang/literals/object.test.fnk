@@ -7,107 +7,162 @@ describe 'object {...}', fn:
 
   it 'parses empty: {}', fn:
     expect
-      parse_expr `{}`
+      parse_expr '{}'
       to_match_snapshot
 
 
   it 'parses single shorthand prop', fn:
     expect
-      parse_expr `{foo}`
+      parse_expr '{foo}'
+
       to_match_snapshot
 
 
-  it 'parses single shorthand prop unicode letters', fn:
+  it 'parses single shorthand value', fn:
     expect
-      parse_expr `{π}`
-      to_match_snapshot
-
-
-  it 'parses multiple shorthand exprs', fn:
-    expect
-      parse_expr `{foo, bar, π}`
+      parse_expr "{'foo'}"
       to_match_snapshot
 
 
   it 'parses multiple shorthand exprs', fn:
     expect
-      parse_expr `{foo, bar: 123, shrub: 'ni'}`
+      parse_expr '{foo, bar, π}'
+      to_match_snapshot
+
+
+  it 'parses multiple shorthand exprs', fn:
+    expect
+      parse_expr "{foo, bar: 123, shrub: 'ni'}"
       to_match_snapshot
 
 
   it 'parses single prop', fn:
     expect
-      parse_expr `{foo: spam}`
+      parse_expr '{foo: spam}'
       to_match_snapshot
 
 
   it 'parses spread prop', fn:
     expect
-      parse_expr `{foo, ...bar}`
+      parse_expr '{foo, ...bar}'
       to_match_snapshot
 
 
-  it `parses single str prop}`, fn:
+  it 'parses single str prop}', fn:
     expect
-      parse_expr `{'foo': spam}`
+      parse_expr "{'foo': spam}"
       to_match_snapshot
 
 
   it 'parses default assignment prop', fn:
     expect
-      parse_expr `{foo=123}`
+      parse_expr '{foo=123}'
       to_match_snapshot
 
 
-  it `parses calculated prop`, fn:
+  it 'parses calculated prop', fn:
     expect
-      parse_expr `{foo, (bar+ni): 123, spam}`
+      parse_expr '{foo, (bar+ni): 123, spam}'
       to_match_snapshot
 
 
-  it `parses keywords as keys`, fn:
+  it 'parses keywords as keys', fn:
     expect
-      parse_expr `
+      parse_expr '
         {fn, match, fold, unfold, map, find, filter, await, attempt}
-      `
+      '
       to_match_snapshot
+
+
+  it 'parses unicode as keys', fn:
+    expect
+      parse_expr '{π, ƒ, ∑}'
+      to_match_snapshot
+
 
 
 describe 'dict', fn:
   it 'parses', fn:
     expect
-      parse_expr `
+      parse_expr '
         dict:
           foo
           # prop comment
           (bar+ni): 123
           spam
           # trailing comment
-      `
+      '
       to_match_snapshot
 
 
 describe 'object {...} - parsing failures', fn:
-  it `errors when missing '}'`, fn:
+  it 'errors when missing `}`', fn:
     expect
-      parse `{`, 'test.fnk'
+      parse '{', 'test.fnk'
       to_match_snapshot
 
 
-  it `errors when encountering bad end of prop`, fn:
+  it 'errors when encountering bad end of prop', fn:
     expect
-      parse `{foo) bar}`, 'test.fnk'
+      parse '{foo) bar}', 'test.fnk'
       to_match_snapshot
 
 
-  it `errors when encountering bad key`, fn:
+  it 'errors when encountering bad key', fn:
     expect
-      parse `{2*3: bar}`, 'test.fnk'
+      parse '{2*3: bar}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{+foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{-foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{*foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{/foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{?foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{:foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{{foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{}foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{[foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{]foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{)foo}', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse '{,foo}', 'test.fnk'
       to_match_snapshot
 
 
-  it `errors when encountering bad start of prop key`, fn:
-
+  it 'errors when encountering bad start of prop key', fn:
     expect
-      parse `{foo, [bar]: spam}`, 'test.fnk'
+      parse '{foo, [bar]: spam}', 'test.fnk'
       to_match_snapshot

@@ -1,5 +1,4 @@
 {next_is, next_matches, has_errors, advance} = import '@fink/prattler'
-{curr_loc, curr_value} = import '@fink/prattler'
 {add_error} = import '@fink/prattler/errors'
 {add_operator, add_separator} = import '@fink/prattler/symbols'
 {rx} = import '@fink/std-lib/regex'
@@ -7,6 +6,7 @@
 {prefix, terminator} = import '../symbols'
 {terminated_block, add_named_block} = import '../block'
 {single_expression} = import '../block/expr'
+{identifier} = import '../identifier'
 
 
 next_is_key = fn ctx:
@@ -16,8 +16,9 @@ next_is_key = fn ctx:
     # TODO is this not covered by the else part?
     # TODO should we use unicode [\p{L}\p{N}_]+
     # TODO ident allows everything expect numbers, should this be the same?
-    next_matches ?, rx'^\w+$': true
+    next_matches ?, rx'^[\p{L}\p{N}_$]+': true
     # TODO: prattler internal
+    # TOOD: should we allow anything but separators?
     {tokenizer: {tokens: {(value): {}}}}: false
     else: true
 
@@ -45,23 +46,19 @@ key_expr = fn ctx:
     next_matches ?, rx'^[`\'"(#]|\.\.\.|---$':
       single_expression ctx, 0
 
-    next_is_key ?:
-      key_ctx = advance ctx
-      loc = curr_loc key_ctx
-      value = curr_value key_ctx
-      key = {type: 'ident', value, loc}
+    next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
+      add_error ctx,
+        "Expected prop-key but found '${ctx.next_token.value}'."
+        ctx.next_token
+
+    else:
+      [key, key_ctx] = identifier advance ctx
 
       match key_ctx:
         next_is ?, '=':
           default_assignment key_ctx, key
         else:
           [key, key_ctx]
-
-    else:
-      add_error ctx,
-        `Expected prop-key but found '${ctx.next_token.value}'.`
-        ctx.next_token
-
 
 
 get_prop = fn ctx, key_or_default:

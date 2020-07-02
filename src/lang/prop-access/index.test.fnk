@@ -10,9 +10,22 @@ describe 'prop access', fn:
       parse_expr `foo.bar`
       to_match_snapshot
 
-  it 'parses unicode', fn:
+
+  it 'parses various idents', fn:
     expect
       parse_expr `foo.π`
+      to_match_snapshot
+
+    expect
+      parse_expr `foo.$spam`
+      to_match_snapshot
+
+    expect
+      parse_expr `foo._spam`
+      to_match_snapshot
+
+    expect
+      parse_expr `foo.∑`
       to_match_snapshot
 
 
@@ -26,13 +39,13 @@ describe 'prop access', fn:
       to_match_snapshot
 
 
-  it `parses member expr`, fn:
+  it `parses member with str expr`, fn:
     expect
       parse_expr `foo.'bar spam'`
       to_match_snapshot
 
 
-  it 'parses member expr', fn:
+  it 'parses member with group expr', fn:
     expect
       parse_expr 'foo.(key)'
       to_match_snapshot
@@ -42,4 +55,54 @@ describe 'prop access', fn:
     expect
       parse 'foo.[bar]', 'test.fnk'
       to_match_snapshot
+
+    expect
+      parse 'foo.+bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.-bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.*bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo./bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.?bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.:bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.{bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.}bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.[bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.]bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.)bar', 'test.fnk'
+      to_match_snapshot
+
+    expect
+      parse 'foo.,bar', 'test.fnk'
+      to_match_snapshot
+
+
 
