@@ -10,14 +10,14 @@ print = fn ast:
         map {error}:
           error
         fold err, str='':
-          `${str}${err}\n`
+          '${str}${err}\n'
 
-      `
+      '
         ${serialize ast}
 
         error:
         ${errors_text}
-      `
+      '
     else:
       serialize ast
 

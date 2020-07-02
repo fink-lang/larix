@@ -7,57 +7,57 @@ describe 'JSX <Foobar>...</Foobar>', fn:
 
   it 'parses self closing elem: <Foobar />', fn:
     expect
-      parse_expr `<Foobar />`
+      parse_expr '<Foobar />'
       to_match_snapshot
 
 
   it 'parses self closing elem with short attr: <Foobar spam />', fn:
     expect
-      parse_expr `<Foobar spam />`
+      parse_expr '<Foobar spam />'
       to_match_snapshot
 
 
   it 'parses self closing elem with str attr: <Foobar spam="ni" />', fn:
     expect
-      parse_expr `<Foobar spam="ni" />`
+      parse_expr '<Foobar spam="ni" />'
       to_match_snapshot
 
 
   it 'parses self closing elem with str attr: <Foobar spam=\'ni\' />', fn:
     expect
-      parse_expr `<Foobar spam='ni' />`
+      parse_expr '<Foobar spam="ni" />'
       to_match_snapshot
 
 
   it 'parses self closing elem with expr attr: <Foobar spam={ni} />', fn:
     expect
-      parse_expr `<Foobar spam={ni} />`
+      parse_expr '<Foobar spam={ni} />'
       to_match_snapshot
 
 
   it 'parses empty elem: <Foobar></Foobar>', fn:
     expect
-      parse_expr `<Foobar></Foobar>`
+      parse_expr '<Foobar></Foobar>'
       to_match_snapshot
 
 
   it 'parses elem with children: <Foobar><Spam /></Foobar>', fn:
     expect
-      parse_expr `
+      parse_expr '
         <Foobar ni>
           <Spam />
         </Foobar>
-      `
+      '
       to_match_snapshot
 
 
   it 'parses elem with expr in body: <Foobar> {...} </Foobar>', fn:
     expect
-      parse_expr `
+      parse_expr '
         <Foobar>
           {1 + 2}
         </Foobar>
-      `
+      '
       to_match_snapshot
 
 

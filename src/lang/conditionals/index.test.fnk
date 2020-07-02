@@ -7,7 +7,7 @@ describe 'match ...:', fn:
 
   it 'parses simple', fn:
     expect
-      parse `
+      parse '
         match item:
           test_pattern: result
 
@@ -15,13 +15,13 @@ describe 'match ...:', fn:
           else: spam
           # trailing comment
         foobar
-      `
+      '
       to_match_snapshot
 
 
   it 'parses complex: {foo}: bar', fn:
     expect
-      parse `
+      parse '
         match item:
           # nested object pattern
           {foo, spam: {ni}}: bar
@@ -35,18 +35,18 @@ describe 'match ...:', fn:
           else:
             # fallback for no match
             spam
-      `
+      '
       to_match_snapshot
 
 
   it 'parses partials', fn:
     expect
-      parse `
+      parse '
         match foo:
           {bar: ? > 1}: ni
 
           is_str ?: foo
 
           [..., ?] > shrub: ni
-      `
+      '
       to_match_snapshot

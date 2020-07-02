@@ -6,38 +6,38 @@
 describe 'numbers', fn:
   it 'parses int 12345', fn:
     expect
-      parse_expr ` 12345  `
+      parse_expr ' 12345  '
       to_match_snapshot
 
 
   it 'parses hex, oct, bin', fn:
     expect
-      parse `
+      parse '
         0x123456789abcdef0
         0x123456789abcde
         0o12345670
         0b101010
-      `
+      '
       to_match_snapshot
 
 
   it 'parses float 123.456', fn:
     expect
-      parse_expr `  123.456  `
+      parse_expr '  123.456  '
       to_match_snapshot
 
 
   it 'parses float 123.456e10', fn:
     expect
-      parse `
+      parse '
         123.456e78
         123.456e+78
         123.456e-78
-      `
+      '
       to_match_snapshot
 
 
   it 'errors when missing exponent', fn:
     expect
-      parse `123.456e * 78`, 'test.fnk'
+      parse '123.456e * 78', 'test.fnk'
       to_match_snapshot

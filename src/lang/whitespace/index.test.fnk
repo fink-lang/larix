@@ -13,7 +13,7 @@ describe 'whitespace', fn:
       start_parser
 
   it 'ignores whitespace', fn:
-    ctx = init_test_parser ` \t\n`
+    ctx = init_test_parser ' \t\n'
 
     expect
       next_is_end ctx

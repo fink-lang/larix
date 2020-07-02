@@ -7,7 +7,7 @@ describe 'comments', fn:
 
   it 'parses line comments', fn:
     expect
-      parse `
+      parse '
         # leading expression
         # multi line
         spam = ni
@@ -20,13 +20,13 @@ describe 'comments', fn:
           # trailing func
 
         ni
-      `
+      '
       to_match_snapshot
 
 
   it 'parses doc-comment', fn:
     expect
-      parse `
+      parse '
         ---
         foobar spam ham
         ---
@@ -34,6 +34,6 @@ describe 'comments', fn:
 
         ---bar---
         spam
-      `
+      '
       to_match_snapshot
 

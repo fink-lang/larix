@@ -6,17 +6,17 @@
 describe 'keywords', fn:
   it 'parses true', fn:
     expect
-      parse `
+      parse '
         foo = true
         bar = trueish
-      `
+      '
       to_match_snapshot
 
 
   it 'parses false', fn:
     expect
-      parse `
+      parse '
         foo = false
         bar = falseish
-      `
+      '
       to_match_snapshot

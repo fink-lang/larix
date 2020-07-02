@@ -7,84 +7,84 @@ describe 'comparison', fn:
 
   it 'parses ==', fn:
     expect
-      parse_expr `a == b`
+      parse_expr 'a == b'
       to_match_snapshot
 
     expect
-      parse_expr `a + b == c`
+      parse_expr 'a + b == c'
       to_match_snapshot
 
     expect
-      parse_expr `a == b == c`
+      parse_expr 'a == b == c'
       to_match_snapshot
 
 
   it 'parses !=', fn:
     expect
-      parse_expr `a != b`
+      parse_expr 'a != b'
       to_match_snapshot
 
     expect
-      parse_expr `a != b != c`
+      parse_expr 'a != b != c'
       to_match_snapshot
 
     expect
-      parse_expr `a + b != c`
+      parse_expr 'a + b != c'
       to_match_snapshot
 
 
   it 'parses <=', fn:
     expect
-      parse_expr `a <= b`
+      parse_expr 'a <= b'
       to_match_snapshot
 
     expect
-      parse_expr `a <= b <= c`
+      parse_expr 'a <= b <= c'
       to_match_snapshot
 
     expect
-      parse_expr `a + b <= c`
+      parse_expr 'a + b <= c'
       to_match_snapshot
 
 
   it 'parses >=', fn:
     expect
-      parse_expr `a >= b`
+      parse_expr 'a >= b'
       to_match_snapshot
 
     expect
-      parse_expr `a >= b >= c`
+      parse_expr 'a >= b >= c'
       to_match_snapshot
 
     expect
-      parse_expr `a + b >= c`
+      parse_expr 'a + b >= c'
       to_match_snapshot
 
 
   it 'parses >', fn:
     expect
-      parse_expr `a > b`
+      parse_expr 'a > b'
       to_match_snapshot
 
     expect
-      parse_expr `a > b > c`
+      parse_expr 'a > b > c'
       to_match_snapshot
 
     expect
-      parse_expr `a + b > c`
+      parse_expr 'a + b > c'
       to_match_snapshot
 
 
   it 'parses <', fn:
     expect
-      parse_expr `a < b`
+      parse_expr 'a < b'
       to_match_snapshot
 
     expect
-      parse_expr `a < b < c`
+      parse_expr 'a < b < c'
       to_match_snapshot
 
     expect
-      parse_expr `a + b < c`
+      parse_expr 'a + b < c'
       to_match_snapshot
 

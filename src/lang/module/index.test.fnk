@@ -7,7 +7,7 @@ describe 'module', fn:
 
   it 'parses module', fn:
     expect
-      parse `
+      parse '
         # leading module comment
 
         # expr comment
@@ -15,5 +15,5 @@ describe 'module', fn:
         spam = ni
 
         # trailing module comment
-      `
+      '
       to_match_snapshot

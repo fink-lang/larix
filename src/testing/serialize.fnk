@@ -12,7 +12,7 @@ get_comment = fn indent, comments:
         else:
           lines = split value, '\n'
           pipe lines:
-            map line: `${indent}--- ${line}`
+            map line: '${indent}--- ${line}'
             join '\n'
     join '\n'
 
@@ -21,21 +21,21 @@ trailing_comment = fn indent, node:
   match node:
     {comments: {trailing: 0 < length ?}}:
       comment = get_comment '${indent}', node.comments.trailing
-      `\n${comment}`
+      '\n${comment}'
     else: ''
 
 
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   head = match op:
     op and ? != type:
-      `${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})`
+      '${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})'
     else:
-      `${type} (${start.line}:${start.column}-${end.line}:${end.column})`
+      '${type} (${start.line}:${start.column}-${end.line}:${end.column})'
 
   leading = match comments:
     {leading: 0 < length ?}:
       comment = get_comment '${indent}', comments.leading
-      `${comment}\n`
+      '${comment}\n'
     else:  ''
 
   '${leading}${indent}${head}'
@@ -44,53 +44,53 @@ str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
 serialize_block = fn node, serialize, indent:
   head = str_type_op node, indent
   exprs = pipe node.exprs:
-    map expr: serialize expr, `${indent}  `
+    map expr: serialize expr, '${indent}  '
     join '\n'
 
   match node:
     {args: {}}:
       args = pipe node.args:
-        map expr: serialize expr, `${indent}  `
+        map expr: serialize expr, '${indent}  '
         join '\n'
 
       arg_str = match node.args:
         0 == length ?: ':'
-        else: `\n${args}\n${indent}  :`
+        else: '\n${args}\n${indent}  :'
 
-      `${head}${arg_str}\n${exprs}`
+      '${head}${arg_str}\n${exprs}'
 
     else:
-      `${head}\n${exprs}`
+      '${head}\n${exprs}'
 
 
 serialize_call = fn node, serialize, indent:
   head = str_type_op node, indent
 
-  callee = serialize node.callee, `${indent}  `
+  callee = serialize node.callee, '${indent}  '
   args = pipe node.args:
-    map expr: serialize expr, `${indent}  `
+    map expr: serialize expr, '${indent}  '
     join '\n'
 
   arg_str = match node.args:
-    0 < length ?: `\n${args}`
+    0 < length ?: '\n${args}'
     else: ''
 
-  `${head}\n${callee}${arg_str}`
+  '${head}\n${callee}${arg_str}'
 
 
 serialize_infix = fn node, serialize, indent:
   head = str_type_op node, indent
 
-  left = serialize node.left, `${indent}  `
-  right = serialize node.right, `${indent}  `
+  left = serialize node.left, '${indent}  '
+  right = serialize node.right, '${indent}  '
 
-  `${head}\n${left}\n${right}`
+  '${head}\n${left}\n${right}'
 
 
 serialize_prefix = fn node, serialize, indent:
   head = str_type_op node, indent
-  right = serialize node.right, `${indent}  `
-  `${head}\n${right}`
+  right = serialize node.right, '${indent}  '
+  '${head}\n${right}'
 
 
 serialize_spread = fn node, serialize, indent:
@@ -103,38 +103,38 @@ serialize_str = fn node, serialize, indent:
   head = str_type_op node, indent
 
   tag = match node:
-    {tag: {}}: ` ${node.tag.value}`
+    {tag: {}}: ' ${node.tag.value}'
     else: ''
 
   [lne, ...lns] = pipe node.exprs:
     map part:
       match part.type:
-        'string:text': `'${part.value}'`
+        'string:text': "'${part.value}'"
         else:
           value = serialize part, '${indent}  '
-          `\n${value}\n`
+          '\n${value}\n'
     join ''
     split ?, '\n'
 
-  pipe lns: map ln: `${indent}  ${ln}`
+  pipe lns: map ln: '${indent}  ${ln}'
 
   indented = pipe lns:
-    map ln: `${indent}  ${ln}`
+    map ln: '${indent}  ${ln}'
 
   str = pipe [lne, ...indented]:
     join '\n'
 
-  `${head}\n${indent}  ${tag}${str}`
+  '${head}\n${indent}  ${tag}${str}'
 
 
 serialize_regex = fn node, indent:
   head = str_type_op node, indent
-  `${head}\n${indent}  /${node.value}/${node.flags}`
+  '${head}\n${indent}  /${node.value}/${node.flags}'
 
 
 serialize_other = fn node, indent:
   head = str_type_op node, indent
-  `${head} ${node.value}`
+  '${head} ${node.value}'
 
 
 serialize_jsx = fn node, serialize, indent:
@@ -143,45 +143,45 @@ serialize_jsx = fn node, serialize, indent:
   match node:
     {type: 'jsx-elem'}:
       props = pipe node.props:
-        map expr: serialize expr, `${indent}  `
+        map expr: serialize expr, '${indent}  '
         join '\n'
 
       children = pipe node.children:
-        map expr: serialize expr, `${indent}  `
+        map expr: serialize expr, '${indent}  '
         join '\n'
 
       props_str = match node.props:
-        0 < length ?: `\n${props}`
+        0 < length ?: '\n${props}'
         else: ''
 
       children_str = match node.children:
-        0 < length ?: `\n${indent}  :\n${children}`
+        0 < length ?: '\n${indent}  :\n${children}'
         else: ''
 
-      `${head} ${node.name}${props_str}${children_str}`
+      '${head} ${node.name}${props_str}${children_str}'
 
     {type: 'jsx-attr', value: {}}:
-      value = serialize node.value, `${indent}  `
-      `${head} ${node.name}\n${indent}  ${value}`
+      value = serialize node.value, '${indent}  '
+      '${head} ${node.name}\n${indent}  ${value}'
 
     {type: 'jsx-attr'}:
-      `${head} ${node.name}`
+      '${head} ${node.name}'
 
     {type: 'jsx-text'}:
-      `${head}\n${indent}  ${obj_to_json node.value}`
+      '${head}\n${indent}  ${obj_to_json node.value}'
 
     {type: 'jsx-string'}:
-      `${head}\n${indent}  '${node.value}'`
+      "${head}\n${indent}  '${node.value}'"
 
     {type: 'jsx-expr-container'}:
-      expr = serialize node.expr, `${indent}  `
-      `${head}\n${expr}`
+      expr = serialize node.expr, '${indent}  '
+      '${head}\n${expr}'
 
 
 serialize = fn node, indent='':
   result = match node:
     {error: {}}:
-      `${indent}::error::`
+      '${indent}::error::'
 
     {type: 'empty'}:
       str_type_op node, indent
@@ -215,6 +215,6 @@ serialize = fn node, indent='':
 
     else:
       head = str_type_op node, indent
-      `Error: cannot serialize ${head}`
+      'Error: cannot serialize ${head}'
 
   '${result}${trailing_comment '${indent}  ', node}'
