@@ -1,67 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`JSX <Foobar>...</Foobar> parses elem with children: <Foobar><Spam /></Foobar> 1`] = `
-jsx-elem (1:0-3:9) Foobar
-  jsx-attr (1:8-1:10) ni
+jsx:elem (1:0-3:9) Foobar
+  jsx:attr (1:8-1:10) ni
   :
-  jsx-text (1:11-2:2)
+  jsx:text (1:11-2:2)
     "\\n  "
-  jsx-elem (2:2-2:10) Spam
-  jsx-text (2:10-3:0)
+  jsx:elem (2:2-2:10) Spam
+  jsx:text (2:10-3:0)
     "\\n"
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses elem with expr in body: <Foobar> {...} </Foobar> 1`] = `
-jsx-elem (1:0-3:9) Foobar
+jsx:elem (1:0-3:9) Foobar
   :
-  jsx-text (1:8-2:2)
+  jsx:text (1:8-2:2)
     "\\n  "
-  jsx-expr-container (2:2-2:9)
+  jsx:expr (2:2-2:9)
     block (2:2-2:9)
       arithm + (2:3-2:8)
         number (2:3-2:4) 1
         number (2:7-2:8) 2
-  jsx-text (2:9-3:0)
+  jsx:text (2:9-3:0)
     "\\n"
 `;
 
-exports[`JSX <Foobar>...</Foobar> parses empty elem: <Foobar></Foobar> 1`] = `jsx-elem (1:0-1:17) Foobar`;
+exports[`JSX <Foobar>...</Foobar> parses empty elem: <Foobar></Foobar> 1`] = `jsx:elem (1:0-1:17) Foobar`;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with expr attr: <Foobar spam={ni} /> 1`] = `
-jsx-elem (1:0-1:20) Foobar
-  jsx-attr (1:8-1:17) spam
-        jsx-expr-container (1:13-1:17)
+jsx:elem (1:0-1:20) Foobar
+  jsx:attr (1:8-1:17) spam
+        jsx:expr (1:13-1:17)
       block (1:13-1:17)
         ident (1:14-1:16) ni
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with short attr: <Foobar spam /> 1`] = `
-jsx-elem (1:0-1:15) Foobar
-  jsx-attr (1:8-1:12) spam
+jsx:elem (1:0-1:15) Foobar
+  jsx:attr (1:8-1:12) spam
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with str attr: <Foobar spam="ni" /> 1`] = `
-jsx-elem (1:0-1:20) Foobar
-  jsx-attr (1:8-1:17) spam
-        jsx-string (1:14-1:16)
+jsx:elem (1:0-1:20) Foobar
+  jsx:attr (1:8-1:17) spam
+        jsx:string (1:14-1:16)
       'ni'
 `;
 
 exports[`JSX <Foobar>...</Foobar> parses self closing elem with str attr: <Foobar spam='ni' /> 1`] = `
-jsx-elem (1:0-1:20) Foobar
-  jsx-attr (1:8-1:17) spam
-        jsx-string (1:14-1:16)
+jsx:elem (1:0-1:20) Foobar
+  jsx:attr (1:8-1:17) spam
+        jsx:string (1:14-1:16)
       'ni'
 `;
 
-exports[`JSX <Foobar>...</Foobar> parses self closing elem: <Foobar /> 1`] = `jsx-elem (1:0-1:10) Foobar`;
+exports[`JSX <Foobar>...</Foobar> parses self closing elem: <Foobar /> 1`] = `jsx:elem (1:0-1:10) Foobar`;
 
 exports[`JSX parse failures errors with invalid attr value 1`] = `
 module (1:0-1:19)
-  jsx-elem (1:0-1:19) Foobar
-    jsx-attr (1:8-1:13) spam
+  jsx:elem (1:0-1:19) Foobar
+    jsx:attr (1:8-1:13) spam
             ::error::
-    jsx-attr (1:13-1:16) 123
+    jsx:attr (1:13-1:16) 123
 
 error:
 test.fnk:1:13

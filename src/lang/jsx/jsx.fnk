@@ -11,14 +11,12 @@
 jsx_expr_container = fn ctx:
   [block, next_ctx] = terminated_block ctx, '}'
   expr = {...block, type: 'block'}
-  # TODO: all other types use foo:bar to denote sub-types
-  [{type: 'jsx-expr-container', expr, loc: expr.loc}, next_ctx]
+  [{type: 'jsx:expr', expr, loc: expr.loc}, next_ctx]
 
 
 jsx_txt = fn ctx:
   [{value: text, loc}, next_ctx] = collect_text ctx, rx"'</|[<{]"
-  # TODO: all other types use foo:bar to denote sub-types
-  [{type: 'jsx-text', value: text, loc}, next_ctx]
+  [{type: 'jsx:text', value: text, loc}, next_ctx]
 
 
 get_children = fn ctx:
@@ -52,7 +50,7 @@ jsx_body = fn name, ctx:
 jsx_string_val = fn ctx:
   [{value, loc}, next_ctx] = collect_text ctx, curr_value ctx
 
-  [{type: 'jsx-string', value, loc}, next_ctx]
+  [{type: 'jsx:string', value, loc}, next_ctx]
 
 
 jsx_attr_value = fn ctx:
@@ -81,7 +79,7 @@ jsx_attr = fn ctx:
       [{}, ctx]
 
   {end} = curr_loc next_ctx
-  [{type: 'jsx-attr', name, ...value, loc: {start, end}}, next_ctx]
+  [{type: 'jsx:attr', name, ...value, loc: {start, end}}, next_ctx]
 
 
 done = true
@@ -131,9 +129,8 @@ jsx_elem = fn ctx:
   [self_closing, children, next_ctx] = body_or_end_elem body_ctx, name
   {end} = curr_loc next_ctx
 
-  # TODO: all other types use foo:bar to denote sub-types
   list:
-    {type: 'jsx-elem', name, props, children, self_closing, loc: {start, end}}
+    {type: 'jsx:elem', name, props, children, self_closing, loc: {start, end}}
     next_ctx
 
 
