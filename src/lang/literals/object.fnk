@@ -29,7 +29,7 @@ default_assignment = fn ctx, left:
 
 key_expr = fn ctx:
   match ctx:
-    next_matches ?, rx'^[`\'"(#]|\.\.\.|---$':
+    next_matches ?, rx'^[\'"(#]|\.\.\.|---$':
       single_expression ctx, 0
 
     next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
