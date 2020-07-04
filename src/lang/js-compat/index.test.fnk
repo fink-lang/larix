@@ -4,13 +4,6 @@
 
 
 describe 'js-compat operators', fn:
-
-  it 'parses new', fn:
-    expect
-      parse_expr 'new_foo = new Foobar spam, ni'
-      to_match_snapshot
-
-
   it 'parses throw', fn:
     expect
       parse_expr "throw_foo = foo or throw err 'foobar'"
@@ -23,18 +16,6 @@ describe 'try ...:', fn:
     expect
       parse "
         [err, result] = try:
-          throw new Error 'foobar'
-      "
-      to_match_snapshot
-
-
-
-describe 'constants', fn:
-
-  it 'parses null', fn:
-    expect
-      parse "
-        foo = null
-        bar = nullish
+          throw error 'foobar'
       "
       to_match_snapshot
