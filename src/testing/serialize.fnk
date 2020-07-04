@@ -27,7 +27,7 @@ trailing_comment = fn indent, node:
 
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   head = match op:
-    op and ? != type:
+    ? and ? != type:
       '${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})'
     else:
       '${type} (${start.line}:${start.column}-${end.line}:${end.column})'
