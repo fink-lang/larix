@@ -27,7 +27,7 @@ trailing_comment = fn indent, node:
 
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   head = match op:
-    op and ? != type:
+    ? and ? != type:
       '${type} ${op} (${start.line}:${start.column}-${end.line}:${end.column})'
     else:
       '${type} (${start.line}:${start.column}-${end.line}:${end.column})'
@@ -141,7 +141,7 @@ serialize_jsx = fn node, serialize, indent:
   head = str_type_op node, indent
 
   match node:
-    {type: 'jsx-elem'}:
+    {type: 'jsx:elem'}:
       props = pipe node.props:
         map expr: serialize expr, '${indent}  '
         join '\n'
@@ -160,20 +160,20 @@ serialize_jsx = fn node, serialize, indent:
 
       '${head} ${node.name}${props_str}${children_str}'
 
-    {type: 'jsx-attr', value: {}}:
+    {type: 'jsx:attr', value: {}}:
       value = serialize node.value, '${indent}  '
       '${head} ${node.name}\n${indent}  ${value}'
 
-    {type: 'jsx-attr'}:
+    {type: 'jsx:attr'}:
       '${head} ${node.name}'
 
-    {type: 'jsx-text'}:
+    {type: 'jsx:text'}:
       '${head}\n${indent}  ${obj_to_json node.value}'
 
-    {type: 'jsx-string'}:
+    {type: 'jsx:string'}:
       "${head}\n${indent}  '${node.value}'"
 
-    {type: 'jsx-expr-container'}:
+    {type: 'jsx:expr'}:
       expr = serialize node.expr, '${indent}  '
       '${head}\n${expr}'
 
@@ -198,7 +198,7 @@ serialize = fn node, indent='':
     {type: 'spread'}:
       serialize_spread node, serialize, indent
 
-    {type: starts_with ?, 'jsx-'}:
+    {type: starts_with ?, 'jsx:'}:
       serialize_jsx node, serialize, indent
 
     {left: {}, right: {}}:

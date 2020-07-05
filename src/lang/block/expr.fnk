@@ -169,7 +169,7 @@ single_expression = fn ctx, lbp=0:
       [expr, next_ctx]
 
     next_is_call_arg expr, lbp, ?:
-      indented_block =  fn ctx, block_expr=single_expression:
+      indented_block = fn ctx, block_expr=single_expression:
         expressions ctx, end_of_block_indent, block_expr
 
       call_expr next_ctx, expr, '', indented_block

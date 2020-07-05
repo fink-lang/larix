@@ -7,10 +7,6 @@ describe 'strings', fn:
 
   it 'parses empty strings', fn:
     expect
-      parse_expr '``'
-      to_match_snapshot
-
-    expect
       parse_expr '""'
       to_match_snapshot
 
@@ -21,16 +17,13 @@ describe 'strings', fn:
 
   it 'parses single line strings', fn:
     expect
-      parse_expr '`foo bar`'
-      to_match_snapshot
-
-    expect
       parse_expr '"foo bar"'
       to_match_snapshot
 
     expect
       parse_expr "'foo bar'"
       to_match_snapshot
+
 
 
   it 'parses multi line strings', fn:
@@ -44,11 +37,6 @@ describe 'strings', fn:
 
 
   it 'parses escape characters', fn:
-
-    expect
-      parse_expr '` $ \\n \\t \\` \\\\`'
-      to_match_snapshot
-
     expect
       parse_expr "' $ \\n \\t \\' \\\\'"
       to_match_snapshot
@@ -64,10 +52,6 @@ describe 'strings', fn:
 
   it 'parses tagged strings', fn:
     expect
-      parse_expr 'foo`bar spam`'
-      to_match_snapshot
-
-    expect
       parse_expr "foo'bar spam'"
       to_match_snapshot
 
@@ -78,15 +62,7 @@ describe 'strings', fn:
 
   it 'parses template strings with expressions', fn:
     expect
-      parse_expr '`foo \${bar + spam} spam`'
-      to_match_snapshot
-
-    expect
       parse_expr "'foo \${bar + spam} spam'"
-      to_match_snapshot
-
-    expect
-      parse_expr '"foo \${bar + spam} spam"'
       to_match_snapshot
 
     expect
@@ -107,7 +83,7 @@ describe 'strings', fn:
 
   it 'parses nested template strings', fn:
     expect
-      parse_expr '`\\n\${foo bar, `  \${spam}`}\\n`'
+      parse_expr "'\\n\${foo bar, '  \${spam}'}\\n'"
       to_match_snapshot
 
 

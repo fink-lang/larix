@@ -10,7 +10,7 @@
 
 member_expr = fn ctx, lbp:
   match ctx:
-    next_matches ?, rx'^[`\'"(]':
+    next_matches ?, rx'^[\'"(]':
       single_expression ctx, lbp
 
     next_matches ?, rx'^[0-9[\]{}),?:*/+-]':

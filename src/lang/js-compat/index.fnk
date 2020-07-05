@@ -1,16 +1,14 @@
 {add_keyword} = import '@fink/prattler/symbols'
 
-{prefix, literal} = import '../symbols'
+{prefix} = import '../symbols'
 {add_named_block} = import '../block'
 
 
 js_op = fn op, type: prefix op, type
 
 
+# TODO: do we want exceptions or should this live in @fink/js-interop?
 add_js_ops = fn ctx:
-  # TODO: should these live as functions in @fink/js-compat
   pipe ctx:
-    add_keyword js_op 'new', 'js-compat'
     add_keyword js_op 'throw', 'js-compat'
     add_named_block 'try', 'js-compat'
-    add_keyword literal 'null', 'literal'
