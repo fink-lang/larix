@@ -45,17 +45,16 @@ comp < (1:0-1:9)
 `;
 
 exports[`comparison parses < 4`] = `
-arithm + (1:0-3:0)
+arithm + (1:0-2:0)
   ident (1:0-1:1) a
-  call (1:4-3:0)
+  call (1:4-2:0)
     ident (1:4-1:5) b
-    jsx:elem (1:6-2:1) c
+    jsx:elem (1:6-1:21) incomplete_jsx
 
 error:
-undefined:3:0
-1| a + b <
-2| c
-3| 
+undefined:2:0
+1| a + b <incomplete_jsx
+2| 
    ^
 
 Expected one of [ '/>' ] but found undefined.

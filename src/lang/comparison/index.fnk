@@ -4,8 +4,6 @@
 {infix} = import '../symbols'
 
 
-arithm = fn op: infix op, 'arithm'
-
 comp = fn op: infix op, 'comp'
 
 
