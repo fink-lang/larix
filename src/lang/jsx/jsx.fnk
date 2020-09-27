@@ -1,7 +1,7 @@
 {curr_is, curr_value, curr_loc} = import '@fink/prattler'
 {next_is, next_matches, next_is_end} = import '@fink/prattler'
 {advance_expected, advance, collect_text} = import '@fink/prattler'
-{length} = import '@fink/std-lib/iter'
+{is_empty} = import '@fink/std-lib/iter'
 {rx} = import '@fink/std-lib/regex'
 
 {prefix} = import '../symbols'
@@ -105,7 +105,7 @@ jsx_props = fn ctx:
       [[...props, prop], next_ctx]
 
   match props:
-    0 == length ?: [props, ctx]
+    is_empty ?: [props, ctx]
     else: [props, next_ctx]
 
 
