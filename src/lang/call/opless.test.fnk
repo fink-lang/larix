@@ -19,6 +19,7 @@ describe 'call expr', fn:
           bar: spam
         'foo \${bar spam} ni'
         foo -1
+        foo <div />
       "
       to_match_snapshot
 
