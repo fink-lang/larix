@@ -36,6 +36,9 @@ get_children = fn ctx:
       [children, end_ctx] = get_children children_ctx
       [[...txt_children, expr, ...children], end_ctx]
 
+    curr_is ?, '</>':
+      [txt_children, next_ctx]
+
     else:
       [txt_children, next_ctx]
 
@@ -134,10 +137,31 @@ jsx_elem = fn ctx:
     next_ctx
 
 
+
+jsx_frag = fn ctx:
+  {start} = curr_loc ctx
+  [children, next_ctx] = get_children ctx
+  {end} = curr_loc next_ctx
+
+  list:
+    {type: 'jsx:frag', children, loc: {start, end}}
+    next_ctx
+
+
+
+jsx_elem_or_fragment = fn ctx:
+  match ctx:
+    curr_is ?, '<>':
+      jsx_frag ctx
+    else:
+      jsx_elem ctx
+
+
+
 jsx = fn op:
   dict:
     ...prefix op
 
     nud: fn: fn ctx:
-      jsx_elem ctx
+      jsx_elem_or_fragment ctx
 

@@ -141,6 +141,18 @@ serialize_jsx = fn node, serialize, indent:
   head = str_type_op node, indent
 
   match node:
+    {type: 'jsx:frag'}:
+      children = pipe node.children:
+        map expr: serialize expr, '${indent}  '
+        join '\n'
+
+      children_str = match node.children:
+        0 < length ?: '\n${indent}  :\n${children}'
+        else: ''
+
+      '${head} ${children_str}'
+
+
     {type: 'jsx:elem'}:
       props = pipe node.props:
         map expr: serialize expr, '${indent}  '

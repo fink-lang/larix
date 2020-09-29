@@ -3,7 +3,7 @@
 {parse_expr, parse} = import '../../'
 
 
-describe 'JSX <Foobar>...</Foobar>', fn:
+describe 'JSX', fn:
 
   it 'parses self closing elem: <Foobar />', fn:
     expect
@@ -59,6 +59,23 @@ describe 'JSX <Foobar>...</Foobar>', fn:
         </Foobar>
       '
       to_match_snapshot
+
+
+  it 'parses fragment', fn:
+    expect
+      parse_expr '
+        <>
+          {1 + 2}
+        </>
+      '
+      to_match_snapshot
+
+    expect
+      parse_expr '
+        <></>
+      '
+      to_match_snapshot
+
 
 
 describe 'JSX parse failures', fn:
