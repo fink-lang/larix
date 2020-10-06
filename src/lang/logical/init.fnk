@@ -1,0 +1,18 @@
+{add_keyword} = import  '@fink/prattler/symbols.fnk'
+
+{infix_right, prefix} = import  '../symbols.fnk'
+
+
+
+logical = fn op: infix_right op, 'logical'
+prefix_logical = fn op: prefix op, 'logical'
+
+
+
+add_logical_operators = fn ctx:
+  pipe ctx:
+    add_keyword logical 'and'
+    add_keyword logical 'or'
+    add_keyword prefix_logical 'not'
+
+    add_keyword logical 'in'

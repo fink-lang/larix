@@ -1,0 +1,12 @@
+{add_list} = import './list.fnk'
+{add_record} = import './record.fnk'
+{add_string} = import './string.fnk'
+{add_keywords} = import './keywords.fnk'
+
+
+add_literals = fn ctx:
+  pipe ctx:
+    add_list
+    add_record
+    add_string
+    add_keywords

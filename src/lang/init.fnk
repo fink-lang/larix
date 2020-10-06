@@ -1,0 +1,60 @@
+{init_indentation} = import './block/indentation.fnk'
+
+{add_jsx} = import './jsx/init.fnk'
+{add_conditionals} = import './conditionals/init.fnk'
+{add_literals} = import './literals/init.fnk'
+{add_logical_operators} = import './logical/init.fnk'
+{add_comparison_operators} = import './comparison/init.fnk'
+{add_arithmetic_operators} = import './arithmitic/init.fnk'
+{add_comments} = import './comments/init.fnk'
+{add_call_operators} = import './call/init.fnk'
+{add_func} = import './func/init.fnk'
+{add_group} = import './group/init.fnk'
+{add_assignment_operators} = import './assignment/init.fnk'
+{add_iterables} = import './iterable/init.fnk'
+{add_spread_operator} = import './spread/init.fnk'
+{add_async} = import './async/init.fnk'
+{add_import} = import './import/init.fnk'
+{add_prop_access} = import './prop-access/init.fnk'
+{add_whitespace_tokens} = import './whitespace/init.fnk'
+{add_js_ops} = import './js-compat/init.fnk'
+{add_partial} = import './partial/init.fnk'
+{add_other} = import './other/init.fnk'
+
+
+init_language = fn ctx:
+  pipe ctx:
+    init_indentation
+
+    add_whitespace_tokens
+    add_comments
+
+    add_func
+
+    add_conditionals
+    add_iterables
+
+    add_assignment_operators
+
+    add_other
+    add_partial
+
+    add_jsx
+
+    add_logical_operators
+    add_comparison_operators
+    add_arithmetic_operators
+
+    add_spread_operator
+    add_async
+    add_import
+
+    add_literals
+
+    add_js_ops
+
+    add_call_operators
+
+    add_group
+
+    add_prop_access

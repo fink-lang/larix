@@ -1,0 +1,9 @@
+{terminated_block} = import '../block/init.fnk'
+{end_of_code} = import '../block/indentation.fnk'
+
+
+
+parse_module = fn ctx:
+  [{exprs, comments, loc}, {errors}] = terminated_block ctx, end_of_code
+  {type: 'module', exprs, comments, loc, errors}
+

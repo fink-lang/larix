@@ -1,0 +1,16 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse} = import '../../parser.fnk'
+
+
+describe 'pipe foo: ...', fn:
+
+  it 'pipes', fn:
+    expect
+      parse '
+        pipe foo:
+          bar shrub
+          ni
+      '
+      to_match_snapshot
+

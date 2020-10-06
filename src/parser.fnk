@@ -1,0 +1,27 @@
+{init_parser, start_parser} = import '@fink/prattler/parser.fnk'
+
+{init_language} = import './lang/init.fnk'
+{parse_module} = import './lang/module/init.fnk'
+{single_expression} = import './lang/block/expr.fnk'
+
+
+
+init = fn ctx:
+  pipe ctx:
+    init_parser
+    init_language
+    start_parser
+
+
+
+parse_expr = fn code, filename:
+  ctx = init {code, filename}
+  [expr, {errors}] = single_expression ctx, 0
+  {...expr, errors}
+
+
+
+parse = fn code, filename:
+  ctx = init {code, filename}
+  parse_module ctx
+

@@ -1,4 +1,4 @@
-{next_is, collect_text, advance} = import '@fink/prattler'
+{next_is, collect_text, advance} = import '@fink/prattler/parser.fnk'
 
 
 collect_single_comment = fn ctx, op:

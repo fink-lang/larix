@@ -1,6 +1,7 @@
-{describe, it, expect, to_match_snapshot} = import '@fink/jest'
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
-{parse_expr, parse} = import '../../'
+{parse_expr, parse} = import '../../parser.fnk'
+
 
 
 describe 'strings', fn:
@@ -23,7 +24,6 @@ describe 'strings', fn:
     expect
       parse_expr "'foo bar'"
       to_match_snapshot
-
 
 
   it 'parses multi line strings', fn:
@@ -94,6 +94,7 @@ describe 'strings', fn:
         'spam'
         "
       to_match_snapshot
+
 
 
 describe 'string - parsing failures', fn:

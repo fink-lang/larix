@@ -1,0 +1,11 @@
+{add_separator} = import '@fink/prattler/symbols.fnk'
+
+{comment} = import './comment.fnk'
+{doc_comment} = import './doc-comment.fnk'
+
+
+
+add_comments = fn ctx:
+  pipe ctx:
+    add_separator comment '#'
+    add_separator doc_comment '---'

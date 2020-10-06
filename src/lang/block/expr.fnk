@@ -1,16 +1,16 @@
 {inspect} = import 'util'
 
-{advance, expression, next_is, next_is_end, has_errors} = import '@fink/prattler'
-{curr_loc, next_loc} = import '@fink/prattler'
-{add_error} = import '@fink/prattler/errors'
+{advance, expression, next_is, next_is_end, has_errors} = import '@fink/prattler/parser.fnk'
+{curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
 
-{collect_single_comment} = import '../comments/collect'
-{next_is_call_arg} = import '../call/opless'
-{call_expr} = import '../call/expr'
+{collect_single_comment} = import '../comments/collect.fnk'
+{next_is_call_arg} = import '../call/opless.fnk'
+{call_expr} = import '../call/expr.fnk'
 
-{update_indentation, push_block, pop_block} = import './indentation'
-{end_of_block_indent, next_is_unindented, next_is_indented} = import './indentation'
-{next_is_new_expr} = import './indentation'
+{update_indentation, push_block, pop_block} = import './indentation.fnk'
+{end_of_block_indent, next_is_unindented} = import './indentation.fnk'
+{next_is_new_expr, next_is_indented} = import './indentation.fnk'
 
 
 empty_expr = fn {loc: {end}}:

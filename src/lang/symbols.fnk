@@ -1,8 +1,8 @@
-{symbol} = import '@fink/prattler/symbols'
-{curr_loc} = import '@fink/prattler'
+{symbol} = import '@fink/prattler/symbols.fnk'
+{curr_loc} = import '@fink/prattler/parser.fnk'
 
-{next_is_new_expr} = import './block/indentation'
-{single_expression} = import './block/expr'
+{next_is_new_expr} = import './block/indentation.fnk'
+{single_expression} = import './block/expr.fnk'
 
 
 

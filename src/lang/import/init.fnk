@@ -1,0 +1,8 @@
+{add_keyword} = import '@fink/prattler/symbols.fnk'
+
+{prefix} = import '../symbols.fnk'
+
+
+add_import = fn ctx:
+  pipe ctx:
+    add_keyword prefix 'import', 'prefix'

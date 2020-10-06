@@ -1,0 +1,39 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse} = import '../../parser.fnk'
+
+
+describe 'comments', fn:
+
+  it 'parses line comments', fn:
+    expect
+      parse '
+        # leading expression
+        # multi line
+        spam = ni
+
+        # single line
+        shrub = ni
+
+        foo = fn:
+          shrub
+          # trailing func
+
+        ni
+      '
+      to_match_snapshot
+
+
+  it 'parses doc-comment', fn:
+    expect
+      parse '
+        ---
+        foobar spam ham
+        ---
+        spam = ni
+
+        ---bar---
+        spam
+      '
+      to_match_snapshot
+

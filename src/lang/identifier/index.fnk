@@ -1,8 +1,0 @@
-{curr_value, curr_loc} = import '@fink/prattler'
-
-
-identifier = fn ctx:
-  value = curr_value ctx
-  loc = curr_loc ctx
-
-  [{type: 'ident', value, loc}, ctx]

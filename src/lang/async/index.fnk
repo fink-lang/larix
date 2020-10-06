@@ -1,9 +1,0 @@
-{add_keyword} = import '@fink/prattler/symbols'
-
-{prefix} = import '../symbols'
-
-
-add_async = fn ctx:
-  pipe ctx:
-    add_keyword prefix 'await', 'prefix'
-

@@ -1,4 +1,4 @@
-{next_lbp} = import '@fink/prattler/symbols'
+{next_lbp} = import '@fink/prattler/symbols.fnk'
 
 
 callable = fn callee, lbp:

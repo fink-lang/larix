@@ -1,0 +1,10 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse_expr} = import '../../parser.fnk'
+
+
+describe 'import', fn:
+  it 'parses import', fn:
+    expect
+      parse_expr "import './foobar.fnk'"
+      to_match_snapshot

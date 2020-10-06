@@ -1,0 +1,23 @@
+{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+
+{prefix, terminator} = import '../symbols.fnk'
+{terminated_block} = import '../block/init.fnk'
+
+
+
+group = fn op:
+  dict:
+    ...prefix op
+
+    nud: fn: fn ctx:
+      [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'
+
+      [{type: 'group', exprs, comments, loc}, next_ctx]
+
+
+
+add_group = fn ctx:
+  pipe ctx:
+    add_operator group '('
+    add_separator terminator ','
+    add_separator terminator ')'

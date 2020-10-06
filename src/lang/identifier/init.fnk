@@ -1,0 +1,8 @@
+{curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
+
+
+identifier = fn ctx:
+  value = curr_value ctx
+  loc = curr_loc ctx
+
+  [{type: 'ident', value, loc}, ctx]

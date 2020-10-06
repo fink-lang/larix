@@ -1,0 +1,49 @@
+{advance, next_matches, has_errors} = import '@fink/prattler/parser.fnk'
+{add_operator} = import '@fink/prattler/symbols.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
+{rx} = import '@fink/std-lib/regex.fnk'
+
+{infix} = import '../symbols.fnk'
+{single_expression} = import '../block/expr.fnk'
+{identifier} = import '../identifier/init.fnk'
+
+
+
+member_expr = fn ctx, lbp:
+  match ctx:
+    next_matches ?, rx'^[\'"(]':
+      single_expression ctx, lbp
+
+    next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
+      add_error ctx,
+        'Expected member key to be an ident, string or group expr.'
+        ctx.next_token
+
+    else:
+      identifier advance ctx
+
+
+
+prop_access = fn op, type:
+  dict:
+    ...infix op
+
+    led: fn lbp: fn ctx, left:
+      {loc: {start}} = left
+      [right, next_ctx] = member_expr ctx, lbp
+
+      match next_ctx:
+        has_errors ?:
+          [left, next_ctx]
+
+        else:
+          {loc: {end}} = right
+
+          [{type, op, left, right, loc: {start, end}}, next_ctx]
+
+
+
+add_prop_access = fn ctx:
+  pipe ctx:
+    add_operator prop_access '.', 'member'
+

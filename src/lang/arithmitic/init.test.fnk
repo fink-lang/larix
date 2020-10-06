@@ -1,0 +1,138 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse_expr, parse} = import '../../parser.fnk'
+
+
+
+describe 'arithmitic', fn:
+
+  it 'parses +', fn:
+    expect
+      parse_expr 'a + b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a + b * c'
+      to_match_snapshot
+
+
+  it 'parses * ', fn:
+    expect
+      parse_expr 'a * b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a * b * c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a * b + c'
+      to_match_snapshot
+
+  it 'parses / ', fn:
+    expect
+      parse_expr 'a / b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a / b / c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a / b + c'
+      to_match_snapshot
+
+
+  it 'parses %', fn:
+    expect
+      parse_expr 'a % b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a % b % c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a % b / c'
+      to_match_snapshot
+
+
+  it 'parses ^', fn:
+    expect
+      parse_expr 'a ^ b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a ^ b ^ c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a ^ b * c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a * b ^ c'
+      to_match_snapshot
+
+
+  it 'parses - prefix', fn:
+    expect
+      parse_expr '-a'
+      to_match_snapshot
+
+    expect
+      parse_expr '-a - b'
+      to_match_snapshot
+
+    expect
+      parse_expr '-a * b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a * -b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'foo -b'
+      to_match_snapshot
+
+    expect
+      parse '
+        foo bar
+        -spam
+        '
+      to_match_snapshot
+
+
+  it 'parses -', fn:
+    expect
+      parse_expr 'a - b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a - b - c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a - b + c'
+      to_match_snapshot
+
+
+  it 'parses grouped', fn:
+    expect
+      parse_expr '(a - b) * c'
+      to_match_snapshot
+
+
+  it 'parses multiline', fn:
+    expect
+      parse_expr '
+        a
+          + b +
+          c
+            + d
+      '
+      to_match_snapshot
+
+
+

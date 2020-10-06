@@ -1,6 +1,7 @@
-{collect_text, expression} = import '@fink/prattler'
+{collect_text, expression} = import '@fink/prattler/parser.fnk'
 
-{prefix} = import '../symbols'
+{prefix} = import '../symbols.fnk'
+
 
 
 doc_comment = fn op:

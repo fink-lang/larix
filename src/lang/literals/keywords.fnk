@@ -1,5 +1,7 @@
-{add_keyword} = import '@fink/prattler/symbols'
-{literal} = import '../symbols'
+{add_keyword} = import '@fink/prattler/symbols.fnk'
+
+{literal} = import '../symbols.fnk'
+
 
 
 add_keywords = fn ctx:
