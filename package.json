@@ -7,6 +7,10 @@
   },
   "type": "module",
   "exports": {
+    ".": {
+      "import": "./parser.js",
+      "require": "./cjs/parser.js"
+    },
     "./": {
       "import": "./",
       "require": "./cjs/"
