@@ -1,15 +1,17 @@
 
-module.exports = {
+export default {
   testEnvironment: 'node',
   setupFiles: [],
   moduleFileExtensions: ['js', 'fnk'],
   transform: {
-    '^.+\\.fnk$': ['@fink/jest/transform']
+    '^.+\\.fnk$': ['@fink/jest/transform.js']
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
 
-  snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot'],
-  snapshotResolver: '@fink/jest/snapshot-resolver',
+  resolver: '@fink/jest/cjs/module-resolver.js',
+
+  snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot.js'],
+  snapshotResolver: '@fink/jest/snapshot-resolver.js',
 
   modulePathIgnorePatterns: ['<rootDir>/build/'],
 

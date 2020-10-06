@@ -1,0 +1,13 @@
+{add_named_block} = import '../block/init.fnk'
+
+
+
+add_pipe = fn ctx:
+  pipe ctx:
+    add_named_block 'pipe'
+
+
+
+add_call_operators = fn ctx:
+  pipe ctx:
+    add_pipe

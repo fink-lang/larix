@@ -1,7 +1,7 @@
-{starts_with} = import '@fink/std-lib/str'
-{split} = import '@fink/std-lib/regex'
-{join, length} = import '@fink/std-lib/iter'
-{obj_to_json} = import '@fink/std-lib/json'
+{starts_with} = import '@fink/std-lib/str.fnk'
+{split} = import '@fink/std-lib/regex.fnk'
+{join, length} = import '@fink/std-lib/iter.fnk'
+{obj_to_json} = import '@fink/std-lib/json.fnk'
 
 
 get_comment = fn indent, comments:

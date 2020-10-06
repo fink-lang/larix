@@ -1,8 +1,9 @@
 {inspect} = import 'util'
 
-{curr_loc, next_loc, next_is, next_is_end, has_errors} = import '@fink/prattler'
-{advance} = import '@fink/prattler'
-{add_error} = import '@fink/prattler/errors'
+{curr_loc, next_loc, next_is, next_is_end} = import '@fink/prattler/parser.fnk'
+{advance, has_errors} = import '@fink/prattler/parser.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
+
 
 
 end_of_block_indent = {end_of_block_indent: true}

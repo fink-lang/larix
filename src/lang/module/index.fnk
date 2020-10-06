@@ -1,9 +1,0 @@
-{terminated_block} = import '../block'
-{end_of_code} = import '../block/indentation'
-
-
-
-parse_module = fn ctx:
-  [{exprs, comments, loc}, {errors}] = terminated_block ctx, end_of_code
-  {type: 'module', exprs, comments, loc, errors}
-

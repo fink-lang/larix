@@ -1,6 +1,0 @@
-{add_named_block} = import '../block'
-
-
-add_func = fn ctx:
-  pipe ctx:
-    add_named_block 'fn'

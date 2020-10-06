@@ -1,11 +1,11 @@
-{curr_is, curr_value, curr_loc} = import '@fink/prattler'
-{next_is, next_matches, next_is_end} = import '@fink/prattler'
-{advance_expected, advance, collect_text} = import '@fink/prattler'
-{is_empty} = import '@fink/std-lib/iter'
-{rx} = import '@fink/std-lib/regex'
+{curr_is, curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
+{next_is, next_matches, next_is_end} = import '@fink/prattler/parser.fnk'
+{advance_expected, advance, collect_text} = import '@fink/prattler/parser.fnk'
+{is_empty} = import '@fink/std-lib/iter.fnk'
+{rx} = import '@fink/std-lib/regex.fnk'
 
-{prefix} = import '../symbols'
-{terminated_block} = import '../block'
+{prefix} = import '../symbols.fnk'
+{terminated_block} = import '../block/init.fnk'
 
 
 jsx_expr_container = fn ctx:

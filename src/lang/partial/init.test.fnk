@@ -1,0 +1,93 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse_expr, parse} = import '../../parser.fnk'
+
+
+describe 'partial', fn:
+
+  it 'parses call', fn:
+    expect
+      parse_expr '? foo'
+      to_match_snapshot
+
+    expect
+      parse_expr '? ()'
+      to_match_snapshot
+
+    expect
+      parse_expr '? _'
+      to_match_snapshot
+
+
+  it 'parses call arg', fn:
+    expect
+      parse_expr 'foo ?'
+      to_match_snapshot
+
+    expect
+      parse_expr 'foo.bar ?'
+      to_match_snapshot
+
+    expect
+      parse_expr 'foo.bar ...?'
+      to_match_snapshot
+
+
+  it 'parses with member', fn:
+    expect
+      parse_expr '?.bar ()'
+      to_match_snapshot
+
+    expect
+      parse_expr '?.bar _'
+      to_match_snapshot
+
+
+  it 'parses binary', fn:
+    expect
+      parse_expr '? > 1'
+      to_match_snapshot
+
+    expect
+      parse_expr '1 < ?'
+      to_match_snapshot
+
+    expect
+      parse_expr '1 + ? * 3'
+      to_match_snapshot
+
+
+  it 'parses str', fn:
+    expect
+      parse_expr "'foo \${?} bar'"
+      to_match_snapshot
+
+
+  it 'parses array', fn:
+    expect
+      parse_expr '[?, 2, 3]'
+      to_match_snapshot
+
+    expect
+      parse_expr '[...?]'
+      to_match_snapshot
+
+
+  it 'parses obj', fn:
+    expect
+      parse_expr '{a: ?, b: 2}'
+      to_match_snapshot
+
+    expect
+      parse_expr "{...?, foo: 'bar'}"
+      to_match_snapshot
+
+
+  it 'parses multiple', fn:
+    expect
+      parse '
+        pipe spam:
+          ? foo
+          ? bar
+        '
+      to_match_snapshot

@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array [...] - parsing failures errors when missing ',' 1`] = `
+module (1:0-1:2)
+  list (1:0-1:2)
+    number (1:1-1:2) 1
+
+error:
+test.fnk:1:2
+1| [1)]
+     ^
+
+Expected ',' or indented new line or ']'.
+
+
+
+`;
+
+exports[`array [...] - parsing failures errors when missing ']' 1`] = `
+module (1:0-1:1)
+  list (1:0-1:1)
+
+
+error:
+test.fnk:1:1
+1| [
+    ^
+
+Expected ',' or indented(>=1) new line or ']'.
+
+
+
+`;
+
+exports[`array [...] parses empty: [] 1`] = `
+list (1:0-1:2)
+
+`;
+
+exports[`array [...] parses leading commas: [,, foo] 1`] = `
+list (1:0-1:8)
+  empty (1:2-1:2)
+  empty (1:3-1:3)
+  ident (1:4-1:7) foo
+`;
+
+exports[`array [...] parses middle commas: [,, foo] 1`] = `
+list (1:0-1:11)
+  ident (1:1-1:4) foo
+  empty (1:5-1:5)
+  ident (1:7-1:10) bar
+`;
+
+exports[`array [...] parses multiple elements: [1, 2] 1`] = `
+list (1:0-1:6)
+  number (1:1-1:2) 1
+  number (1:4-1:5) 2
+`;
+
+exports[`array [...] parses multiple elements: [1, 2] 2`] = `
+list (1:0-1:9)
+  number (1:1-1:2) 1
+  number (1:4-1:5) 2
+  number (1:7-1:8) 3
+`;
+
+exports[`array [...] parses single elemement: [1] 1`] = `
+list (1:0-1:3)
+  number (1:1-1:2) 1
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 1`] = `
+list (1:0-1:10)
+  spread ... (1:1-1:7)
+    ident (1:4-1:7) foo
+  empty (1:8-1:8)
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 2`] = `
+list (1:0-1:12)
+  spread ... (1:1-1:7)
+    ident (1:4-1:7) foo
+  empty (1:8-1:8)
+  empty (1:10-1:10)
+`;
+
+exports[`array [...] parses trailing commas: [...foo,,] 3`] = `
+list (1:0-1:12)
+  empty (1:2-1:2)
+  spread ... (1:3-1:9)
+    ident (1:6-1:9) foo
+  empty (1:10-1:10)
+`;
+
+exports[`array block parses empty 1`] = `
+list (1:0-2:1)
+
+`;
+
+exports[`array block parses leading commas 1`] = `
+list (1:0-5:1)
+  empty (2:3-2:3)
+  empty (3:3-3:3)
+  ident (4:2-4:5) foo
+`;
+
+exports[`array block parses leading commas 2`] = `
+list (1:0-4:1)
+  empty (2:3-2:3)
+  empty (2:4-2:4)
+  ident (3:2-3:5) foo
+`;
+
+exports[`array block parses multiple elements 1`] = `
+list (1:0-4:1)
+  number (2:2-2:3) 1
+  number (3:2-3:3) 2
+`;
+
+exports[`array block parses multiple elements 2`] = `
+list (1:0-3:1)
+  number (2:2-2:3) 1
+  number (2:5-2:6) 2
+`;
+
+exports[`array block parses single elemement 1`] = `
+list (1:0-3:1)
+  number (2:2-2:3) 1
+`;
+
+exports[`array block parses trailing commas 1`] = `
+list (1:0-4:1)
+  ident (2:2-2:5) foo
+  empty (3:3-3:3)
+`;
+
+exports[`array block parses trailing commas 2`] = `
+list (1:0-5:1)
+  ident (2:2-2:5) foo
+  empty (3:3-3:3)
+  empty (4:3-4:3)
+`;
+
+exports[`array block parses trailing commas 3`] = `
+list (1:0-5:1)
+  empty (2:3-2:3)
+  spread ... (3:2-3:8)
+    ident (3:5-3:8) foo
+  empty (4:3-4:3)
+`;
+
+exports[`list parses leading commas 1`] = `
+list (1:0-5:0):
+  empty (2:3-2:3)
+  empty (3:3-3:3)
+  ident (4:2-4:5) foo
+`;
+
+exports[`list parses leading commas 2`] = `
+list (1:0-4:0):
+  empty (2:3-2:3)
+  empty (2:4-2:4)
+  ident (3:2-3:5) foo
+`;
+
+exports[`list parses multiple elements 1`] = `
+list (1:0-5:0):
+  number (2:2-2:3) 1
+  # comment
+  number (4:2-4:3) 2
+`;
+
+exports[`list parses single elemement 1`] = `
+list (1:0-3:0):
+  number (2:2-2:3) 1
+`;
+
+exports[`list parses trailing commas 1`] = `
+list (1:0-4:0):
+  ident (2:2-2:5) foo
+  empty (3:3-3:3)
+`;
+
+exports[`list parses trailing commas 2`] = `
+list (1:0-5:0):
+  ident (2:2-2:5) foo
+  empty (3:3-3:3)
+  empty (4:3-4:3)
+`;
+
+exports[`list parses trailing commas 3`] = `
+list (1:0-5:0):
+  empty (2:3-2:3)
+  spread ... (3:2-3:8)
+    ident (3:5-3:8) foo
+  empty (4:3-4:3)
+`;

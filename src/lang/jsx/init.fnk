@@ -1,0 +1,13 @@
+{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+
+{terminator} = import '../symbols.fnk'
+{jsx} = import './jsx.fnk'
+
+
+add_jsx = fn ctx:
+  pipe ctx:
+    add_operator jsx '<'
+    add_operator jsx '<>'
+    add_separator terminator '/>'
+    add_separator terminator '</'
+    add_separator terminator '</>'

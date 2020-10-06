@@ -1,0 +1,106 @@
+{next_is, next_matches, has_errors, advance} = import '@fink/prattler/parser.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
+{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+{rx} = import '@fink/std-lib/regex.fnk'
+
+{prefix, terminator} = import '../symbols.fnk'
+{terminated_block, add_named_block} = import '../block/init.fnk'
+{single_expression} = import '../block/expr.fnk'
+{identifier} = import '../identifier/init.fnk'
+
+
+
+value_expr = fn ctx, key:
+  match ctx:
+    next_is ?, ':':
+      next_ctx = advance ctx
+      single_expression next_ctx, 0
+    else:
+      [key, ctx]
+
+
+
+default_assignment = fn ctx, left:
+  expr_ctx = advance ctx
+
+  [right, next_ctx] = single_expression expr_ctx, 0
+  {loc: {end}} = right
+
+  [{type: 'assign', op: '=', left, right, loc: {...left.loc, end}}, next_ctx]
+
+
+
+key_expr = fn ctx:
+  match ctx:
+    next_matches ?, rx'^[\'"(#]|\.\.\.|---$':
+      single_expression ctx, 0
+
+    next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
+      add_error ctx,
+        "Expected prop-key but found '${ctx.next_token.value}'."
+        ctx.next_token
+
+    else:
+      [key, key_ctx] = identifier advance ctx
+
+      match key_ctx:
+        next_is ?, '=':
+          default_assignment key_ctx, key
+        else:
+          [key, key_ctx]
+
+
+
+get_key_val = fn ctx, key_or_default:
+  match ctx:
+    has_errors ?:
+      left = key_or_default
+      [left, ctx]
+
+    else:
+      [value, next_ctx] = value_expr ctx, key_or_default
+
+      key = match key_or_default.type:
+        'assign': key_or_default.left
+        else: key_or_default
+
+      {start} = key.loc
+      {end} = value.loc
+
+      [{type: 'rec:kv', left: key, right: value, loc: {start, end}}, next_ctx]
+
+
+
+key_val_expr = fn ctx:
+  [key_or_default, value_ctx] = key_expr ctx
+
+  match key_or_default:
+    {type: 'comment'}:
+      [key_or_default, value_ctx]
+    else:
+      get_key_val value_ctx, key_or_default
+
+
+
+record = fn op:
+  dict:
+    ...prefix op
+
+    nud: fn: fn ctx:
+      # {start} = curr_loc ctx
+      [{exprs, loc}, next_ctx] = terminated_block ctx, '}', key_val_expr
+
+      [{type: 'rec', exprs, loc}, next_ctx]
+
+
+
+add_record = fn ctx:
+  pipe ctx:
+    add_operator record '{'
+    add_separator terminator ','
+    add_separator terminator ':'
+    add_separator terminator '}'
+
+    add_named_block 'dict', 'rec', key_val_expr
+    add_named_block 'rec', 'rec', key_val_expr
+

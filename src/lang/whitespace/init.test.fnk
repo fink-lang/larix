@@ -1,0 +1,27 @@
+{describe, it, expect, to_equal} = import '@fink/jest/test.fnk'
+
+{init_parser, start_parser, next_is_end, next_loc} = import '@fink/prattler/parser.fnk'
+
+{init_language} = import '../init.fnk'
+
+
+describe 'whitespace', fn:
+  init_test_parser = fn code:
+    pipe {code}:
+      init_parser
+      init_language
+      start_parser
+
+  it 'ignores whitespace', fn:
+    ctx = init_test_parser ' \t\n'
+
+    expect
+      next_is_end ctx
+      to_equal true
+
+    expect
+      next_loc ctx
+      to_equal {
+        start: {pos: 3, line: 2, column: 0},
+        end: {pos: 3, line: 2, column: 0}
+      }

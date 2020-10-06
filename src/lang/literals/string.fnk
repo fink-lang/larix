@@ -1,20 +1,22 @@
-{collect_text, curr_loc, next_loc} = import '@fink/prattler'
-{curr_value, advance_expected} = import '@fink/prattler'
-{add_operator} = import '@fink/prattler/symbols'
+{collect_text, curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
+{curr_value, advance_expected} = import '@fink/prattler/parser.fnk'
+{add_operator} = import '@fink/prattler/symbols.fnk'
 
-{rx, match_all, replace_all} = import '@fink/std-lib/regex'
-{starts_with, slice} = import '@fink/std-lib/str'
-{length} = import '@fink/std-lib/iter'
-{min} = import '@fink/std-lib/math'
-{max_int} = import '@fink/std-lib/num'
+{rx, match_all, replace_all} = import '@fink/std-lib/regex.fnk'
+{starts_with, slice} = import '@fink/std-lib/str.fnk'
+{length} = import '@fink/std-lib/iter.fnk'
+{min} = import '@fink/std-lib/math.fnk'
+{max_int} = import '@fink/std-lib/num.fnk'
 
-{prefix} = import '../symbols'
+{prefix} = import '../symbols.fnk'
 
-{terminated_block} = import '../block'
-{next_is_new_expr, curr_indentation} = import '../block/indentation'
+{terminated_block} = import '../block/init.fnk'
+{next_is_new_expr, curr_indentation} = import '../block/indentation.fnk'
+
 
 
 is_even = ? % 2 == 0
+
 
 
 curr_next_adjecent = fn ctx:
@@ -22,6 +24,7 @@ curr_next_adjecent = fn ctx:
   next = next_loc ctx
 
   curr.end.line == next.start.line and curr.end.column == next.start.column
+
 
 
 get_expr_part = fn ctx:
@@ -34,6 +37,7 @@ get_expr_part = fn ctx:
     else:
       {exprs: [expr]} = block
       [expr, next_ctx]
+
 
 
 get_str_part = fn ctx, op:
@@ -57,6 +61,7 @@ get_str_part = fn ctx, op:
       [{type: 'string:text', value, loc: {start, end}}, final_ctx]
 
 
+
 get_parts = fn ctx, op:
   [str_part, next_ctx] = get_str_part ctx, op
   match curr_value next_ctx:
@@ -68,10 +73,12 @@ get_parts = fn ctx, op:
       [[str_part], next_ctx]
 
 
+
 get_str_ind = fn str, min_ind:
   matched = match_all str, rx'\n([ ]{${min_ind},})'
   pipe matched:
     map [, spaces]: length spaces
+
 
 
 get_unindent = fn ctx, parts:
@@ -90,6 +97,7 @@ get_unindent = fn ctx, parts:
 
 
   fn str: replace_all str, rx'\n[ ]{0,${ind}}', '\n'
+
 
 
 get_unindented_text = fn ctx, op:
@@ -119,6 +127,7 @@ get_unindented_text = fn ctx, op:
   [{type: 'string', op, exprs, loc: {start, end}}, next_ctx]
 
 
+
 string = fn op:
   dict:
     ...prefix op
@@ -140,6 +149,7 @@ string = fn op:
 
     nud: fn: fn ctx:
       get_unindented_text ctx, op
+
 
 
 add_string = fn ctx:

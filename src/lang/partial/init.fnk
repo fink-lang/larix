@@ -1,0 +1,7 @@
+{add_operator} = import '@fink/prattler/symbols.fnk'
+{literal} = import '../symbols.fnk'
+
+
+add_partial = fn ctx:
+  pipe ctx:
+    add_operator literal '?', 'partial'

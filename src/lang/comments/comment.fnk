@@ -1,8 +1,9 @@
-{curr_loc} = import '@fink/prattler'
+{curr_loc} = import '@fink/prattler/parser.fnk'
 
-{prefix} = import '../symbols'
-{next_is_end_of_block, single_expression} = import '../block/expr'
-{collect_comments} = import './collect'
+{prefix} = import '../symbols.fnk'
+{next_is_end_of_block, single_expression} = import '../block/expr.fnk'
+{collect_comments} = import './collect.fnk'
+
 
 
 comment = fn op:

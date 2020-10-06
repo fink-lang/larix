@@ -1,0 +1,50 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+{parse_expr} = import '../../parser.fnk'
+
+
+
+describe 'logical keywords:', fn:
+  it 'parses and', fn:
+    expect
+      parse_expr 'a and b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a and b and c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a and b or c'
+      to_match_snapshot
+
+
+  it 'parses or', fn:
+    expect
+      parse_expr 'a or b'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a or b or c'
+      to_match_snapshot
+
+    expect
+      parse_expr 'a or b and c'
+      to_match_snapshot
+
+  it 'parses in', fn:
+    expect
+      parse_expr 'a in b or a in c'
+      to_match_snapshot
+
+
+  it 'parses not', fn:
+    expect
+      parse_expr 'not a'
+      to_match_snapshot
+
+
+  it 'parses as non-seperating', fn:
+    expect
+      parse_expr 'andornot'
+      to_match_snapshot

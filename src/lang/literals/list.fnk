@@ -1,0 +1,25 @@
+{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+
+{prefix, terminator} = import '../symbols.fnk'
+{terminated_block, add_named_block} = import '../block/init.fnk'
+
+
+
+list_op = fn op:
+  dict:
+    ...prefix op
+
+    nud: fn: fn ctx:
+      [{exprs, loc}, next_ctx] = terminated_block ctx, ']'
+      [{type: 'list', exprs, loc}, next_ctx]
+
+
+
+add_list = fn ctx:
+  pipe ctx:
+    add_operator list_op '['
+    add_separator terminator ','
+    add_separator terminator ']'
+
+    add_named_block 'list', 'list'
+    add_named_block 'seq', 'list'

@@ -1,4 +1,4 @@
-{serialize} = import './serialize'
+{serialize} = import './serialize.fnk'
 
 
 print = fn ast:
