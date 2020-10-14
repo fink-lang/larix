@@ -8,15 +8,18 @@
 {terminated_block} = import '../block/init.fnk'
 
 
+
 jsx_expr_container = fn ctx:
   [block, next_ctx] = terminated_block ctx, '}'
   expr = {...block, type: 'block'}
   [{type: 'jsx:expr', expr, loc: expr.loc}, next_ctx]
 
 
+
 jsx_txt = fn ctx:
   [{value: text, loc}, next_ctx] = collect_text ctx, rx"'</|[<{]"
   [{type: 'jsx:text', value: text, loc}, next_ctx]
+
 
 
 get_children = fn ctx:
@@ -43,6 +46,7 @@ get_children = fn ctx:
       [txt_children, next_ctx]
 
 
+
 jsx_body = fn name, ctx:
   [children, name_ctx] = get_children ctx
 
@@ -50,10 +54,12 @@ jsx_body = fn name, ctx:
   [children, advance_expected end_ctx, '>']
 
 
+
 jsx_string_val = fn ctx:
   [{value, loc}, next_ctx] = collect_text ctx, curr_value ctx
 
   [{type: 'jsx:string', value, loc}, next_ctx]
+
 
 
 jsx_attr_value = fn ctx:
@@ -70,6 +76,7 @@ jsx_attr_value = fn ctx:
       [err, err_ctx]
 
 
+
 jsx_attr = fn ctx:
   name = curr_value ctx
   {start} = curr_loc ctx
@@ -83,6 +90,7 @@ jsx_attr = fn ctx:
 
   {end} = curr_loc next_ctx
   [{type: 'jsx:attr', name, ...value, loc: {start, end}}, next_ctx]
+
 
 
 done = true
@@ -112,6 +120,7 @@ jsx_props = fn ctx:
     else: [props, next_ctx]
 
 
+
 body_or_end_elem = fn ctx, name:
   match ctx:
     next_is ?, '>':
@@ -119,6 +128,7 @@ body_or_end_elem = fn ctx, name:
       [false, children, next_ctx]
     else:
       [true, [], advance_expected ctx, '/>']
+
 
 
 jsx_elem = fn ctx:

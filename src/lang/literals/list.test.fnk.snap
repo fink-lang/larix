@@ -10,7 +10,7 @@ test.fnk:1:2
 1| [1)]
      ^
 
-Expected ',' or indented new line or ']'.
+Expected \`,\` or indented new line or \`]\`.
 
 
 
@@ -26,7 +26,7 @@ test.fnk:1:1
 1| [
     ^
 
-Expected ',' or indented(>=1) new line or ']'.
+Expected \`,\` or indented(>=1) new line or \`]\`.
 
 
 

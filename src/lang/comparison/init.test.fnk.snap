@@ -57,7 +57,7 @@ undefined:2:0
 2| 
    ^
 
-Expected one of [ '/>' ] but found undefined.
+Expected one of \`/>\` but found \`undefined\`.
 
 
 

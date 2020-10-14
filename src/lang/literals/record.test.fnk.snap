@@ -30,7 +30,7 @@ test.fnk:1:4
 1| {foo) bar}
        ^
 
-Expected ',' or indented new line or '}'.
+Expected \`,\` or indented new line or \`}\`.
 
 
 
@@ -142,7 +142,7 @@ test.fnk:1:1
 1| {:foo}
     ^
 
-Expected ',' or indented(>=1) new line or '}'.
+Expected \`,\` or indented(>=1) new line or \`}\`.
 
 
 
@@ -174,7 +174,7 @@ test.fnk:1:2
 1| {}foo}
      ^
 
-Expected ',' or indented new line or end of code.
+Expected \`,\` or indented new line or end of code.
 
 
 
@@ -266,7 +266,7 @@ test.fnk:1:1
 1| {
     ^
 
-Expected ',' or indented(>=1) new line or '}'.
+Expected \`,\` or indented(>=1) new line or \`}\`.
 
 
 
