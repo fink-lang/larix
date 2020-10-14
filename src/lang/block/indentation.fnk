@@ -1,5 +1,3 @@
-{inspect} = import 'util'
-
 {curr_loc, next_loc, next_is, next_is_end} = import '@fink/prattler/parser.fnk'
 {advance, has_errors} = import '@fink/prattler/parser.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
@@ -69,7 +67,7 @@ pop_block = fn ctx:
         else:
           ind = min_indentation ctx
           [, err_ctx] = add_error ctx,
-            "Expected ',' or indented(>=${ind}) new line or ${inspect end_symbol}."
+            'Expected `,` or indented(>=${ind}) new line or `${end_symbol}`.'
             ctx.next_token
 
           err_ctx
