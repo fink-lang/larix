@@ -13,8 +13,10 @@
 {next_is_new_expr, next_is_indented} = import './indentation.fnk'
 
 
+
 empty_expr = fn {loc: {end}}:
   {type: 'empty', value: '', loc: {start: end, end}}
+
 
 
 get_end_symb = fn {blocks: [block, ...blocks]}:
@@ -23,12 +25,14 @@ get_end_symb = fn {blocks: [block, ...blocks]}:
     else: block.end_symbol
 
 
+
 end_symb_str = fn ctx:
   symb = get_end_symb ctx
   match symb:
     # {end_of_block_indent: true}: 'end of block'
     {end_of_code: true}: 'end of code'
     else: inspect symb
+
 
 
 next_is_end_of_block = fn ctx:
@@ -42,15 +46,17 @@ next_is_end_of_block = fn ctx:
     else: false
 
 
+
 next_is_nl = fn ctx:
   {end: {line: curr_line}} = curr_loc ctx
   {start: {line: next_line}} = next_loc ctx
   curr_line < next_line
 
 
+
 get_all = fn ctx, single_expr:
   # TODO this is a monster, needs breakdown
-  pipe [[], ctx, true, false]:
+  [[, [exprs, next_ctx]]] = pipe [[], ctx, true, false]:
     unfold [exprs, ctx, at_start, was_comma]:
       [done, next] = match ctx:
         has_errors ?:
@@ -102,10 +108,10 @@ get_all = fn ctx, single_expr:
 
       ([done, next], next)
 
-    find [done]: done
+    filter [done]: done
 
-    fn [, [exprs, next_ctx]]:
-      [exprs, next_ctx]
+  [exprs, next_ctx]
+
 
 
 expressions = fn ctx, end_symbol, single_expr:
@@ -130,6 +136,7 @@ expressions = fn ctx, end_symbol, single_expr:
   [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
 
 
+
 # TODO: move to ../comments/?
 add_trailing_comment = fn expr, ctx:
   match ctx:
@@ -147,9 +154,11 @@ add_trailing_comment = fn expr, ctx:
       [expr, ctx]
 
 
+
 expression_with_comment = fn ctx, lbp:
   [expr, next_ctx] = expression ctx, lbp
   add_trailing_comment expr, next_ctx
+
 
 
 single_expression = fn ctx, lbp=0:
