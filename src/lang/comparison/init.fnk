@@ -14,7 +14,6 @@ lt = fn op:
     ...comp op
 
     lbp: fn lbp: fn ctx:
-
       match ctx:
         # TODO: this is a prattler internal interface
         {tokenizer: {partial_token: {value: starts_with ?, ' '}}}:
@@ -22,6 +21,16 @@ lt = fn op:
 
         else:
           0
+
+
+gt = fn op:
+  dict:
+    ...comp op
+
+    lbp: fn lbp: fn ctx:
+      match ctx:
+        {jsx: true}: 0
+        else: lbp
 
 
 
@@ -32,5 +41,5 @@ add_comparison_operators = fn ctx:
     add_operator comp '!='
     add_operator comp '>='
     add_operator comp '<='
-    add_operator comp '>'
+    add_operator gt '>'
     add_operator lt '<'

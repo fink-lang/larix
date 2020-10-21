@@ -10,3 +10,35 @@ module (1:0-4:0)
       ident (2:6-2:11) shrub
     ident (3:2-3:4) ni
 `;
+
+exports[`small pipe | handles precedence 1`] = `
+module (1:0-3:0)
+  assign = (1:0-1:34)
+    ident (1:0-1:3) foo
+    call | (1:6-1:34)
+      call (1:14-1:34)
+        ident (1:14-1:21) matches
+        string " (1:22-1:31)
+           rx'[a-z]'
+        partial (1:33-1:34) ?
+      string " (1:6-1:11)
+        'foo'
+  assign = (2:0-2:30)
+    ident (2:0-2:3) bar
+    list (2:6-2:30)
+      call | (2:7-2:17)
+        ident (2:14-2:17) ham
+        ident (2:7-2:11) spam
+      call | (2:19-2:29)
+        ident (2:27-2:29) ni
+        ident (2:19-2:24) shrub
+`;
+
+exports[`small pipe | pipes 1`] = `
+module (1:0-2:0)
+  assign = (1:0-1:18)
+    ident (1:0-1:3) foo
+    call | (1:6-1:18)
+      ident (1:12-1:18) is_int
+      number (1:6-1:9) 134
+`;

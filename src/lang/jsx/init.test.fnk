@@ -1,6 +1,7 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
-{parse_expr, parse} = import '../../parser.fnk'
+{parse_expr} = import '../../parser.fnk'
+
 
 
 describe 'JSX', fn:
@@ -23,9 +24,9 @@ describe 'JSX', fn:
       to_match_snapshot
 
 
-  it 'parses self closing elem with str attr: <Foobar spam=\'ni\' />', fn:
+  it "parses self closing elem with str attr: <Foobar spam='ni' />", fn:
     expect
-      parse_expr '<Foobar spam="ni" />'
+      parse_expr "<Foobar spam='ni' />"
       to_match_snapshot
 
 
@@ -71,15 +72,45 @@ describe 'JSX', fn:
       to_match_snapshot
 
     expect
+      parse_expr '<></>'
+      to_match_snapshot
+
+    expect
       parse_expr '
-        <></>
+        <div>
+          <></>
+        </div>
       '
       to_match_snapshot
 
 
 
-describe 'JSX parse failures', fn:
-  it 'errors with invalid attr value', fn:
+describe 'JSX extensions',  fn:
+  it 'parses spread', fn:
     expect
-      parse '<Foobar spam=123 />', 'test.fnk'
+      parse_expr '<Foobar spam ...ham shrub />'
+      to_match_snapshot
+
+
+  it "parses template str attr", fn:
+    expect
+      parse_expr "<Foobar spam='ni: \${1 + 2}' />"
+      to_match_snapshot
+
+
+  it "parses fink expr as attr values", fn:
+    expect
+      parse_expr "<Foobar spam=ham shrub=1234 ni=-123> foo </Foobar>"
+      to_match_snapshot
+
+
+  it "parses fink expr with gt comparison", fn:
+    expect
+      parse_expr "<Foobar spam=(foo > 123) shrub=1234> ni </Foobar>"
+      to_match_snapshot
+
+
+  it "parses expr group with call for attr value", fn:
+    expect
+      parse_expr "<Foobar spam=(ham ni) shrub=1234 />"
       to_match_snapshot

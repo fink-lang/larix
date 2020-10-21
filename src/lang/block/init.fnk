@@ -9,7 +9,7 @@
 
 
 terminated_block = fn ctx, end_symbol, block_expr=single_expression:
-  expressions ctx, end_symbol, block_expr
+  expressions {...ctx, jsx: false}, end_symbol, block_expr
 
 
 

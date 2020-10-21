@@ -1,21 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`JSX parse failures errors with invalid attr value 1`] = `
-module (1:0-1:19)
-  jsx:elem (1:0-1:19) Foobar
-    jsx:attr (1:8-1:13) spam
-            ::error::
-    jsx:attr (1:13-1:16) 123
+exports[`JSX extensions parses expr group with call for attr value 1`] = `
+jsx:elem (1:0-1:35) Foobar
+  jsx:attr (1:8-1:21) spam
+        group (1:13-1:21)
+      call (1:14-1:20)
+        ident (1:14-1:17) ham
+        ident (1:18-1:20) ni
+  jsx:attr (1:22-1:32) shrub
+        number (1:28-1:32) 1234
+`;
 
-error:
-test.fnk:1:13
-1| <Foobar spam=123 />
-                ^
+exports[`JSX extensions parses fink expr as attr values 1`] = `
+jsx:elem (1:0-1:50) Foobar
+  jsx:attr (1:8-1:16) spam
+        ident (1:13-1:16) ham
+  jsx:attr (1:17-1:27) shrub
+        number (1:23-1:27) 1234
+  jsx:attr (1:28-1:35) ni
+        arithm:prefix - (1:31-1:35)
+      number (1:32-1:35) 123
+  :
+  jsx:text (1:36-1:41)
+    " foo "
+`;
 
-Expected one of \`{,",'\` but found \`123\`.
+exports[`JSX extensions parses fink expr with gt comparison 1`] = `
+jsx:elem (1:0-1:49) Foobar
+  jsx:attr (1:8-1:24) spam
+        group (1:13-1:24)
+      comp > (1:14-1:23)
+        ident (1:14-1:17) foo
+        number (1:20-1:23) 123
+  jsx:attr (1:25-1:35) shrub
+        number (1:31-1:35) 1234
+  :
+  jsx:text (1:36-1:40)
+    " ni "
+`;
 
+exports[`JSX extensions parses spread 1`] = `
+jsx:elem (1:0-1:28) Foobar
+  jsx:attr (1:8-1:12) spam
+  spread ... (1:13-1:19)
+    ident (1:16-1:19) ham
+  jsx:attr (1:20-1:25) shrub
+`;
 
-
+exports[`JSX extensions parses template str attr 1`] = `
+jsx:elem (1:0-1:30) Foobar
+  jsx:attr (1:8-1:27) spam
+        string ' (1:13-1:27)
+      'ni: '
+            arithm + (1:20-1:25)
+              number (1:20-1:21) 1
+              number (1:24-1:25) 2
+      ''
 `;
 
 exports[`JSX parses elem with children: <Foobar><Spam /></Foobar> 1`] = `
@@ -61,6 +101,16 @@ jsx:frag (1:0-3:3)
 
 exports[`JSX parses fragment 2`] = `jsx:frag (1:0-1:5) `;
 
+exports[`JSX parses fragment 3`] = `
+jsx:elem (1:0-3:6) div
+  :
+  jsx:text (1:5-2:2)
+    "\\n  "
+  jsx:frag (2:2-2:7) 
+  jsx:text (2:7-3:0)
+    "\\n"
+`;
+
 exports[`JSX parses self closing elem with expr attr: <Foobar spam={ni} /> 1`] = `
 jsx:elem (1:0-1:20) Foobar
   jsx:attr (1:8-1:17) spam
@@ -77,14 +127,14 @@ jsx:elem (1:0-1:15) Foobar
 exports[`JSX parses self closing elem with str attr: <Foobar spam="ni" /> 1`] = `
 jsx:elem (1:0-1:20) Foobar
   jsx:attr (1:8-1:17) spam
-        jsx:string (1:14-1:16)
+        string " (1:13-1:17)
       'ni'
 `;
 
 exports[`JSX parses self closing elem with str attr: <Foobar spam='ni' /> 1`] = `
 jsx:elem (1:0-1:20) Foobar
   jsx:attr (1:8-1:17) spam
-        jsx:string (1:14-1:16)
+        string ' (1:13-1:17)
       'ni'
 `;
 
