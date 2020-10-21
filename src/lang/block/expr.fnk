@@ -41,6 +41,7 @@ next_is_end_of_block = fn ctx:
     next_is_unindented ?: true
     # TODO: should be responsibility of enclosing block
     next_is ?, ':': true
+    next_is ?, '/>': true
     else: false
 
 
@@ -175,7 +176,8 @@ single_expression = fn ctx, lbp=0:
     next_is_new_expr ?:
       [expr, next_ctx]
 
-    next_is_call_arg expr, lbp, ?:
+
+    not ctx.jsx and next_is_call_arg expr, lbp, ?:
       indented_block = fn ctx, block_expr=single_expression:
         expressions ctx, end_of_block_indent, block_expr
 

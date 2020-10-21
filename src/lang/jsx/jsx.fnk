@@ -6,6 +6,8 @@
 
 {prefix} = import '../symbols.fnk'
 {terminated_block} = import '../block/init.fnk'
+{single_expression} = import '../block/expr.fnk'
+{get_unindented_text} = import '../literals/string.fnk'
 
 
 
@@ -29,6 +31,11 @@ get_children = fn ctx:
     else: [txt]
 
   match next_ctx:
+    curr_is ?, '<>':
+      [expr, children_ctx] = jsx_frag next_ctx
+      [children, end_ctx] = get_children children_ctx
+      [[...txt_children, expr, ...children], end_ctx]
+
     curr_is ?, '<':
       [expr, children_ctx] = jsx_elem next_ctx
       [children, end_ctx] = get_children children_ctx
@@ -56,9 +63,12 @@ jsx_body = fn name, ctx:
 
 
 jsx_string_val = fn ctx:
-  [{value, loc}, next_ctx] = collect_text ctx, curr_value ctx
+  {start} = curr_loc ctx
+  op = curr_value ctx
 
-  [{type: 'jsx:string', value, loc}, next_ctx]
+  [{loc: {end}, ...str}, next_ctx] = get_unindented_text ctx, op
+
+  [{...str, loc: {start, end}}, next_ctx]
 
 
 
@@ -71,9 +81,10 @@ jsx_attr_value = fn ctx:
       jsx_string_val advance ctx
 
     else:
-      err_ctx = advance_expected ctx, '{', '"', "'"
-      [..., err] = err_ctx.errors
-      [err, err_ctx]
+      # err_ctx = advance_expected ctx, '{', '"', "'"
+      # [..., err] = err_ctx.errors
+      # [err, err_ctx]
+      single_expression {...ctx, jsx: true}, 0
 
 
 
@@ -85,11 +96,22 @@ jsx_attr = fn ctx:
     next_is ?, '=':
       [value, next_ctx] = jsx_attr_value advance ctx
       [{value}, next_ctx]
+
     else:
+      # TODO: should we use identifier as value?
       [{}, ctx]
 
   {end} = curr_loc next_ctx
   [{type: 'jsx:attr', name, ...value, loc: {start, end}}, next_ctx]
+
+
+
+jsx_spread_attr = fn ctx:
+  {start} = curr_loc ctx
+  [right, next_ctx] = single_expression {...ctx, jsx: true}, 0
+  {end} = curr_loc next_ctx
+
+  [{type: 'spread', op: '...', right, loc: {start, end}}, next_ctx]
 
 
 
@@ -104,6 +126,9 @@ jsx_props = fn ctx:
 
         next_is_end ?, '>':
           [done, prop_ctx]
+
+        next_is ?, '...':
+          jsx_spread_attr advance prop_ctx
 
         else:
           jsx_attr advance prop_ctx
