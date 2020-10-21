@@ -1,10 +1,27 @@
+{add_operator} = import '@fink/prattler/symbols.fnk'
+
 {add_named_block} = import '../block/init.fnk'
+{single_expression} = import '../block/expr.fnk'
+{infix} = import '../symbols.fnk'
+
+
+
+infix_pipe = fn op:
+  dict:
+    ...infix op, 'call'
+
+    led: fn lbp:  fn ctx, left:
+      {loc: {start}} = left
+      [callee, next_ctx] = single_expression ctx, lbp
+      {loc: {end}} = callee
+      [{type: 'call', callee, args: [left], op, loc: {start,end}}, next_ctx]
 
 
 
 add_pipe = fn ctx:
   pipe ctx:
     add_named_block 'pipe'
+    add_operator infix_pipe '|'
 
 
 

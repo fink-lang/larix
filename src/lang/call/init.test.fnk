@@ -14,3 +14,21 @@ describe 'pipe foo: ...', fn:
       '
       to_match_snapshot
 
+
+
+describe 'small pipe |', fn:
+  it 'pipes', fn:
+    expect
+      parse '
+        foo = 134 | is_int
+      '
+      to_match_snapshot
+
+
+  it 'handles precedence', fn:
+    expect
+      parse '
+        foo = "foo" | matches rx"[a-z]", ?
+        bar = [spam | ham, shrub | ni]
+      '
+      to_match_snapshot
