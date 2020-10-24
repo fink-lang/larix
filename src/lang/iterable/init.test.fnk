@@ -89,15 +89,3 @@ describe 'until item: ...', fn:
       '
       to_match_snapshot
 
-
-describe 'find item: ...', fn:
-
-  it 'parses', fn:
-    expect
-      parse_expr '
-        find item:
-          item % 2 == 0
-          # trailing comment
-      '
-      to_match_snapshot
-

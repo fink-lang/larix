@@ -1,8 +1,16 @@
 {
   "name": "@fink/larix",
-  "keywords": ["fink",  "fink-lang",  "ast",  "compiler",  "parser"],
+  "keywords": [
+    "fink",
+    "fink-lang",
+    "ast",
+    "compiler",
+    "parser"
+  ],
   "license": "MIT",
-  "engines": {"node": ">=14.0.0"},
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "type": "module",
   "exports": {
     "./": {
@@ -12,7 +20,9 @@
   },
   "version": "0.0.0-semantically-released",
   "private": false,
-  "publishConfig": {"access": "public"},
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:fink-lang/larix"
@@ -42,7 +52,7 @@
     "@fink/cli": "^8.0.0",
     "@fink/jest": "^7.0.0",
     "@fink/larix": "^14.0.0",
-    "@fink/loxia": "^14.0.2",
+    "@fink/loxia": "^15.0.1",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
     "jest-cli": "^26.5.3",
