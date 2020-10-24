@@ -12,18 +12,6 @@ block filter (1:0-4:0)
   # trailing comment
 `;
 
-exports[`find item: ... parses 1`] = `
-block find (1:0-4:0)
-  ident (1:5-1:9) item
-  :
-  comp == (2:2-2:15)
-    arithm % (2:2-2:10)
-      ident (2:2-2:6) item
-      number (2:9-2:10) 2
-    number (2:14-2:15) 0
-  # trailing comment
-`;
-
 exports[`fold item, accu: ... parses 1`] = `
 block fold (1:0-4:0)
   ident (1:5-1:9) item
