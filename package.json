@@ -45,14 +45,14 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@fink/prattler": "^6.1.0",
-    "@fink/std-lib": "^5.0.0"
+    "@fink/prattler": "^6.2.0",
+    "@fink/std-lib": "^6.0.0"
   },
   "devDependencies": {
     "@fink/cli": "^8.0.0",
     "@fink/jest": "^7.0.0",
-    "@fink/larix": "^14.0.0",
-    "@fink/loxia": "^15.0.1",
+    "@fink/larix": "^15.0.0",
+    "@fink/loxia": "^17.0.0",
     "commitizen": "^4.0.5",
     "cz-conventional-changelog": "^3.1.0",
     "jest-cli": "^26.5.3",
