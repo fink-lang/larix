@@ -28,8 +28,8 @@ describe 'unfold accu: ...', fn:
   it 'parses with item, accu result', fn:
     expect
       parse_expr '
-        unfold prev=0:
-          (prev * 2, prev + 1)
+        unfold prev, acc=0:
+          [acc + prev * 2, prev + 1]
       '
       to_match_snapshot
 

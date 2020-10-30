@@ -55,9 +55,9 @@ next_is_nl = fn ctx:
 
 get_all = fn ctx, single_expr:
   # TODO this is a monster, needs breakdown
-  [[, [exprs, next_ctx]]] = pipe [[], ctx, true, false]:
-    unfold [exprs, ctx, at_start, was_comma]:
-      [done, next] = match ctx:
+  [[, [exprs, next_ctx]]] = pipe [, [[], ctx, true, false]]:
+    unfold [, [exprs, ctx, at_start, was_comma]]:
+      match ctx:
         has_errors ?:
           [true, [exprs, ctx]]
 
@@ -104,8 +104,6 @@ get_all = fn ctx, single_expr:
               next_is_start = next_is_nl next_ctx
 
               [false, [[...exprs, expr], next_ctx, next_is_start, false]]
-
-      ([done, next], next)
 
     filter [done]: done
 
