@@ -118,8 +118,8 @@ jsx_spread_attr = fn ctx:
 done = true
 
 jsx_props = fn ctx:
-  [props, next_ctx] = pipe ctx:
-    unfold prop_ctx:
+  [props, next_ctx] = pipe [, ctx]:
+    unfold [ ,prop_ctx]:
       [prop, next_ctx] = match prop_ctx:
         next_is_end ?, '/>':
           [done, prop_ctx]
@@ -133,7 +133,7 @@ jsx_props = fn ctx:
         else:
           jsx_attr advance prop_ctx
 
-      ([prop, next_ctx], next_ctx)
+      [prop, next_ctx]
 
     while [prop]: prop != done
 
