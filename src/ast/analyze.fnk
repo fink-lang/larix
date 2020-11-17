@@ -1,0 +1,230 @@
+{reverse} = import '@fink/std-lib/iter.fnk'
+
+
+
+get_expr_id = fn expr:
+  {type, op, value, name, loc: {start}} = expr
+
+  match expr:
+    {type: {}, op: {}}:
+      '${type}:${op}@${start.line}:${start.column}'
+    {type: 'ident'}:
+      '${type}:${value}@${start.line}:${start.column}'
+    {type: 'jsx:elem'}:
+      '${type}:${name}@${start.line}:${start.column}'
+    {type: 'jsx:attr'}:
+      '${type}:${name}@${start.line}:${start.column}'
+    else:
+      '${type}@${start.line}:${start.column}'
+
+
+
+is_parent = fn parent, expr, ctx:
+  match expr:
+    false: false
+    parent: true
+    else:
+      next_expr = get_parent expr, ctx
+      is_parent parent, next_expr, ctx
+
+
+
+get_parent = fn expr, {parents}:
+  # {(get_expr_id expr): parent_expr=false} = parents
+  {(get_expr_id expr): parent_expr} = parents
+  parent_expr
+
+
+
+add_parents = map [expr, parent], , {parents={}, ...ctx}:
+  expr_id = get_expr_id expr
+
+  next_ctx = rec:
+    ...ctx
+    parents: rec:
+      ...parents
+      (expr_id): parent
+
+  [[expr, parent], , next_ctx]
+
+
+
+get_scope = fn expr, ctx:
+  parent = get_parent expr, ctx
+
+  match parent:
+    # false:
+    #   expr
+
+    {type: 'module'}:
+      parent
+
+    {type: 'block', args: []}:
+      parent
+
+    {type: 'match:expr'}:
+      parent
+
+    else:
+      get_scope parent, ctx
+
+
+
+may_bind = fn expr, ctx:
+  parent = get_parent expr, ctx
+
+  match parent:
+    {type: 'block', 'op': ? in ['match', 'pipe'], args: expr in ?}:
+      false
+
+    {type: 'block', args: expr in ?}:
+      true
+
+    {type: 'rec', exprs: expr in ?}:
+      may_bind parent, ctx
+
+    {type: 'rec:kv', left: parent.right, right: expr}:
+      may_bind parent, ctx
+
+    {type: 'rec:kv', right: expr}:
+      may_bind parent, ctx
+
+    {type: 'assign', left: expr}:
+      true
+
+    {type: 'list', exprs: expr in ?}:
+      may_bind parent, ctx
+
+    {type: 'group', exprs: expr in ?}:
+      may_bind parent, ctx
+
+    # {right: expr}:
+    #   may_bind parent, ctx
+
+    else:
+      false
+
+
+
+is_binding_ident = fn expr, ctx:
+  match expr:
+    {type: 'ident'}:
+      may_bind expr, ctx
+    else:
+      false
+
+
+
+is_referencing = fn expr, ctx:
+  match expr:
+    may_bind ?, ctx: false
+
+    {type: 'ident'}:
+      parent = get_parent expr, ctx
+      match parent:
+        {type: 'rec:kv', left: ? == expr}: false
+        {type: 'member', right: ? == expr}: false
+        else: true
+
+    {type: 'jsx:attr', value: {}}:
+      false
+
+    {type: 'jsx:attr'}:
+      true
+
+    {type: 'jsx:elem'}:
+      true
+
+    else:
+      false
+
+
+
+find_binding = fn expr, ctx:
+  expr_scope = get_scope expr, ctx
+
+  name = match expr:
+    {type: 'ident'}: expr.value
+    {type: 'jsx:elem'}: expr.name
+    {type: 'jsx:attr'}: expr.name
+
+  [binding=false] = pipe ctx.bindings:
+    reverse
+    filter {value}: name == value
+    filter binding_expr:
+      binding_scope = get_scope binding_expr, ctx
+      is_parent binding_scope, expr_scope, ctx
+
+  binding
+
+
+
+add_binding = fn expr, ctx:
+  {bindings=[], refs={}}= ctx
+  rec:
+    ...ctx
+    bindings: [...bindings, expr]
+    refs: rec:
+      ...refs
+      (get_expr_id expr): []
+
+
+
+get_refs = fn expr, ctx:
+  expr_id = match expr:
+    false: 'unbound'
+    else: get_expr_id expr
+
+  {refs: {(expr_id): refs=[]}} = ctx
+  refs
+
+
+add_ref = fn expr, ctx:
+  binding = find_binding expr, ctx
+
+  binding_id = match binding:
+    false: 'unbound'
+    else: get_expr_id binding
+
+  # {refs: {(binding_id): refs=[]}={}} = ctx
+  refs = get_refs binding, ctx
+  rec:
+    ...ctx
+    refs: rec:
+      ...ctx.refs
+      (binding_id): [...refs, expr]
+
+
+
+add_binding_refs = map [expr, parent], , ctx:
+  next_ctx = match expr:
+    is_referencing ?, ctx:
+      add_ref expr, ctx
+
+    is_binding_ident ?, ctx:
+      add_binding expr, ctx
+
+    else:
+      ctx
+
+  [[expr, parent], , next_ctx]
+
+
+
+add_duplicate_bindings = map [expr, parent], ids=[], ctx:
+  match expr:
+    is_binding_ident ?, ctx:
+      scope_id = get_expr_id get_scope expr, ctx
+      id = '${scope_id}${expr.name or expr.value}'
+
+      match id:
+        ? in ids:
+          {rebindings=[]} = ctx
+          next_ctx = {...ctx, rebindings: [...rebindings, expr]}
+          [[expr, parent], ids, next_ctx]
+        else:
+          [[expr, parent], [...ids, id], ctx]
+    else:
+      [[expr, parent], ids, ctx]
+
+

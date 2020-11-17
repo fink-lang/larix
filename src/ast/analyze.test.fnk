@@ -1,0 +1,113 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+
+
+{parse} = import '../parser.fnk'
+
+{add_parents, add_binding_refs, add_duplicate_bindings, get_expr_id, get_scope} = import './analyze.fnk'
+{walk} = import './traverse.fnk'
+
+
+
+collect_exprs = fold [expr], , , ctx={}: [expr, , ctx]
+
+
+collect_bindings = fn parsed:
+  [, {bindings}] = collect_exprs parsed
+  [...bindings | map expr: get_expr_id expr]
+
+
+
+collect_refs = fn parsed:
+  [, {refs}] = collect_exprs parsed
+
+  seq:
+    ...refs | map [expr_id, exprs]:
+      ... exprs | map expr:
+        '${get_expr_id expr} -> ${expr_id}'
+
+
+
+collect_scopes = fn parsed:
+  [, ctx] = collect_exprs parsed
+  seq:
+    ... ctx.bindings | map expr:
+      '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
+
+
+
+collect_duplicate_bindings = fn parsed:
+  [, ctx] = collect_exprs parsed
+  seq:
+    ... ctx.rebindings | map expr:
+      '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
+
+
+
+
+analyze = fn source, collector:
+  pipe source:
+    parse ?, 'test.fnk'
+    walk [?]
+    add_parents
+    add_binding_refs
+    add_duplicate_bindings
+    collector
+
+
+
+
+source = '
+  foo = 1234
+
+  bar = fn spam, ham:
+    ni = spam.ni + ham"\${foo}"
+    ni + undef
+
+  {ni, na: {nu}} = {foo}
+  {(ni): nini=nu} = {foo: bar, (ni): nu}
+
+  match bar foo:
+    nu:
+      ni = foo
+      ni
+
+  <div />
+
+  Spam = fn {children}:
+    <>{children}</>
+
+  <Spam ni shrub=nu spam={ham + 1}>
+  </Spam>
+
+  try:
+    foo
+
+  [ni] = [1234]
+'
+
+
+describe analyze, fn:
+
+  it 'gets bindings', fn:
+    expect
+      analyze source, collect_bindings
+      to_match_snapshot
+
+
+  it 'gets duplicate bindings', fn:
+    expect
+      analyze source, collect_duplicate_bindings
+      to_match_snapshot
+
+
+  it 'gets refs', fn:
+    expect
+      analyze source, collect_refs
+      to_match_snapshot
+
+
+  it 'gets scopes', fn:
+    expect
+      analyze source, collect_scopes
+      to_match_snapshot
+
