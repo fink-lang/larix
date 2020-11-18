@@ -19,6 +19,12 @@ get_expr_id = fn expr:
 
 
 
+get_parent = fn expr, {parents}:
+  # {(get_expr_id expr): parent_expr=false} = parents
+  {(get_expr_id expr): parent_expr} = parents
+  parent_expr
+
+
 is_parent = fn parent, expr, ctx:
   match expr:
     false: false
@@ -26,13 +32,6 @@ is_parent = fn parent, expr, ctx:
     else:
       next_expr = get_parent expr, ctx
       is_parent parent, next_expr, ctx
-
-
-
-get_parent = fn expr, {parents}:
-  # {(get_expr_id expr): parent_expr=false} = parents
-  {(get_expr_id expr): parent_expr} = parents
-  parent_expr
 
 
 
@@ -53,8 +52,9 @@ get_scope = fn expr, ctx:
   parent = get_parent expr, ctx
 
   match parent:
-    # false:
-    #   expr
+    --- istanbul ignore next ---
+    false:
+      expr
 
     {type: 'module'}:
       parent
@@ -83,7 +83,7 @@ may_bind = fn expr, ctx:
     {type: 'rec', exprs: expr in ?}:
       may_bind parent, ctx
 
-    {type: 'rec:kv', left: parent.right, right: expr}:
+    {type: 'rec:kv', left: expr, right: expr}:
       may_bind parent, ctx
 
     {type: 'rec:kv', right: expr}:
@@ -98,8 +98,8 @@ may_bind = fn expr, ctx:
     {type: 'group', exprs: expr in ?}:
       may_bind parent, ctx
 
-    # {right: expr}:
-    #   may_bind parent, ctx
+    {type: 'spread'}:
+      may_bind parent, ctx
 
     else:
       false
@@ -122,8 +122,8 @@ is_referencing = fn expr, ctx:
     {type: 'ident'}:
       parent = get_parent expr, ctx
       match parent:
-        {type: 'rec:kv', left: ? == expr}: false
-        {type: 'member', right: ? == expr}: false
+        {type: 'rec:kv', left: expr, right: ? != expr}: false
+        {type: 'member', right:expr}: false
         else: true
 
     {type: 'jsx:attr', value: {}}:
@@ -147,6 +147,7 @@ find_binding = fn expr, ctx:
     {type: 'ident'}: expr.value
     {type: 'jsx:elem'}: expr.name
     {type: 'jsx:attr'}: expr.name
+
 
   [binding=false] = pipe ctx.bindings:
     reverse

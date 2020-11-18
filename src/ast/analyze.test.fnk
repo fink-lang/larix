@@ -43,7 +43,6 @@ collect_duplicate_bindings = fn parsed:
 
 
 
-
 analyze = fn source, collector:
   pipe source:
     parse ?, 'test.fnk'
@@ -56,11 +55,13 @@ analyze = fn source, collector:
 
 
 
+
+
 source = '
   foo = 1234
 
-  bar = fn spam, ham:
-    ni = spam.ni + ham"\${foo}"
+  bar = fn spam, {...ham}:
+    ni = spam.ni + ham"\${foo.spam}"
     ni + undef
 
   {ni, na: {nu}} = {foo}
@@ -69,7 +70,7 @@ source = '
   match bar foo:
     nu:
       ni = foo
-      ni
+      [...ni]
 
   <div />
 
@@ -83,6 +84,8 @@ source = '
     foo
 
   [ni] = [1234]
+  na = [...ni]
+  fn foo: {foo}
 '
 
 
