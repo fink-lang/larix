@@ -34,6 +34,10 @@ get_child_exprs = fn expr:
     {left: {}, right: {}}:
       [expr.left, expr.right]
 
+    # spread
+    {right: {}}:
+      [expr.right]
+
     # {left: {}}:
     #   [expr.left]
 
@@ -41,7 +45,6 @@ get_child_exprs = fn expr:
       expr.exprs
 
     else:
-      # console.log '----------------', expr.type, expr.value
       []
 
 
@@ -50,5 +53,6 @@ walk = fn exprs, parent=false:
     map expr:
       children = get_child_exprs expr
       ... [[expr, parent]] | chain walk children, expr
+
 
 

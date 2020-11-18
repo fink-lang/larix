@@ -5,7 +5,7 @@ Array [
   "ident:foo@1:0",
   "ident:bar@3:0",
   "ident:spam@3:9",
-  "ident:ham@3:15",
+  "ident:ham@3:19",
   "ident:ni@4:2",
   "ident:ni@7:1",
   "ident:nu@7:10",
@@ -14,6 +14,8 @@ Array [
   "ident:Spam@17:0",
   "ident:children@17:11",
   "ident:ni@26:1",
+  "ident:na@27:0",
+  "ident:foo@28:3",
 ]
 `;
 
@@ -26,13 +28,14 @@ Array [
 exports[`analyze gets refs 1`] = `
 Array [
   "ident:foo@4:23 -> ident:foo@1:0",
+  "ident:foo@7:18 -> ident:foo@1:0",
   "ident:foo@10:10 -> ident:foo@1:0",
   "ident:foo@12:9 -> ident:foo@1:0",
   "ident:foo@24:2 -> ident:foo@1:0",
   "ident:bar@8:24 -> ident:bar@3:0",
   "ident:bar@10:6 -> ident:bar@3:0",
   "ident:spam@4:7 -> ident:spam@3:9",
-  "ident:ham@4:17 -> ident:ham@3:15",
+  "ident:ham@4:17 -> ident:ham@3:19",
   "ident:ni@5:2 -> ident:ni@4:2",
   "ident:undef@5:7 -> unbound",
   "jsx:elem:div@15:0 -> unbound",
@@ -43,9 +46,11 @@ Array [
   "ident:nu@8:12 -> ident:nu@7:10",
   "ident:nu@8:35 -> ident:nu@7:10",
   "ident:nu@11:2 -> ident:nu@7:10",
-  "ident:ni@13:4 -> ident:ni@12:4",
+  "ident:ni@13:8 -> ident:ni@12:4",
   "jsx:elem:Spam@20:0 -> ident:Spam@17:0",
   "ident:children@18:5 -> ident:children@17:11",
+  "ident:ni@27:9 -> ident:ni@26:1",
+  "ident:foo@28:9 -> ident:foo@28:3",
 ]
 `;
 
@@ -54,7 +59,7 @@ Array [
   "ident:foo@1:0  module@1:0",
   "ident:bar@3:0  module@1:0",
   "ident:spam@3:9  block:fn@3:6",
-  "ident:ham@3:15  block:fn@3:6",
+  "ident:ham@3:19  block:fn@3:6",
   "ident:ni@4:2  block:fn@3:6",
   "ident:ni@7:1  module@1:0",
   "ident:nu@7:10  module@1:0",
@@ -63,5 +68,7 @@ Array [
   "ident:Spam@17:0  module@1:0",
   "ident:children@17:11  block:fn@17:7",
   "ident:ni@26:1  module@1:0",
+  "ident:na@27:0  module@1:0",
+  "ident:foo@28:3  block:fn@28:0",
 ]
 `;
