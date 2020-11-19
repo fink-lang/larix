@@ -69,6 +69,7 @@ source = '
       ni = foo
       [...ni]
 
+
   <div />
 
   Spam = fn {children}:
@@ -83,6 +84,9 @@ source = '
   [ni] = [1234]
   na = [...ni]
   fn foo: {foo}
+
+  map await ham:
+    ham + 1
 '
 
 

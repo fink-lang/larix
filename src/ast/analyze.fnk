@@ -102,6 +102,9 @@ may_bind = fn expr, ctx:
     {type: 'spread'}:
       may_bind parent, ctx
 
+    {op: 'await'}:
+      may_bind parent, ctx
+
     else:
       false
 
