@@ -144,11 +144,12 @@ string = fn op:
 
       [{loc: {end}, ...str}, next_ctx] = get_unindented_text ctx, op
 
-      # TODO: use `left` rather than `tag`?
       [{...str, tag: left, loc: {start, end}}, next_ctx]
 
     nud: fn: fn ctx:
-      get_unindented_text ctx, op
+      [str, next_ctx] = get_unindented_text ctx, op
+      [{...str, tag: false}, next_ctx]
+
 
 
 

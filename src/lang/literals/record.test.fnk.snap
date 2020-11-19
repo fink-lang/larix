@@ -4,7 +4,6 @@ exports[`dict parses 1`] = `
 rec dict (1:0-7:0):
   rec:kv (2:2-2:5)
     ident (2:2-2:5) foo
-    ident (2:2-2:5) foo
   rec:kv (4:2-4:15)
     # prop comment
     group (4:2-4:10)
@@ -14,7 +13,6 @@ rec dict (1:0-7:0):
     number (4:12-4:15) 123
   rec:kv (5:2-5:6)
     ident (5:2-5:6) spam
-    ident (5:2-5:6) spam
   # trailing comment
 `;
 
@@ -22,7 +20,6 @@ exports[`object {...} - parsing failures errors when encountering bad end of pro
 module (1:0-1:4)
   rec (1:0-1:4)
     rec:kv (1:1-1:4)
-      ident (1:1-1:4) foo
       ident (1:1-1:4) foo
 
 error:
@@ -234,14 +231,12 @@ module (1:0-1:6)
     empty (1:2-1:2)
     rec:kv (1:2-1:5)
       ident (1:2-1:5) foo
-      ident (1:2-1:5) foo
 `;
 
 exports[`object {...} - parsing failures errors when encountering bad start of prop key 1`] = `
 module (1:0-1:5)
   rec (1:0-1:5)
     rec:kv (1:1-1:4)
-      ident (1:1-1:4) foo
       ident (1:1-1:4) foo
     ::error::
 
@@ -276,7 +271,6 @@ exports[`object {...} parses calculated prop 1`] = `
 rec (1:0-1:26)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-    ident (1:1-1:4) foo
   rec:kv (1:6-1:19)
     group (1:6-1:14)
       arithm + (1:7-1:13)
@@ -284,7 +278,6 @@ rec (1:0-1:26)
         ident (1:11-1:13) ni
     number (1:16-1:19) 123
   rec:kv (1:21-1:25)
-    ident (1:21-1:25) spam
     ident (1:21-1:25) spam
 `;
 
@@ -306,30 +299,21 @@ exports[`object {...} parses keywords as keys 1`] = `
 rec (1:0-1:60)
   rec:kv (1:1-1:3)
     ident (1:1-1:3) fn
-    ident (1:1-1:3) fn
   rec:kv (1:5-1:10)
-    ident (1:5-1:10) match
     ident (1:5-1:10) match
   rec:kv (1:12-1:16)
     ident (1:12-1:16) fold
-    ident (1:12-1:16) fold
   rec:kv (1:18-1:24)
-    ident (1:18-1:24) unfold
     ident (1:18-1:24) unfold
   rec:kv (1:26-1:29)
     ident (1:26-1:29) map
-    ident (1:26-1:29) map
   rec:kv (1:31-1:35)
-    ident (1:31-1:35) find
     ident (1:31-1:35) find
   rec:kv (1:37-1:43)
     ident (1:37-1:43) filter
-    ident (1:37-1:43) filter
   rec:kv (1:45-1:50)
     ident (1:45-1:50) await
-    ident (1:45-1:50) await
   rec:kv (1:52-1:59)
-    ident (1:52-1:59) attempt
     ident (1:52-1:59) attempt
 `;
 
@@ -337,19 +321,15 @@ exports[`object {...} parses multiple shorthand exprs 1`] = `
 rec (1:0-1:13)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-    ident (1:1-1:4) foo
   rec:kv (1:6-1:9)
     ident (1:6-1:9) bar
-    ident (1:6-1:9) bar
   rec:kv (1:11-1:12)
-    ident (1:11-1:12) π
     ident (1:11-1:12) π
 `;
 
 exports[`object {...} parses multiple shorthand exprs 2`] = `
 rec (1:0-1:28)
   rec:kv (1:1-1:4)
-    ident (1:1-1:4) foo
     ident (1:1-1:4) foo
   rec:kv (1:6-1:14)
     ident (1:6-1:9) bar
@@ -371,14 +351,11 @@ exports[`object {...} parses single shorthand prop 1`] = `
 rec (1:0-1:5)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-    ident (1:1-1:4) foo
 `;
 
 exports[`object {...} parses single shorthand value 1`] = `
 rec (1:0-1:7)
   rec:kv (1:1-1:6)
-    string ' (1:1-1:6)
-      'foo'
     string ' (1:1-1:6)
       'foo'
 `;
@@ -395,10 +372,7 @@ exports[`object {...} parses spread prop 1`] = `
 rec (1:0-1:13)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-    ident (1:1-1:4) foo
   rec:kv (1:6-1:12)
-    spread ... (1:6-1:12)
-      ident (1:9-1:12) bar
     spread ... (1:6-1:12)
       ident (1:9-1:12) bar
 `;
@@ -407,11 +381,8 @@ exports[`object {...} parses unicode as keys 1`] = `
 rec (1:0-1:9)
   rec:kv (1:1-1:2)
     ident (1:1-1:2) π
-    ident (1:1-1:2) π
   rec:kv (1:4-1:5)
     ident (1:4-1:5) ƒ
-    ident (1:4-1:5) ƒ
   rec:kv (1:7-1:8)
-    ident (1:7-1:8) ∑
     ident (1:7-1:8) ∑
 `;

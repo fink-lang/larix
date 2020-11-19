@@ -8,6 +8,7 @@
 {terminated_block} = import '../block/init.fnk'
 {single_expression} = import '../block/expr.fnk'
 {get_unindented_text} = import '../literals/string.fnk'
+{identifier} = import '../identifier/init.fnk'
 
 
 
@@ -54,10 +55,15 @@ get_children = fn ctx:
 
 
 
+jsx_ident = fn ctx:
+  identifier advance ctx
+
+
+
 jsx_body = fn name, ctx:
   [children, name_ctx] = get_children ctx
 
-  end_ctx = advance_expected name_ctx, name
+  end_ctx = advance_expected name_ctx, name.value
   [children, advance_expected end_ctx, '>']
 
 
@@ -89,20 +95,18 @@ jsx_attr_value = fn ctx:
 
 
 jsx_attr = fn ctx:
-  name = curr_value ctx
-  {start} = curr_loc ctx
+  [name, value_ctx] = jsx_ident ctx
+  {start} = name.loc
 
-  [value, next_ctx] = match ctx:
+  [value, next_ctx] = match value_ctx:
     next_is ?, '=':
-      [value, next_ctx] = jsx_attr_value advance ctx
-      [{value}, next_ctx]
+      jsx_attr_value advance value_ctx
 
     else:
-      # TODO: should we use identifier as value?
-      [{}, ctx]
+      [false, value_ctx]
 
   {end} = curr_loc next_ctx
-  [{type: 'jsx:attr', name, ...value, loc: {start, end}}, next_ctx]
+  [{type: 'jsx:attr', name, value, loc: {start, end}}, next_ctx]
 
 
 
@@ -131,7 +135,7 @@ jsx_props = fn ctx:
           jsx_spread_attr advance prop_ctx
 
         else:
-          jsx_attr advance prop_ctx
+          jsx_attr prop_ctx
 
       [prop, next_ctx]
 
@@ -155,16 +159,15 @@ body_or_end_elem = fn ctx, name:
       [true, [], advance_expected ctx, '/>']
 
 
-
 jsx_elem = fn ctx:
   {start} = curr_loc ctx
 
-  elem_ctx = advance ctx
-  name = curr_value elem_ctx
+  [name, elem_ctx] = jsx_ident ctx
 
   [props, body_ctx] = jsx_props elem_ctx
 
   [self_closing, children, next_ctx] = body_or_end_elem body_ctx, name
+
   {end} = curr_loc next_ctx
 
   list:
