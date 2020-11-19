@@ -54,14 +54,11 @@ analyze = fn source, collector:
 
 
 
-
-
-
 source = '
   foo = 1234
 
   bar = fn spam, {...ham}:
-    ni = spam.ni + ham"\${foo.spam}"
+    ni = spam.ni.nu + ham"\${foo.spam}"
     ni + undef
 
   {ni, na: {nu}} = {foo}

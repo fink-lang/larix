@@ -3,19 +3,20 @@
 
 
 get_expr_id = fn expr:
-  {type, op, value, name, loc: {start}} = expr
+  {type, op, value, name, loc: {start, end}} = expr
+  loc_str = '${start.line}:${start.column}-${end.line}:${end.column}'
 
   match expr:
     {type: {}, op: {}}:
-      '${type}:${op}@${start.line}:${start.column}'
+      '${type}:${op}@${loc_str}'
     {type: 'ident'}:
-      '${type}:${value}@${start.line}:${start.column}'
+      '${type}:${value}@${loc_str}'
     {type: 'jsx:elem'}:
-      '${type}:${name}@${start.line}:${start.column}'
+      '${type}:${name}@${loc_str}'
     {type: 'jsx:attr'}:
-      '${type}:${name}@${start.line}:${start.column}'
+      '${type}:${name}@${loc_str}'
     else:
-      '${type}@${start.line}:${start.column}'
+      '${type}@${loc_str}'
 
 
 
