@@ -10,12 +10,10 @@ module (1:0-14:0)
       rec (3:2-3:19)
         rec:kv (3:3-3:6)
           ident (3:3-3:6) foo
-          ident (3:3-3:6) foo
         rec:kv (3:8-3:18)
           ident (3:8-3:12) spam
           rec (3:14-3:18)
             rec:kv (3:15-3:17)
-              ident (3:15-3:17) ni
               ident (3:15-3:17) ni
       block (3:19-3:24)
         ident (3:21-3:24) bar

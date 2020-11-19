@@ -3,18 +3,16 @@
 
 
 get_expr_id = fn expr:
-  {type, op, value, name, loc: {start, end}} = expr
+  {type, op, value, loc: {start, end}} = expr
   loc_str = '${start.line}:${start.column}-${end.line}:${end.column}'
 
   match expr:
-    {type: {}, op: {}}:
-      '${type}:${op}@${loc_str}'
     {type: 'ident'}:
       '${type}:${value}@${loc_str}'
-    {type: 'jsx:elem'}:
-      '${type}:${name}@${loc_str}'
-    {type: 'jsx:attr'}:
-      '${type}:${name}@${loc_str}'
+
+    {type: {}, op: {}}:
+      '${type}:${op}@${loc_str}'
+
     else:
       '${type}@${loc_str}'
 
@@ -24,6 +22,7 @@ get_parent = fn expr, {parents}:
   # {(get_expr_id expr): parent_expr=false} = parents
   {(get_expr_id expr): parent_expr} = parents
   parent_expr
+
 
 
 is_parent = fn parent, expr, ctx:
@@ -75,6 +74,21 @@ may_bind = fn expr, ctx:
   parent = get_parent expr, ctx
 
   match parent:
+    {type: 'assign', left: expr}:
+      true
+
+    {type: 'spread'}:
+      may_bind parent, ctx
+
+    {op: 'await'}:
+      may_bind parent, ctx
+
+    {type: 'rec:kv', right: expr}:
+      may_bind parent, ctx
+
+    {type: 'rec:kv', left: expr, right: false}:
+      may_bind parent, ctx
+
     {type: 'block', 'op': ? in ['match', 'pipe'], args: expr in ?}:
       false
 
@@ -84,25 +98,10 @@ may_bind = fn expr, ctx:
     {type: 'rec', exprs: expr in ?}:
       may_bind parent, ctx
 
-    {type: 'rec:kv', left: expr, right: expr}:
-      may_bind parent, ctx
-
-    {type: 'rec:kv', right: expr}:
-      may_bind parent, ctx
-
-    {type: 'assign', left: expr}:
-      true
-
     {type: 'list', exprs: expr in ?}:
       may_bind parent, ctx
 
     {type: 'group', exprs: expr in ?}:
-      may_bind parent, ctx
-
-    {type: 'spread'}:
-      may_bind parent, ctx
-
-    {op: 'await'}:
       may_bind parent, ctx
 
     else:
@@ -126,18 +125,11 @@ is_referencing = fn expr, ctx:
     {type: 'ident'}:
       parent = get_parent expr, ctx
       match parent:
-        {type: 'rec:kv', left: expr, right: ? != expr}: false
-        {type: 'member', right:expr}: false
+        {type: 'rec:kv', left: expr, right: false}: true
+        {type: 'rec:kv', left: expr}: false
+        {type: 'member', right: expr}: false
+        {type: 'jsx:attr', name: expr, value: ? != false}: false
         else: true
-
-    {type: 'jsx:attr', value: {}}:
-      false
-
-    {type: 'jsx:attr'}:
-      true
-
-    {type: 'jsx:elem'}:
-      true
 
     else:
       false
@@ -149,8 +141,8 @@ find_binding = fn expr, ctx:
 
   name = match expr:
     {type: 'ident'}: expr.value
-    {type: 'jsx:elem'}: expr.name
-    {type: 'jsx:attr'}: expr.name
+    # {type: 'jsx:elem'}: expr.name
+    # {type: 'jsx:attr'}: expr.name
 
 
   [binding=false] = pipe ctx.bindings:
@@ -184,6 +176,7 @@ get_refs = fn expr, ctx:
   refs
 
 
+
 add_ref = fn expr, ctx:
   binding = find_binding expr, ctx
 
@@ -191,7 +184,6 @@ add_ref = fn expr, ctx:
     false: 'unbound'
     else: get_expr_id binding
 
-  # {refs: {(binding_id): refs=[]}={}} = ctx
   refs = get_refs binding, ctx
   rec:
     ...ctx

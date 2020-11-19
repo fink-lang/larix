@@ -4,6 +4,7 @@
 {obj_to_json} = import '@fink/std-lib/json.fnk'
 
 
+
 get_comment = fn indent, comments:
   pipe comments:
     map {op, value}:
@@ -17,12 +18,14 @@ get_comment = fn indent, comments:
     join '\n'
 
 
+
 trailing_comment = fn indent, node:
   match node:
     {comments: {trailing: 0 < length ?}}:
       comment = get_comment '${indent}', node.comments.trailing
       '\n${comment}'
     else: ''
+
 
 
 str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
@@ -41,6 +44,7 @@ str_type_op = fn {type, op, comments, loc: {start, end}}, indent:
   '${leading}${indent}${head}'
 
 
+
 serialize_block = fn node, serialize, indent:
   head = str_type_op node, indent
   exprs = pipe node.exprs:
@@ -48,7 +52,7 @@ serialize_block = fn node, serialize, indent:
     join '\n'
 
   match node:
-    {args: {}}:
+    {args: []}:
       args = pipe node.args:
         map expr: serialize expr, '${indent}  '
         join '\n'
@@ -61,6 +65,7 @@ serialize_block = fn node, serialize, indent:
 
     else:
       '${head}\n${exprs}'
+
 
 
 serialize_call = fn node, serialize, indent:
@@ -78,13 +83,18 @@ serialize_call = fn node, serialize, indent:
   '${head}\n${callee}${arg_str}'
 
 
+
 serialize_infix = fn node, serialize, indent:
   head = str_type_op node, indent
 
   left = serialize node.left, '${indent}  '
-  right = serialize node.right, '${indent}  '
 
-  '${head}\n${left}\n${right}'
+  right = match node:
+    {right: false}: ''
+    else: '\n${serialize node.right, '${indent}  '}'
+
+  '${head}\n${left}${right}'
+
 
 
 serialize_prefix = fn node, serialize, indent:
@@ -93,16 +103,19 @@ serialize_prefix = fn node, serialize, indent:
   '${head}\n${right}'
 
 
+
 serialize_spread = fn node, serialize, indent:
   match node:
-    {right: {}}: serialize_prefix node, serialize, indent
-    else: str_type_op node, indent
+    {right: false}: str_type_op node, indent
+    else: serialize_prefix node, serialize, indent
+
 
 
 serialize_str = fn node, serialize, indent:
   head = str_type_op node, indent
 
   tag = match node:
+    {tag: false}: ''
     {tag: {}}: ' ${node.tag.value}'
     else: ''
 
@@ -127,14 +140,17 @@ serialize_str = fn node, serialize, indent:
   '${head}\n${indent}  ${tag}${str}'
 
 
+
 serialize_regex = fn node, indent:
   head = str_type_op node, indent
   '${head}\n${indent}  /${node.value}/${node.flags}'
 
 
+
 serialize_other = fn node, indent:
   head = str_type_op node, indent
   '${head} ${node.value}'
+
 
 
 serialize_jsx = fn node, serialize, indent:
@@ -170,14 +186,16 @@ serialize_jsx = fn node, serialize, indent:
         0 < length ?: '\n${indent}  :\n${children}'
         else: ''
 
-      '${head} ${node.name}${props_str}${children_str}'
+      '${head} ${node.name.value}${props_str}${children_str}'
 
-    {type: 'jsx:attr', value: {}}:
+    {type: 'jsx:attr', value: ? != false}:
+      name = serialize node.name, '${indent}  '
       value = serialize node.value, '${indent}  '
-      '${head} ${node.name}\n${indent}  ${value}'
+      '${head}\n${name}\n${value}'
 
     {type: 'jsx:attr'}:
-      '${head} ${node.name}'
+      name = serialize node.name, '${indent}  '
+      '${head}\n${name}'
 
     {type: 'jsx:text'}:
       '${head}\n${indent}  ${obj_to_json node.value}'
@@ -188,6 +206,7 @@ serialize_jsx = fn node, serialize, indent:
     {type: 'jsx:expr'}:
       expr = serialize node.expr, '${indent}  '
       '${head}\n${expr}'
+
 
 
 serialize = fn node, indent='':
