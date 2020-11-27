@@ -1,0 +1,247 @@
+{slice} = import '@fink/std-lib/str.fnk'
+{match_all, rx, split} = import '@fink/std-lib/regex.fnk'
+{length} = import '@fink/std-lib/iter.fnk'
+
+
+
+get_loc = fn start, text:
+  text_len = length text
+  lines = split text, rx'\n'
+  lines_len = length lines
+
+  line = start.line - 1 + lines_len
+  column = match lines_len:
+    1:
+      start.column + text_len
+    else:
+      [..., last] = lines
+      length last
+
+  {pos: start.pos + text_len, line, column}
+
+
+
+fink_lex = rx'
+  ^(
+    (?<ignorable>\s+)
+    |(?<comment_sl>#.+?(?=\n))
+    |(?<comment_ml>---[\s\S]*?---)
+    |(?<keyword>\b(
+      fn|match|fold|unfold|else|map|filter|while|until
+      |await|import|try|throw|rec|dict|seq|list|true|false|pipe
+      |in|or|and|not
+    )\b)
+    |(?<str_start>\'|")
+
+    |(?<jsx_elem_close>/>)
+    |(?<jsx_frag_open><>)
+    |(?<jsx_elem_start>(<(?=\w)))
+
+    |(?<compare>((!=)|(==)|(<=)|(>=)|<))
+    |(?<assign>=)
+
+    |(?<arithm>[-+*/%^](?=\s))
+    |(?<prefix_neg>-(?=\S))
+
+    |(?<overloaded>[>{}])
+
+    |(?<empty>\b_\b)
+
+    |(?<number>[0-9][\._abcdefxob+0-9-]*)
+    |(?<ident>[_$\p{L}][_$\p{L}\p{N}]*)
+
+    |(?<spread>\.\.\.)
+    |(?<member>\.)
+    |(?<operator>[?|])
+    |(?<grouping>[()[\]])
+    |(?<terminator>[,:])
+    |(?<other>.)
+    |(?<end>$)
+  )
+'
+
+
+str_sq_lex = rx"
+  ^(
+    (?<str_end>')
+    |(?<str_expr_start>\$\{)
+    |(?<str_text>(?:[^'\\]|\\.)+?(?='|$|(\$\{)))
+    |(?<end>$)
+  )
+"
+
+str_dq_lex = rx'
+  ^(
+    (?<str_end>")
+    |(?<str_expr_start>\$\{)
+    |(?<str_text>(?:[^"\\]|\\.)+?(?="|$|(\$\{)))
+    |(?<end>$)
+  )
+'
+
+
+jsx_lex = rx'
+  ^(
+    (?<jsx_frag_open><>)
+    |(?<jsx_frag_close></>)
+    |(?<jsx_elem_start>(<(?=\w)))
+    |(?<jsx_elem_close>(</.+?>))
+    |(?<jsx_expr_start>\{)
+    |(?<jsx_text>[^<{]+)
+    |(?<end>$)
+  )
+  '
+
+jsx_elem_lex = rx'
+  ^(
+    (?<ignorable>\s+)
+    |(?<comment_sl>#.+?\n)
+    |(?<comment_ml>---[\s\S]*?---)
+
+    |(?<str_start>\'|")
+
+    |(?<jsx_elem_close>/>)
+    |(?<jsx_frag_open><>)
+    |(?<jsx_elem_start>(<(?=\w)))
+
+    |(?<compare>((!=)|(==)|(<=)|(>=)|<))
+    |(?<assign>=)
+
+    |(?<overloaded>[>{}])
+
+    |(?<arithm>[-+*/%^](?=\s))
+    |(?<prefix_neg>-(?=\S))
+    |(?<empty>\b_\b)
+
+    |(?<number>[0-9][\._abcdefxob+0-9-]*)
+    |(?<ident>[_$\p{L}][_$\p{L}\p{N}]*)
+
+    |(?<spread>\.\.\.)
+    |(?<member>\.)
+    |(?<operator>[?|])
+    |(?<grouping>[()[\]])
+    |(?<terminator>[,:])
+    |(?<other>.)
+    |(?<end>$)
+  )'
+
+
+
+get_token_type = fn matched, value, curr_matcher, parent_lex, cc:
+  match matched.groups:
+    {str_start: {}}: 'str-start'
+    {str_text: {}}: 'str-text'
+    {str_end: {}}: 'str-end'
+    {str_expr_start: {}}: 'str-expr-start'
+
+    {comment_sl: {}}: 'comment-sl'
+    {comment_ml: {}}: 'comment-ml'
+
+    {ignorable: {}}: 'ignorable'
+    {prefix_neg: {}}: 'prefix_neg'
+    {ident: {}}: 'ident'
+    {number: {}}: 'number'
+
+    {other: {}}: 'other'
+    {end: {}}: 'end'
+
+    {jsx_elem_start: {}}: 'jsx-elem-start'
+    {jsx_elem_close: {}}: 'jsx-elem-close'
+    {jsx_frag_open: {}}: 'jsx-frag-open'
+    {jsx_frag_close: {}}: 'jsx-elem-close'
+    {jsx_expr_start: {}}: 'jsx-expr-start'
+    {jsx_text: {}}: 'jsx-text'
+
+    {overloaded: {}}:
+      match value:
+        '{': match curr_matcher:
+          jsx_elem_lex: 'jsx-expr-start'
+          else: value
+
+        '}': match true:
+          cc == 0 and parent_lex == str_dq_lex: 'str-expr-end'
+          cc == 0 and parent_lex == str_sq_lex: 'str-expr-end'
+          cc == 0 and parent_lex == jsx_lex: 'jsx-expr-end'
+          cc == 0 and parent_lex == jsx_elem_lex: 'jsx-expr-end'
+          else: value
+
+        --- istanbul ignore else TODO: cov should be done by loxia ---
+        '>': match curr_matcher:
+          jsx_elem_lex: 'jsx-elem-end'
+          else: value
+
+    else:
+      value
+
+
+
+get_next_token = fn [lex, parent_lex], code, start, cc:
+  code_slice = slice code, start.pos
+
+  [matched] = match_all code_slice, lex
+  [value] = matched
+  type = get_token_type matched, value, lex, parent_lex, cc
+
+
+  end = get_loc start, value
+  token = {type, value, loc: {start, end}}
+  [token, end]
+
+
+
+
+get_next_matchers = fn token, [curr_matcher, ...parent_matchers]:
+  match token:
+    # {type: 'jsx-elem-close', value: '/>'}: parent_matchers
+    {type: 'jsx-elem-close'}: parent_matchers
+
+    {type: 'jsx-frag-open'}: [jsx_lex, curr_matcher, ...parent_matchers]
+    {type: 'jsx-elem-start'}: [jsx_elem_lex, curr_matcher, ...parent_matchers]
+    {type: 'jsx-elem-end'}: [jsx_lex, ...parent_matchers]
+
+    {type: 'jsx-expr-start'}: [fink_lex, curr_matcher, ...parent_matchers]
+    {type: 'jsx-expr-end'}: parent_matchers
+
+    {type: 'str-start', value: '"'}: [str_dq_lex, curr_matcher, ...parent_matchers]
+    {type: 'str-start', value: "'"}: [str_sq_lex, curr_matcher, ...parent_matchers]
+    {type: 'str-expr-start'}: [fink_lex, curr_matcher, ...parent_matchers]
+    {type: 'str-expr-end'}: parent_matchers
+    {type: 'str-end'}: parent_matchers
+
+    else: [curr_matcher, ...parent_matchers]
+
+
+
+get_cc = fn token, cc:
+  match token:
+    {type: '{'}:
+      cc + 1
+    {type: '}'}:
+      cc - 1
+    else:
+      cc
+
+
+
+tokenize = fn code, start={pos: 0, line: 1, column: 0}:
+  initial_ctx = rec:
+    code
+    start
+    matchers: [fink_lex]
+    cc: 0
+
+
+  pipe:
+    unfold  , {code, start, matchers, cc}=initial_ctx:
+      [token, next_start] = get_next_token matchers, code, start, cc
+
+      next_matchers = get_next_matchers token, matchers
+      next_cc = get_cc token, cc
+
+      [token, {code, start: next_start, matchers: next_matchers, cc: next_cc}]
+
+
+ident_or_keyword = seq:
+  'ident', 'fn', 'pipe', 'match',
+  'fold', 'unfold', 'map', 'filter', 'while',  'until'
+  'seq', 'rec', 'await', 'try', 'throw'
