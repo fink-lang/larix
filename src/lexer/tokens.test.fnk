@@ -40,6 +40,14 @@ describe 'tokenizer', fn:
       to_match_snapshot
 
 
+  it 'tokenizes str exprs', fn:
+    expect
+      foo '
+        {foo: "\${ham}"}
+      '
+      to_match_snapshot
+
+
 
 describe 'JSX tokenizer', fn:
   it 'tokenizes fragment', fn:

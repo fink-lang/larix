@@ -23,14 +23,15 @@ get_loc = fn start, text:
 
 fink_lex = rx'
   ^(
-    (?<ignorable>\s+)
-    |(?<comment_sl>#.+?(?=\n))
-    |(?<comment_ml>---[\s\S]*?---)
-    |(?<keyword>\b(
+    (?<keyword>\b(
       fn|match|fold|unfold|else|map|filter|while|until
       |await|import|try|throw|rec|dict|seq|list|true|false|pipe
       |in|or|and|not
     )\b)
+    |(?<ignorable>\s+)
+    |(?<comment_sl>#.*?(?=\n))
+    |(?<comment_ml>---[\s\S]*?---)
+
     |(?<str_start>\'|")
 
     |(?<jsx_elem_close>/>)
@@ -40,14 +41,14 @@ fink_lex = rx'
     |(?<compare>((!=)|(==)|(<=)|(>=)|<))
     |(?<assign>=)
 
+    |(?<overloaded>[>{}])
+
     |(?<arithm>[-+*/%^](?=\s))
     |(?<prefix_neg>-(?=\S))
 
-    |(?<overloaded>[>{}])
-
     |(?<empty>\b_\b)
 
-    |(?<number>[0-9][\._abcdefxob+0-9-]*)
+    |(?<number>[0-9][\._a-fA-Fxobe+0-9-]*)
     |(?<ident>[_$\p{L}][_$\p{L}\p{N}]*)
 
     |(?<spread>\.\.\.)
@@ -55,10 +56,9 @@ fink_lex = rx'
     |(?<operator>[?|])
     |(?<grouping>[()[\]])
     |(?<terminator>[,:])
-    |(?<other>.)
+    |(?<error>.)
     |(?<end>$)
-  )
-'
+  )'
 
 
 str_sq_lex = rx"
@@ -95,7 +95,7 @@ jsx_lex = rx'
 jsx_elem_lex = rx'
   ^(
     (?<ignorable>\s+)
-    |(?<comment_sl>#.+?\n)
+    |(?<comment_sl>#.*?(?=\n))
     |(?<comment_ml>---[\s\S]*?---)
 
     |(?<str_start>\'|")
@@ -111,9 +111,10 @@ jsx_elem_lex = rx'
 
     |(?<arithm>[-+*/%^](?=\s))
     |(?<prefix_neg>-(?=\S))
+
     |(?<empty>\b_\b)
 
-    |(?<number>[0-9][\._abcdefxob+0-9-]*)
+    |(?<number>[0-9][\._a-fA-Fxobe+0-9-]*)
     |(?<ident>[_$\p{L}][_$\p{L}\p{N}]*)
 
     |(?<spread>\.\.\.)
@@ -121,13 +122,14 @@ jsx_elem_lex = rx'
     |(?<operator>[?|])
     |(?<grouping>[()[\]])
     |(?<terminator>[,:])
-    |(?<other>.)
+    |(?<error>.)
     |(?<end>$)
   )'
 
 
 
-get_token_type = fn matched, value, curr_matcher, parent_lex, cc:
+get_token_type = fn matched, value, matchers:
+
   match matched.groups:
     {str_start: {}}: 'str-start'
     {str_text: {}}: 'str-text'
@@ -142,7 +144,7 @@ get_token_type = fn matched, value, curr_matcher, parent_lex, cc:
     {ident: {}}: 'ident'
     {number: {}}: 'number'
 
-    {other: {}}: 'other'
+    {error: {}}: 'error'
     {end: {}}: 'end'
 
     {jsx_elem_start: {}}: 'jsx-elem-start'
@@ -153,17 +155,20 @@ get_token_type = fn matched, value, curr_matcher, parent_lex, cc:
     {jsx_text: {}}: 'jsx-text'
 
     {overloaded: {}}:
+      [[curr_matcher, cc], parent] = matchers
       match value:
         '{': match curr_matcher:
           jsx_elem_lex: 'jsx-expr-start'
           else: value
 
-        '}': match true:
-          cc == 0 and parent_lex == str_dq_lex: 'str-expr-end'
-          cc == 0 and parent_lex == str_sq_lex: 'str-expr-end'
-          cc == 0 and parent_lex == jsx_lex: 'jsx-expr-end'
-          cc == 0 and parent_lex == jsx_elem_lex: 'jsx-expr-end'
-          else: value
+        '}':
+          [parent_lex] = parent
+          match true:
+            cc == 0 and parent_lex == str_dq_lex: 'str-expr-end'
+            cc == 0 and parent_lex == str_sq_lex: 'str-expr-end'
+            cc == 0 and parent_lex == jsx_lex: 'jsx-expr-end'
+            cc == 0 and parent_lex == jsx_elem_lex: 'jsx-expr-end'
+            else: value
 
         --- istanbul ignore else TODO: cov should be done by loxia ---
         '>': match curr_matcher:
@@ -175,12 +180,13 @@ get_token_type = fn matched, value, curr_matcher, parent_lex, cc:
 
 
 
-get_next_token = fn [lex, parent_lex], code, start, cc:
+get_next_token = fn matchers, code, start:
+  [[lex]] = matchers
   code_slice = slice code, start.pos
 
   [matched] = match_all code_slice, lex
   [value] = matched
-  type = get_token_type matched, value, lex, parent_lex, cc
+  type = get_token_type matched, value, matchers
 
 
   end = get_loc start, value
@@ -190,36 +196,44 @@ get_next_token = fn [lex, parent_lex], code, start, cc:
 
 
 
-get_next_matchers = fn token, [curr_matcher, ...parent_matchers]:
+get_next_matchers = fn token, matchers:
+  [curr_matcher, ...parent_matchers] = matchers
+
   match token:
     # {type: 'jsx-elem-close', value: '/>'}: parent_matchers
     {type: 'jsx-elem-close'}: parent_matchers
 
-    {type: 'jsx-frag-open'}: [jsx_lex, curr_matcher, ...parent_matchers]
-    {type: 'jsx-elem-start'}: [jsx_elem_lex, curr_matcher, ...parent_matchers]
-    {type: 'jsx-elem-end'}: [jsx_lex, ...parent_matchers]
+    {type: 'jsx-frag-open'}: [[jsx_lex, 0], ...matchers]
+    {type: 'jsx-elem-start'}: [[jsx_elem_lex, 0], ...matchers]
+    {type: 'jsx-elem-end'}: [[jsx_lex, 0], ...parent_matchers]
 
-    {type: 'jsx-expr-start'}: [fink_lex, curr_matcher, ...parent_matchers]
+    {type: 'jsx-expr-start'}: [[fink_lex, 0], ...matchers]
     {type: 'jsx-expr-end'}: parent_matchers
 
-    {type: 'str-start', value: '"'}: [str_dq_lex, curr_matcher, ...parent_matchers]
-    {type: 'str-start', value: "'"}: [str_sq_lex, curr_matcher, ...parent_matchers]
-    {type: 'str-expr-start'}: [fink_lex, curr_matcher, ...parent_matchers]
-    {type: 'str-expr-end'}: parent_matchers
+    {type: 'str-start', value: '"'}: [[str_dq_lex, 0], ...matchers]
+    {type: 'str-start', value: "'"}: [[str_sq_lex, 0], ...matchers]
     {type: 'str-end'}: parent_matchers
+
+    {type: 'str-expr-start'}: [[fink_lex, 0], ...matchers]
+
+    {type: 'str-expr-end'}: parent_matchers
 
     else: [curr_matcher, ...parent_matchers]
 
 
 
-get_cc = fn token, cc:
-  match token:
-    {type: '{'}:
-      cc + 1
-    {type: '}'}:
-      cc - 1
+update_matcher_state = fn token, matchers:
+  [[curr_m, curr_cc], ...rest] = matchers
+
+  next_cc = match token:
+    {value: '{'}:
+      curr_cc + 1
+    {value: '}'}:
+      curr_cc - 1
     else:
-      cc
+      curr_cc
+
+  [[curr_m, next_cc], ...rest]
 
 
 
@@ -227,21 +241,28 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
   initial_ctx = rec:
     code
     start
-    matchers: [fink_lex]
-    cc: 0
+    matchers: [[fink_lex, 0], []]
 
 
   pipe:
-    unfold  , {code, start, matchers, cc}=initial_ctx:
-      [token, next_start] = get_next_token matchers, code, start, cc
+    unfold  , {code, start, matchers}=initial_ctx:
+      [token, next_start] = get_next_token matchers, code, start
 
-      next_matchers = get_next_matchers token, matchers
-      next_cc = get_cc token, cc
+      curr_matchers = update_matcher_state token, matchers
 
-      [token, {code, start: next_start, matchers: next_matchers, cc: next_cc}]
+      next_matchers = get_next_matchers token, curr_matchers
+
+      [token, {code, start: next_start, matchers: next_matchers}]
 
 
+
+# TODO: should prattler allow registering for token-type + value
+# if so, we could simply test on type being 'keyword'
 ident_or_keyword = seq:
-  'ident', 'fn', 'pipe', 'match',
-  'fold', 'unfold', 'map', 'filter', 'while',  'until'
-  'seq', 'rec', 'await', 'try', 'throw'
+  'ident', 'import', 'fn', 'pipe', 'match', 'else'
+  'fold', 'unfold', 'map', 'filter', 'while', 'until'
+  'seq', 'rec', 'await', 'try', 'throw',
+  'and', 'or', 'not', 'in', 'true', 'false'
+
+
+
