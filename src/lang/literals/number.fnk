@@ -1,47 +1,24 @@
-{curr_value, next_value, curr_loc, next_is, advance} = import '@fink/prattler/parser.fnk'
-{add_error} = import '@fink/prattler/errors.fnk'
-{ends_with} = import '@fink/std-lib/str.fnk'
+{curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
+{add_literal, non_binding} = import '@fink/prattler/expressions.fnk'
 
-
-exponent = fn ctx:
-  plus_minus = next_value ctx
-  next_ctx = advance ctx
-
-  match plus_minus:
-    ? == '+' or ? == '-':
-      ['${plus_minus}${next_value next_ctx}', advance next_ctx]
-    else:
-      [, err_ctx] = add_error next_ctx,
-        'Expected exponent.'
-        next_ctx.curr_token
-
-      [plus_minus, err_ctx]
-
-
-float = fn ctx:
-  match ctx:
-    next_is ?, '.':
-      float_ctx = advance ctx
-      value = '.${next_value float_ctx}'
-
-      [exp, next_ctx] = match value:
-        ends_with ?, 'e':
-          exponent advance float_ctx
-        else:
-          ['', advance float_ctx]
-
-      ['${value}${exp}', next_ctx]
-    else:
-      ['', ctx]
 
 
 number = fn ctx:
-  {start} = curr_loc ctx
+  {start, end} = curr_loc ctx
+  value = curr_value ctx
 
-  int_value = curr_value ctx
-  [float_value, next_ctx] = float ctx
+  [{type: 'number', value, loc: {start, end}}, ctx]
 
-  value = '${int_value}${float_value}'
 
-  {end} = curr_loc next_ctx
-  [{type: 'number', value, loc: {start, end}}, next_ctx]
+
+num = fn token_type:
+  rec:
+    ...non_binding token_type
+
+    nud: fn: fn ctx:
+      number ctx
+
+
+
+add_number = fn ctx:
+  ctx | add_literal num 'number'

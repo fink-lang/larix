@@ -1,18 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`numbers errors when missing exponent 1`] = `
-module (1:0-1:10)
-  number (1:0-1:10) 123.456e*
-
-error:
-test.fnk:1:9
-1| 123.456e * 78
-            ^
-
-Expected exponent.
-
-
-
+module (1:0-1:13)
+  arithm * (1:0-1:13)
+    number (1:0-1:8) 123.456e
+    number (1:11-1:13) 78
 `;
 
 exports[`numbers parses float 123.456 1`] = `number (1:2-1:9) 123.456`;

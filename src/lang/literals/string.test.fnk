@@ -69,6 +69,10 @@ describe 'strings', fn:
       parse_expr '"foo \${bar + spam} spam"'
       to_match_snapshot
 
+    expect
+      parse_expr '"\${foo}"'
+      to_match_snapshot
+
 
   it 'parses multiline template strings', fn:
     expect
@@ -96,6 +100,12 @@ describe 'strings', fn:
       to_match_snapshot
 
 
+  it 'foo', fn:
+    expect
+      parse "'\${foo}\${bar}_\${spam}'"
+      to_match_snapshot
+
+
 
 describe 'string - parsing failures', fn:
 
@@ -109,4 +119,5 @@ describe 'string - parsing failures', fn:
     expect
       parse "12'bar spam'", 'test.fnk'
       to_match_snapshot
+
 

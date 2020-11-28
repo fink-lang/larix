@@ -10,5 +10,4 @@ module (1:0-8:0)
   assign = (5:0-5:9)
     ident (5:0-5:4) spam
     ident (5:7-5:9) ni
-  # trailing module comment
 `;

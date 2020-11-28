@@ -87,11 +87,3 @@ describe 'comparison', fn:
     expect
       parse_expr 'a + b < c'
       to_match_snapshot
-
-    expect
-      parse_expr
-        '
-          a + b <incomplete_jsx
-        '
-      to_match_snapshot
-

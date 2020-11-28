@@ -2,6 +2,7 @@
 {add_record} = import './record.fnk'
 {add_string} = import './string.fnk'
 {add_keywords} = import './keywords.fnk'
+{add_number} = import './number.fnk'
 
 
 add_literals = fn ctx:
@@ -10,3 +11,4 @@ add_literals = fn ctx:
     add_record
     add_string
     add_keywords
+    add_number

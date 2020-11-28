@@ -1,10 +1,9 @@
-{curr_is, curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
-{next_is, next_matches, next_is_end} = import '@fink/prattler/parser.fnk'
-{advance_expected, advance, collect_text} = import '@fink/prattler/parser.fnk'
-{is_empty} = import '@fink/std-lib/iter.fnk'
-{rx} = import '@fink/std-lib/regex.fnk'
+{curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
+{next_is} = import '@fink/prattler/parser.fnk'
+{advance} = import '@fink/prattler/parser.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
 
-{prefix} = import '../symbols.fnk'
+{prefix} = import '../expressions.fnk'
 {terminated_block} = import '../block/init.fnk'
 {single_expression} = import '../block/expr.fnk'
 {get_unindented_text} = import '../literals/string.fnk'
@@ -13,46 +12,49 @@
 
 
 jsx_expr_container = fn ctx:
-  [block, next_ctx] = terminated_block ctx, '}'
+  [block, next_ctx] = terminated_block ctx, 'jsx-expr-end'
   expr = {...block, type: 'block'}
-  [{type: 'jsx:expr', expr, loc: expr.loc}, next_ctx]
+  {end} = curr_loc next_ctx
+  [{type: 'jsx:expr', expr, loc: {start: expr.loc.start, end}}, next_ctx]
 
 
 
 jsx_txt = fn ctx:
-  [{value: text, loc}, next_ctx] = collect_text ctx, rx"'</|[<{]"
-  [{type: 'jsx:text', value: text, loc}, next_ctx]
+  {value, loc} = ctx.curr_token
+  [{type: 'jsx:text', value, loc}, ctx]
 
 
 
 get_children = fn ctx:
-  [txt, next_ctx] = jsx_txt ctx
-  txt_children = match txt:
-    {value: ''}: []
-    else: [txt]
+  match ctx.next_token:
+    {type: 'jsx-elem-close'}:
+      [[], ctx]
 
-  match next_ctx:
-    curr_is ?, '<>':
-      [expr, children_ctx] = jsx_frag next_ctx
+    {type: 'jsx-text'}:
+      [expr, children_ctx] = jsx_txt advance ctx
       [children, end_ctx] = get_children children_ctx
-      [[...txt_children, expr, ...children], end_ctx]
+      [[expr, ...children], end_ctx]
 
-    curr_is ?, '<':
-      [expr, children_ctx] = jsx_elem next_ctx
+    {type: 'jsx-frag-open'}:
+      [expr, children_ctx] = jsx_frag advance ctx
       [children, end_ctx] = get_children children_ctx
-      [[...txt_children, expr, ...children], end_ctx]
+      [[expr, ...children], end_ctx]
 
-    curr_is ?, '{':
-      [expr, children_ctx] = jsx_expr_container next_ctx
+    {type: 'jsx-elem-start'}:
+      [expr, children_ctx] = jsx_elem advance ctx
       [children, end_ctx] = get_children children_ctx
-      [[...txt_children, expr, ...children], end_ctx]
+      [[expr, ...children], end_ctx]
 
-    curr_is ?, '</>':
-      [txt_children, next_ctx]
+    {type: 'jsx-expr-start'}:
+      [expr, children_ctx] = jsx_expr_container advance ctx
+      [children, end_ctx] = get_children children_ctx
+      [[expr, ...children], end_ctx]
 
     else:
-      [txt_children, next_ctx]
-
+      [err, err_ctx] =  add_error ctx,
+        'Expected JSX element <...>, </...> or JSX text or JSX expr {...}.'
+        ctx.next_token
+      [[err], err_ctx]
 
 
 jsx_ident = fn ctx:
@@ -61,10 +63,19 @@ jsx_ident = fn ctx:
 
 
 jsx_body = fn name, ctx:
-  [children, name_ctx] = get_children ctx
+  [children, close_ctx] = get_children ctx
 
-  end_ctx = advance_expected name_ctx, name.value
-  [children, advance_expected end_ctx, '>']
+  end_ctx = match close_ctx.next_token:
+    # TODO: name can also be a member expr, ...
+    {type: 'jsx-elem-close', value: '</${name.value}>'}:
+      advance close_ctx
+    else:
+      [, err_ctx] =  add_error close_ctx,
+        'Expected JSX closing element </${name.value}>.'
+        close_ctx.next_token
+      err_ctx
+
+  [children, end_ctx]
 
 
 
@@ -79,17 +90,14 @@ jsx_string_val = fn ctx:
 
 
 jsx_attr_value = fn ctx:
-  match ctx:
-    next_is ?, '{':
+  match ctx.next_token:
+    {type: 'jsx-expr-start'}:
       jsx_expr_container advance ctx
 
-    next_matches ?, rx'[\'"]':
+    {type: 'str-start'}:
       jsx_string_val advance ctx
 
     else:
-      # err_ctx = advance_expected ctx, '{', '"', "'"
-      # [..., err] = err_ctx.errors
-      # [err, err_ctx]
       single_expression {...ctx, jsx: true}, 0
 
 
@@ -119,53 +127,55 @@ jsx_spread_attr = fn ctx:
 
 
 
-done = true
-
 jsx_props = fn ctx:
-  [props, next_ctx] = pipe [, ctx]:
-    unfold [ ,prop_ctx]:
-      [prop, next_ctx] = match prop_ctx:
-        next_is_end ?, '/>':
-          [done, prop_ctx]
 
-        next_is_end ?, '>':
-          [done, prop_ctx]
+  match ctx.next_token:
+    {type: 'jsx-elem-close', value: '/>'}:
+      [[], ctx]
 
-        next_is ?, '...':
-          jsx_spread_attr advance prop_ctx
+    {type: 'jsx-elem-end'}:
+      [[], ctx]
 
-        else:
-          jsx_attr prop_ctx
+    {type: '...'}:
+      [expr, next_ctx] = jsx_spread_attr advance ctx
+      [props, end_ctx] = jsx_props next_ctx
+      [[expr, ...props], end_ctx]
 
-      [prop, next_ctx]
+    {type: 'ident'}:
+      [expr, next_ctx] = jsx_attr ctx
+      [props, end_ctx] = jsx_props next_ctx
+      [[expr, ...props], end_ctx]
 
-    while [prop]: prop != done
-
-    fold [prop, next_ctx], [props]=[[]]:
-      [[...props, prop], next_ctx]
-
-  match props:
-    is_empty ?: [props, ctx]
-    else: [props, next_ctx]
+    else:
+      [err, err_ctx] =  add_error ctx,
+        'Expected JSX prop identifier, spread expr, or end of tag.'
+        ctx.next_token
+      [[err], err_ctx]
 
 
 
 body_or_end_elem = fn ctx, name:
-  match ctx:
-    next_is ?, '>':
+  match ctx.next_token:
+    {type: 'jsx-elem-end'}:
       [children, next_ctx] = jsx_body name, advance ctx
       [false, children, next_ctx]
+
+    {type: 'jsx-elem-close'}:
+      [true, [], advance ctx]
+
     else:
-      [true, [], advance_expected ctx, '/>']
+      [err, err_ctx] =  add_error ctx,
+        'Expected end of JSX tag.'
+        ctx.next_token
+      [false, [err], err_ctx]
+
 
 
 jsx_elem = fn ctx:
   {start} = curr_loc ctx
 
   [name, elem_ctx] = jsx_ident ctx
-
   [props, body_ctx] = jsx_props elem_ctx
-
   [self_closing, children, next_ctx] = body_or_end_elem body_ctx, name
 
   {end} = curr_loc next_ctx
@@ -178,27 +188,35 @@ jsx_elem = fn ctx:
 
 jsx_frag = fn ctx:
   {start} = curr_loc ctx
-  [children, next_ctx] = get_children ctx
-  {end} = curr_loc next_ctx
 
-  list:
-    {type: 'jsx:frag', children, loc: {start, end}}
-    next_ctx
+  [children, close_ctx] = get_children ctx
+
+  end_ctx = match close_ctx.next_token:
+    {type: 'jsx-elem-close', value: '</>'}:
+      advance close_ctx
+    else:
+      [, err_ctx] =  add_error ctx,
+        'Expected closing JSX fragment </>.'
+        ctx.next_token
+      err_ctx
+
+  {end} = curr_loc end_ctx
+  [{type: 'jsx:frag', children, loc: {start, end}}, end_ctx]
 
 
 
 jsx_elem_or_fragment = fn ctx:
-  match ctx:
-    curr_is ?, '<>':
+  match ctx.curr_token:
+    {type: 'jsx-frag-open'}:
       jsx_frag ctx
     else:
       jsx_elem ctx
 
 
 
-jsx = fn op:
-  dict:
-    ...prefix op
+jsx = fn token_type:
+  rec:
+    ...prefix token_type
 
     nud: fn: fn ctx:
       jsx_elem_or_fragment ctx

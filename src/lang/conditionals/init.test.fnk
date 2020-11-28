@@ -23,7 +23,7 @@ describe 'match ...:', fn:
     expect
       parse '
         match item:
-          # nested object pattern
+          # nested record pattern
           {foo, spam: {ni}}: bar
 
           # nested iterables

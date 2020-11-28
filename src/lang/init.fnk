@@ -16,17 +16,17 @@
 {add_async} = import './async/init.fnk'
 {add_import} = import './import/init.fnk'
 {add_prop_access} = import './prop-access/init.fnk'
-{add_whitespace_tokens} = import './whitespace/init.fnk'
+{add_ignorable_tokens} = import './whitespace/init.fnk'
 {add_js_ops} = import './js-compat/init.fnk'
 {add_partial} = import './partial/init.fnk'
-{add_other} = import './other/init.fnk'
+{add_ident} = import './identifier/init.fnk'
 
 
 init_language = fn ctx:
   pipe ctx:
     init_indentation
 
-    add_whitespace_tokens
+    add_ignorable_tokens
     add_comments
 
     add_func
@@ -36,7 +36,7 @@ init_language = fn ctx:
 
     add_assignment_operators
 
-    add_other
+    add_ident
     add_partial
 
     add_jsx

@@ -1,7 +1,7 @@
-{curr_loc} = import '@fink/prattler/parser.fnk'
-{add_separator, add_keyword} = import '@fink/prattler/symbols.fnk'
+{curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
+{add_separator, add_operator} = import '@fink/prattler/expressions.fnk'
 
-{prefix, terminator} = import '../symbols.fnk'
+{prefix, terminator} = import '../expressions.fnk'
 
 {end_of_block_indent} = import './indentation.fnk'
 {expressions, single_expression} = import './expr.fnk'
@@ -18,21 +18,22 @@ indented_block = fn ctx, block_expr=single_expression:
 
 
 
-named_block = fn op, type, block_expr:
-  dict:
-    ...prefix op
+named_block = fn token_type, expr_type, block_expr:
+  rec:
+    ...prefix token_type
 
     nud: fn: fn ctx:
       {start} = curr_loc ctx
+      op = curr_value ctx
 
       [{exprs: args}, body_ctx] = terminated_block ctx, ':'
       [{exprs, comments, loc}, next_ctx] = indented_block body_ctx, block_expr
-      [{type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
+      [{type: expr_type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
 
 
 
-add_named_block = fn op, type='block', block_expr=single_expression: fn ctx:
+add_named_block = fn token_type, expr_type='block', block_expr=single_expression: fn ctx:
   pipe ctx:
-    add_keyword named_block op, type, block_expr
+    add_operator named_block token_type, expr_type, block_expr
     add_separator terminator ','
     add_separator terminator ':'

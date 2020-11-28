@@ -1,17 +1,20 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
+{curr_value} = import '@fink/prattler/parser.fnk'
 
 {add_named_block} = import '../block/init.fnk'
 {single_expression} = import '../block/expr.fnk'
-{infix} = import '../symbols.fnk'
+{infix} = import '../expressions.fnk'
 
 
 
-infix_pipe = fn op:
-  dict:
-    ...infix op, 'call'
+infix_pipe = fn token_type:
+  rec:
+    ...infix token_type, 'call'
 
     led: fn lbp:  fn ctx, left:
       {loc: {start}} = left
+      op = curr_value ctx
+
       [callee, next_ctx] = single_expression ctx, lbp
       {loc: {end}} = callee
       [{type: 'call', callee, args: [left], op, loc: {start,end}}, next_ctx]

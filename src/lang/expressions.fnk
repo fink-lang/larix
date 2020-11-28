@@ -1,0 +1,77 @@
+{left_binding, non_binding} = import '@fink/prattler/expressions.fnk'
+{curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
+
+{next_is_new_expr} = import './block/indentation.fnk'
+{single_expression} = import './block/expr.fnk'
+
+
+
+infix_led = fn expr_type, lbp: fn ctx, left:
+  op = curr_value ctx
+
+  {loc: {start}} = left
+  [right, next_ctx] = single_expression ctx, lbp
+  {loc: {end}} = right
+
+  [{type: expr_type, op, left, right, loc: {start, end}}, next_ctx]
+
+
+
+maybe_left_binging = fn token_type:
+  rec:
+    ...left_binding token_type
+
+    lbp: fn lbp: fn ctx:
+      match ctx:
+        next_is_new_expr ?:
+          0
+        else:
+          lbp
+
+
+infix = fn token_type, expr_type:
+  rec:
+    ...maybe_left_binging token_type
+
+    led: fn lbp: infix_led expr_type, lbp + 1
+
+
+
+infix_right = fn token_type, expr_type:
+  rec:
+    ...maybe_left_binging token_type
+
+    led: fn lbp: infix_led expr_type, lbp - 1
+
+
+
+prefix = fn token_type, expr_type:
+  rec:
+    ...non_binding token_type
+
+    nud: fn lbp: fn ctx:
+      {start} = curr_loc ctx
+      op = curr_value ctx
+
+      [right, next_ctx] = single_expression ctx, lbp
+      {end} = right.loc
+
+      [{type: expr_type, op, right, loc: {start, end}}, next_ctx]
+
+
+
+literal = fn token_type, expr_type:
+  rec:
+    ...non_binding token_type
+
+    nud: fn: fn ctx:
+      loc = curr_loc ctx
+      value = curr_value ctx
+      [{type: expr_type, value, loc}, ctx]
+
+
+
+terminator = fn token_type:
+  rec:
+    ...maybe_left_binging token_type
+

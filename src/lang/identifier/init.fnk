@@ -1,8 +1,27 @@
 {curr_value, curr_loc} = import '@fink/prattler/parser.fnk'
+{add_identifier, non_binding} = import '@fink/prattler/expressions.fnk'
+
+{maybe_call_expr} = import '../call/expr.fnk'
 
 
 identifier = fn ctx:
   value = curr_value ctx
   loc = curr_loc ctx
-
   [{type: 'ident', value, loc}, ctx]
+
+
+
+ident = fn op:
+  rec:
+    ...non_binding op
+
+    nud: fn: fn ctx:
+      [expr, next_ctx] = identifier ctx
+      maybe_call_expr expr, next_ctx
+
+
+
+add_ident = fn ctx:
+  pipe ctx:
+    add_identifier ident 'ident'
+

@@ -1,4 +1,6 @@
 {init_parser, start_parser} = import '@fink/prattler/parser.fnk'
+{tokenize} = import './lexer/tokens.fnk'
+
 
 {init_language} = import './lang/init.fnk'
 {parse_module} = import './lang/module/init.fnk'
@@ -6,8 +8,15 @@
 
 
 
+init_tokens = fn ctx:
+  tokens = tokenize ctx.code
+  {...ctx, tokens}
+
+
+
 init = fn ctx:
   pipe ctx:
+    init_tokens
     init_parser
     init_language
     start_parser

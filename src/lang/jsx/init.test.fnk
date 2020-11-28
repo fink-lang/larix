@@ -1,4 +1,4 @@
-{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+{skip, describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
 {parse_expr} = import '../../parser.fnk'
 
@@ -104,7 +104,7 @@ describe 'JSX extensions',  fn:
       to_match_snapshot
 
 
-  it "parses fink expr with gt comparison", fn:
+  skip.it "parses fink expr with gt comparison", fn:
     expect
       parse_expr "<Foobar spam=(foo > 123) shrub=1234> ni </Foobar>"
       to_match_snapshot
@@ -114,3 +114,24 @@ describe 'JSX extensions',  fn:
     expect
       parse_expr "<Foobar spam=(ham ni) shrub=1234 />"
       to_match_snapshot
+
+
+
+describe 'JSX errors',  fn:
+  it 'errors on missing closign tag or children', fn:
+    expect
+      parse_expr '<Foobar>'
+      to_match_snapshot
+
+
+  it 'errors on missing closing fragment tag', fn:
+    expect
+      parse_expr '<> '
+      to_match_snapshot
+
+
+  it 'errors on missing end of tag', fn:
+    expect
+      parse_expr '<Foobar '
+      to_match_snapshot
+

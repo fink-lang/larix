@@ -1,0 +1,87 @@
+{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+{obj_to_json} = import '@fink/std-lib/json.fnk'
+{join} = import '@fink/std-lib/iter.fnk'
+
+{tokenize} = import './tokens.fnk'
+
+
+
+foo = fn source:
+  pipe source:
+    tokenize
+    until token: token.type == 'end'
+    map {type, value, loc: {start, end}}:
+      pos = '(${start.pos}-${end.pos})'
+      loc = '(${start.line}:${start.column}-${end.line}:${end.column})'
+      match value:
+        type:
+          '${type} ${pos} ${loc}'
+        else:
+          '${type} ${pos} ${loc}\n  ${obj_to_json value}'
+
+    join '\n'
+
+
+
+describe 'tokenizer', fn:
+
+  it 'tokenizes', fn:
+    expect
+      foo '
+        01234567
+        foo bar
+        (shrub)
+        (spam ni, hi)
+        a + b - c * d / f ^ g
+        "shrub"
+        "ni \${ham} spam"
+        foo.bar ...ni
+      '
+      to_match_snapshot
+
+
+  it 'tokenizes str exprs', fn:
+    expect
+      foo '
+        {foo: "\${ham}"}
+      '
+      to_match_snapshot
+
+
+
+describe 'JSX tokenizer', fn:
+  it 'tokenizes fragment', fn:
+    expect
+      foo '
+        <>
+          foo bar
+          <foo>
+            spam {1 + 2}
+          </foo>
+        </>
+      '
+      to_match_snapshot
+
+
+  it 'tokenizes jsx', fn:
+    expect
+      foo '
+        <foo>{a > b, {a: 12345}, "foo \${ni} bar"}</foo>
+      '
+      to_match_snapshot
+
+    expect
+      foo '
+        <>
+          <foo />
+        </>
+      '
+      to_match_snapshot
+
+
+  it 'tokenizes expr-attr', fn:
+    expect
+      foo '
+        <Foobar spam={ni} />
+      '
+      to_match_snapshot

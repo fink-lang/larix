@@ -1,9 +1,6 @@
-{add_whitespace} = import '@fink/prattler/symbols.fnk'
+{add_ignorable} = import '@fink/prattler/expressions.fnk'
 
 
-add_whitespace_tokens = fn ctx:
+add_ignorable_tokens = fn ctx:
   pipe ctx:
-    add_whitespace ' '
-    add_whitespace '\t'
-    add_whitespace '\n'
-
+    add_ignorable 'ignorable'

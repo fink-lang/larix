@@ -1,13 +1,13 @@
-{add_keyword} = import '@fink/prattler/symbols.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
 
-{literal} = import '../symbols.fnk'
+{literal} = import '../expressions.fnk'
 
 
 
 add_keywords = fn ctx:
   pipe ctx:
-    add_keyword literal 'true', 'literal'
-    add_keyword literal 'false', 'literal'
-    add_keyword literal '_', 'empty'
+    add_operator literal 'true', 'literal'
+    add_operator literal 'false', 'literal'
+    add_operator literal '_', 'empty'
 
 

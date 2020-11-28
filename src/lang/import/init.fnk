@@ -1,8 +1,8 @@
-{add_keyword} = import '@fink/prattler/symbols.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
 
-{prefix} = import '../symbols.fnk'
+{prefix} = import '../expressions.fnk'
 
 
 add_import = fn ctx:
   pipe ctx:
-    add_keyword prefix 'import', 'prefix'
+    add_operator prefix 'import', 'prefix', 'import'

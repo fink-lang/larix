@@ -6,7 +6,7 @@ module (1:0-14:0)
     ident (1:6-1:10) item
     :
     match:expr (3:2-3:24)
-      # nested object pattern
+      # nested record pattern
       rec (3:2-3:19)
         rec:kv (3:3-3:6)
           ident (3:3-3:6) foo
@@ -78,7 +78,7 @@ module (1:0-7:0)
 
 exports[`match ...: parses simple 1`] = `
 module (1:0-8:0)
-  block match (1:0-6:21)
+  block match (1:0-5:12)
     ident (1:6-1:10) item
     :
     match:expr (2:2-2:22)
@@ -88,6 +88,5 @@ module (1:0-8:0)
     # fallback if no match
     block else (5:2-5:12):
       ident (5:8-5:12) spam
-    # trailing comment
   ident (7:0-7:6) foobar
 `;

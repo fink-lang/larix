@@ -1,5 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`JSX errors errors on missing closign tag or children 1`] = `
+jsx:elem (1:0-1:8) Foobar
+  :
+  ::error::
+
+error:
+undefined:1:8
+1| <Foobar>
+           ^
+
+Expected JSX element <...>, </...> or JSX text or JSX expr {...}.
+
+undefined:1:8
+1| <Foobar>
+           ^
+
+Expected JSX closing element </Foobar>.
+
+
+
+`;
+
+exports[`JSX errors errors on missing closing fragment tag 1`] = `
+jsx:frag (1:0-1:2) 
+  :
+  jsx:text (1:2-1:3)
+    " "
+  ::error::
+
+error:
+undefined:1:2
+1| <> 
+     ^
+
+Expected closing JSX fragment </>.
+
+
+
+`;
+
+exports[`JSX errors errors on missing end of tag 1`] = `
+jsx:elem (1:0-1:7) Foobar
+  ::error::
+  :
+  ::error::
+
+error:
+undefined:1:8
+1| <Foobar 
+           ^
+
+Expected JSX prop identifier, spread expr, or end of tag.
+
+undefined:1:8
+1| <Foobar 
+           ^
+
+Expected end of JSX tag.
+
+
+
+`;
+
 exports[`JSX extensions parses expr group with call for attr value 1`] = `
 jsx:elem (1:0-1:35) Foobar
   jsx:attr (1:8-1:21)

@@ -24,7 +24,6 @@ block fn (4:0-8:0)
   :
   ident (5:2-5:5) foo
   ident (6:2-6:5) bar
-  # trailing func comment
 `;
 
 exports[`func: fn ...: ... parses no arg: fn: foo 1`] = `

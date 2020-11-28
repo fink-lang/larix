@@ -248,4 +248,4 @@ serialize = fn node, indent='':
       head = str_type_op node, indent
       'Error: cannot serialize ${head}'
 
-  '${result}${trailing_comment '${indent}  ', node}'
+  '${result}${trailing_comment '${indent}', node}'

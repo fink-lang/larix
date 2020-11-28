@@ -73,7 +73,7 @@ describe 'partial', fn:
       to_match_snapshot
 
 
-  it 'parses obj', fn:
+  it 'parses record', fn:
     expect
       parse_expr '{a: ?, b: 2}'
       to_match_snapshot

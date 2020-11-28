@@ -20,7 +20,7 @@ collect_bindings = fn parsed:
 collect_refs = fn parsed:
   [, {refs}] = collect_exprs parsed
 
-  seq:
+  list:
     ...refs | map [expr_id, exprs]:
       ... exprs | map expr:
         '${get_expr_id expr} -> ${expr_id}'
@@ -29,7 +29,7 @@ collect_refs = fn parsed:
 
 collect_scopes = fn parsed:
   [, ctx] = collect_exprs parsed
-  seq:
+  list:
     ... ctx.bindings | map expr:
       '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
 
@@ -37,7 +37,7 @@ collect_scopes = fn parsed:
 
 collect_duplicate_bindings = fn parsed:
   [, ctx] = collect_exprs parsed
-  seq:
+  list:
     ... ctx.rebindings | map expr:
       '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
 

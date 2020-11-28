@@ -4,7 +4,7 @@
 
 
 
-describe 'object {...}', fn:
+describe 'record {...}', fn:
 
   it 'parses empty: {}', fn:
     expect
@@ -63,7 +63,7 @@ describe 'object {...}', fn:
 
   it 'parses calculated prop', fn:
     expect
-      parse_expr '{foo, (bar+ni): 123, spam}'
+      parse_expr '{foo, (bar + ni): 123, spam}'
       to_match_snapshot
 
 
@@ -77,19 +77,19 @@ describe 'object {...}', fn:
 
   it 'parses unicode as keys', fn:
     expect
-      parse_expr '{π, ƒ, ∑}'
+      parse_expr '{π, ƒ}'
       to_match_snapshot
 
 
 
-describe 'dict', fn:
+describe 'records', fn:
   it 'parses', fn:
     expect
       parse_expr '
-        dict:
+        rec:
           foo
           # prop comment
-          (bar+ni): 123
+          (bar + ni): 123
           spam
           # trailing comment
       '
@@ -97,7 +97,7 @@ describe 'dict', fn:
 
 
 
-describe 'object {...} - parsing failures', fn:
+describe 'record {...} - parsing failures', fn:
   it 'errors when missing `}`', fn:
     expect
       parse '{', 'test.fnk'

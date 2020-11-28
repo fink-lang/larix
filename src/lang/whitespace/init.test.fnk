@@ -1,18 +1,17 @@
 {describe, it, expect, to_equal} = import '@fink/jest/test.fnk'
 
-{init_parser, start_parser, next_is_end, next_loc} = import '@fink/prattler/parser.fnk'
+{next_is_end, next_loc} = import '@fink/prattler/parser.fnk'
 
-{init_language} = import '../init.fnk'
+{init} = import '../../parser.fnk'
 
 
-describe 'whitespace', fn:
+
+describe 'ignorable', fn:
   init_test_parser = fn code:
-    pipe {code}:
-      init_parser
-      init_language
-      start_parser
+    init {code, filename: 'test.fnk'}
 
-  it 'ignores whitespace', fn:
+
+  it 'ignores ignorable', fn:
     ctx = init_test_parser ' \t\n'
 
     expect
@@ -21,7 +20,7 @@ describe 'whitespace', fn:
 
     expect
       next_loc ctx
-      to_equal {
-        start: {pos: 3, line: 2, column: 0},
+      to_equal rec:
+        start: {pos: 3, line: 2, column: 0}
         end: {pos: 3, line: 2, column: 0}
-      }
+

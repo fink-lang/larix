@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`string - parsing failures errors when missing end 1`] = `
-module (1:0-1:10)
+module (1:0-1:9)
   string " (1:0-1:9)
     'foo bar,'
 
@@ -25,10 +25,22 @@ test.fnk:1:2
 1| 12'bar spam'
      ^
 
-Expected \`,\` or indented new line or end of code.
+Expected \`,\` or indented new line or end.
 
 
 
+`;
+
+exports[`strings foo 1`] = `
+module (1:0-1:22)
+  string ' (1:0-1:22)
+    ''
+        ident (1:3-1:6) foo
+    ''
+        ident (1:9-1:12) bar
+    '_'
+        ident (1:16-1:20) spam
+    ''
 `;
 
 exports[`strings handles default indentation for lbp 1`] = `
@@ -87,7 +99,7 @@ string ' (1:0-8:1)
   ':'
     ident (2:11-2:14) bar
   ':'
-    block (2:17-5:1)
+    block (2:16-5:1)
       assign = (3:2-3:14)
         ident (3:2-3:7) shrub
         number (3:10-3:14) 1234
@@ -149,4 +161,11 @@ string " (1:0-1:24)
       ident (1:7-1:10) bar
       ident (1:13-1:17) spam
   ' spam'
+`;
+
+exports[`strings parses template strings with expressions 3`] = `
+string " (1:0-1:8)
+  ''
+    ident (1:3-1:6) foo
+  ''
 `;

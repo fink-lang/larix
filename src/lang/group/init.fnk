@@ -1,18 +1,27 @@
-{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+{add_operator, add_separator} = import '@fink/prattler/expressions.fnk'
 
-{prefix, terminator} = import '../symbols.fnk'
+{prefix, terminator} = import '../expressions.fnk'
 {terminated_block} = import '../block/init.fnk'
+{maybe_call_expr} = import '../call/expr.fnk'
 
 
 
-group = fn op:
-  dict:
-    ...prefix op
+group = fn token_type:
+  rec:
+    ...prefix token_type
 
-    nud: fn: fn ctx:
+    nud: fn: fn {no_oppless_call, ...ctx}:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'
 
-      [{type: 'group', exprs, comments, loc}, next_ctx]
+      expr = {type: 'group', exprs, comments, loc}
+
+      match true:
+        # TODO: why is jsx getting lost in terminated block
+        ctx.jsx or no_oppless_call:
+          [expr, next_ctx]
+        else:
+          maybe_call_expr expr, next_ctx
+
 
 
 
