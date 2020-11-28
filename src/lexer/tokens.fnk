@@ -79,7 +79,6 @@ str_dq_lex = rx'
   )
 '
 
-
 jsx_lex = rx'
   ^(
     (?<jsx_frag_open><>)
@@ -195,7 +194,6 @@ get_next_token = fn matchers, code, start:
 
 
 
-
 get_next_matchers = fn token, matchers:
   [curr_matcher, ...parent_matchers] = matchers
 
@@ -242,7 +240,6 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
     code
     start
     matchers: [[fink_lex, 0], []]
-
 
   pipe:
     unfold  , {code, start, matchers}=initial_ctx:
