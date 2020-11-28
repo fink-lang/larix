@@ -7,7 +7,7 @@
 
 
 spread = fn token_type, expr_type:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn lbp: fn ctx:

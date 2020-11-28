@@ -18,7 +18,7 @@ infix_led = fn expr_type, lbp: fn ctx, left:
 
 
 maybe_left_binging = fn token_type:
-  dict:
+  rec:
     ...left_binding token_type
 
     lbp: fn lbp: fn ctx:
@@ -30,7 +30,7 @@ maybe_left_binging = fn token_type:
 
 
 infix = fn token_type, expr_type:
-  dict:
+  rec:
     ...maybe_left_binging token_type
 
     led: fn lbp: infix_led expr_type, lbp + 1
@@ -38,7 +38,7 @@ infix = fn token_type, expr_type:
 
 
 infix_right = fn token_type, expr_type:
-  dict:
+  rec:
     ...maybe_left_binging token_type
 
     led: fn lbp: infix_led expr_type, lbp - 1
@@ -46,7 +46,7 @@ infix_right = fn token_type, expr_type:
 
 
 prefix = fn token_type, expr_type:
-  dict:
+  rec:
     ...non_binding token_type
 
     nud: fn lbp: fn ctx:
@@ -61,7 +61,7 @@ prefix = fn token_type, expr_type:
 
 
 literal = fn token_type, expr_type:
-  dict:
+  rec:
     ...non_binding token_type
 
     nud: fn: fn ctx:
@@ -72,6 +72,6 @@ literal = fn token_type, expr_type:
 
 
 terminator = fn token_type:
-  dict:
+  rec:
     ...maybe_left_binging token_type
 

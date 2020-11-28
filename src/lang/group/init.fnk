@@ -7,7 +7,7 @@
 
 
 group = fn token_type:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn: fn {no_oppless_call, ...ctx}:

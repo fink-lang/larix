@@ -8,7 +8,7 @@
 
 
 infix_pipe = fn token_type:
-  dict:
+  rec:
     ...infix token_type, 'call'
 
     led: fn lbp:  fn ctx, left:

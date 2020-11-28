@@ -4,7 +4,7 @@
 
 
 
-describe 'object {...}', fn:
+describe 'record {...}', fn:
 
   it 'parses empty: {}', fn:
     expect
@@ -82,11 +82,11 @@ describe 'object {...}', fn:
 
 
 
-describe 'dict', fn:
+describe 'records', fn:
   it 'parses', fn:
     expect
       parse_expr '
-        dict:
+        rec:
           foo
           # prop comment
           (bar + ni): 123
@@ -97,7 +97,7 @@ describe 'dict', fn:
 
 
 
-describe 'object {...} - parsing failures', fn:
+describe 'record {...} - parsing failures', fn:
   it 'errors when missing `}`', fn:
     expect
       parse '{', 'test.fnk'

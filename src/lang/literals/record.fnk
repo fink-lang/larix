@@ -84,7 +84,7 @@ key_val_expr = fn ctx:
 
 
 record = fn token_type:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn: fn ctx:
@@ -102,6 +102,5 @@ add_record = fn ctx:
     add_separator terminator ':'
     add_separator terminator '}'
 
-    add_named_block 'dict', 'rec', key_val_expr
     add_named_block 'rec', 'rec', key_val_expr
 

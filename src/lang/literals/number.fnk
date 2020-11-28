@@ -12,7 +12,7 @@ number = fn ctx:
 
 
 num = fn token_type:
-  dict:
+  rec:
     ...non_binding token_type
 
     nud: fn: fn ctx:

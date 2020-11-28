@@ -70,7 +70,7 @@ get_parts = fn ctx:
 
       exprs = match ctx.curr_token:
         {type: 'str-expr-end'}:
-          seq:
+          list:
             get_str_empty ctx
             expr, ...rest
         else:
@@ -148,7 +148,7 @@ get_unindented_text = fn ctx, op:
 
 
 string = fn token_type:
-  dict:
+  rec:
     ...left_binding token_type
 
     lbp: fn lbp: fn ctx, left:

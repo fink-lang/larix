@@ -6,7 +6,7 @@ module (1:0-14:0)
     ident (1:6-1:10) item
     :
     match:expr (3:2-3:24)
-      # nested object pattern
+      # nested record pattern
       rec (3:2-3:19)
         rec:kv (3:3-3:6)
           ident (3:3-3:6) foo

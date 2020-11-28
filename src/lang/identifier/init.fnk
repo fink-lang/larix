@@ -12,7 +12,7 @@ identifier = fn ctx:
 
 
 ident = fn op:
-  dict:
+  rec:
     ...non_binding op
 
     nud: fn: fn ctx:

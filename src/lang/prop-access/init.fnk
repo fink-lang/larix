@@ -31,7 +31,7 @@ member_expr = fn ctx, lbp:
 
 
 prop_access = fn op, type:
-  dict:
+  rec:
     ...infix op
 
     led: fn lbp: fn ctx, left:

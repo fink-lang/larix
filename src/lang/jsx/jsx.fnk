@@ -215,7 +215,7 @@ jsx_elem_or_fragment = fn ctx:
 
 
 jsx = fn token_type:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn: fn ctx:

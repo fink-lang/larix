@@ -19,7 +19,7 @@ indented_block = fn ctx, block_expr=single_expression:
 
 
 named_block = fn token_type, expr_type, block_expr:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn: fn ctx:

@@ -6,7 +6,7 @@
 
 
 partial = fn token_type, expr_type:
-  dict:
+  rec:
     ...non_binding token_type
 
     nud: fn: fn ctx:

@@ -88,7 +88,7 @@ module (1:0-4:0)
       ident (3:4-3:7) bar
 `;
 
-exports[`partial parses obj 1`] = `
+exports[`partial parses record 1`] = `
 rec (1:0-1:12)
   rec:kv (1:1-1:5)
     ident (1:1-1:2) a
@@ -98,7 +98,7 @@ rec (1:0-1:12)
     number (1:10-1:11) 2
 `;
 
-exports[`partial parses obj 2`] = `
+exports[`partial parses record 2`] = `
 rec (1:0-1:18)
   rec:kv (1:1-1:5)
     spread ... (1:1-1:5)

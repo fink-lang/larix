@@ -6,7 +6,7 @@
 
 
 list_op = fn token_type:
-  dict:
+  rec:
     ...prefix token_type
 
     nud: fn: fn ctx:
@@ -22,4 +22,3 @@ add_list = fn ctx:
     add_separator terminator ']'
 
     add_named_block 'list', 'list'
-    add_named_block 'seq', 'list'
