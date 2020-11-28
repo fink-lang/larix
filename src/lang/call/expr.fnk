@@ -1,8 +1,39 @@
+{next_lbp} = import '@fink/prattler/expressions.fnk'
+{next_is_end} = import '@fink/prattler/parser.fnk'
 
-call_expr = fn ctx, callee, op, arg_block:
+{single_expression, expressions} = import '../block/expr.fnk'
+{end_of_block_indent, next_is_new_expr} = import '../block/indentation.fnk'
+
+
+
+next_is_call_arg = fn callee, ctx:
+  match ctx:
+    {jsx: true}: false
+    next_is_end ?: false
+    # TODO
+    {next_token: {type: ? in [',', ':', '}', ']', ')', 'str-expr-end', 'jsx-expr-end']}}: false
+    0 < next_lbp ?, callee: false
+    else: true
+
+
+
+call_expr = fn ctx, callee, arg_block:
   {start} = callee.loc
-
   [{exprs: args, comments, loc}, next_ctx] = arg_block ctx
+  [{type: 'call', callee, args, comments, loc: {...loc, start}}, next_ctx]
 
-  # TODO: left, right instead of callee, args
-  [{type: 'call', callee, args, op, comments, loc: {...loc, start}}, next_ctx]
+
+
+maybe_call_expr = fn expr, ctx:
+  match ctx:
+    next_is_new_expr ?:
+      [expr, ctx]
+
+    next_is_call_arg expr, ?:
+      indented_block = fn ctx, block_expr=single_expression:
+        expressions ctx, end_of_block_indent, block_expr
+
+      call_expr ctx, expr, indented_block
+
+    else:
+      [expr, ctx]

@@ -4,16 +4,15 @@ exports[`dict parses 1`] = `
 rec dict (1:0-7:0):
   rec:kv (2:2-2:5)
     ident (2:2-2:5) foo
-  rec:kv (4:2-4:15)
+  rec:kv (4:2-4:17)
     # prop comment
-    group (4:2-4:10)
-      arithm + (4:3-4:9)
+    group (4:2-4:12)
+      arithm + (4:3-4:11)
         ident (4:3-4:6) bar
-        ident (4:7-4:9) ni
-    number (4:12-4:15) 123
+        ident (4:9-4:11) ni
+    number (4:14-4:17) 123
   rec:kv (5:2-5:6)
     ident (5:2-5:6) spam
-  # trailing comment
 `;
 
 exports[`object {...} - parsing failures errors when encountering bad end of prop 1`] = `
@@ -27,7 +26,7 @@ test.fnk:1:4
 1| {foo) bar}
        ^
 
-Expected \`,\` or indented new line or \`}\`.
+Expected \`,\` or indented(>=1) new line or \`}\`.
 
 
 
@@ -171,7 +170,7 @@ test.fnk:1:2
 1| {}foo}
      ^
 
-Expected \`,\` or indented new line or end of code.
+Expected \`,\` or indented new line or end.
 
 
 
@@ -196,14 +195,14 @@ Expected prop-key but found '['.
 exports[`object {...} - parsing failures errors when encountering bad key 11`] = `
 module (1:0-1:1)
   rec (1:0-1:1)
-    ::error::
+
 
 error:
 test.fnk:1:1
 1| {]foo}
     ^
 
-Expected prop-key but found ']'.
+Expected \`,\` or indented(>=1) new line or \`}\`.
 
 
 
@@ -212,14 +211,14 @@ Expected prop-key but found ']'.
 exports[`object {...} - parsing failures errors when encountering bad key 12`] = `
 module (1:0-1:1)
   rec (1:0-1:1)
-    ::error::
+
 
 error:
 test.fnk:1:1
 1| {)foo}
     ^
 
-Expected prop-key but found ')'.
+Expected \`,\` or indented(>=1) new line or \`}\`.
 
 
 
@@ -268,17 +267,17 @@ Expected \`,\` or indented(>=1) new line or \`}\`.
 `;
 
 exports[`object {...} parses calculated prop 1`] = `
-rec (1:0-1:26)
+rec (1:0-1:28)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-  rec:kv (1:6-1:19)
-    group (1:6-1:14)
-      arithm + (1:7-1:13)
+  rec:kv (1:6-1:21)
+    group (1:6-1:16)
+      arithm + (1:7-1:15)
         ident (1:7-1:10) bar
-        ident (1:11-1:13) ni
-    number (1:16-1:19) 123
-  rec:kv (1:21-1:25)
-    ident (1:21-1:25) spam
+        ident (1:13-1:15) ni
+    number (1:18-1:21) 123
+  rec:kv (1:23-1:27)
+    ident (1:23-1:27) spam
 `;
 
 exports[`object {...} parses default assignment prop 1`] = `
@@ -378,11 +377,9 @@ rec (1:0-1:13)
 `;
 
 exports[`object {...} parses unicode as keys 1`] = `
-rec (1:0-1:9)
+rec (1:0-1:6)
   rec:kv (1:1-1:2)
     ident (1:1-1:2) π
   rec:kv (1:4-1:5)
     ident (1:4-1:5) ƒ
-  rec:kv (1:7-1:8)
-    ident (1:7-1:8) ∑
 `;

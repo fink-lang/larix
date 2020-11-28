@@ -1,6 +1,7 @@
-{collect_text, curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
-{curr_value, advance_expected} = import '@fink/prattler/parser.fnk'
-{add_operator} = import '@fink/prattler/symbols.fnk'
+{curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
+{curr_value, advance} = import '@fink/prattler/parser.fnk'
+{add_separator, add_literal, left_binding} = import '@fink/prattler/expressions.fnk'
+{add_error} = import '@fink/prattler/errors.fnk'
 
 {rx, match_all, replace_all} = import '@fink/std-lib/regex.fnk'
 {starts_with, slice} = import '@fink/std-lib/str.fnk'
@@ -8,14 +9,9 @@
 {min} = import '@fink/std-lib/math.fnk'
 {max_int} = import '@fink/std-lib/num.fnk'
 
-{prefix} = import '../symbols.fnk'
-
+{terminator} = import '../expressions.fnk'
 {terminated_block} = import '../block/init.fnk'
 {next_is_new_expr, curr_indentation} = import '../block/indentation.fnk'
-
-
-
-is_even = ? % 2 == 0
 
 
 
@@ -27,51 +23,66 @@ curr_next_adjecent = fn ctx:
 
 
 
-get_expr_part = fn ctx:
-  expr_ctx = advance_expected ctx, '{'
-  [block, next_ctx] = terminated_block expr_ctx, '}'
+get_str_empty = fn ctx:
+  {start} = curr_loc ctx
+  end = start
+  {type: 'string:text', value: '', loc: {start, end}}
 
-  match block:
+
+
+get_expr_part = fn ctx:
+  [block, next_ctx] = terminated_block ctx, 'str-expr-end'
+  expr = match block:
     {exprs: 1 < length ?}:
-      [{...block, type: 'block'}, next_ctx]
+      {...block, type: 'block'}
     else:
       {exprs: [expr]} = block
-      [expr, next_ctx]
+      expr
+  [expr, next_ctx]
 
 
 
-get_str_part = fn ctx, op:
-  [{value: text, loc: {start, end}}, next_ctx] = match op:
-    '"': collect_text ctx, rx'"|\$\{'
-    else: collect_text ctx, rx"'|\$\{"
+get_str_part = fn ctx:
+  value = curr_value ctx
+  loc = curr_loc ctx
+  [{type: 'string:text', value, loc}, ctx]
 
-  [[escaped]] = match_all text, rx'\\*$'
 
-  match escaped:
-    is_even length ?:
-      [{type: 'string:text', value: text, loc: {start, end}}, next_ctx]
+
+get_parts = fn ctx:
+  match ctx.next_token:
+    {type: 'str-end'}:
+      expr = get_str_empty ctx
+      [[expr], advance ctx]
+
+    {type: 'str-text'}:
+      [expr, next_ctx] = get_str_part advance ctx
+      match next_ctx.next_token:
+        {type: 'str-end'}:
+          [[expr], advance next_ctx]
+        else:
+          [rest, end_ctx] = get_parts next_ctx
+          [[expr, ...rest], end_ctx]
+
+    {type: 'str-expr-start'}:
+      [expr, next_ctx] = get_expr_part advance ctx
+      [rest, end_ctx] = get_parts next_ctx
+
+      exprs = match ctx.curr_token:
+        {type: 'str-expr-end'}:
+          seq:
+            get_str_empty ctx
+            expr, ...rest
+        else:
+          [expr, ...rest]
+
+      [exprs, end_ctx]
 
     else:
-      stop_value = curr_value next_ctx
-      [str_part, final_ctx] = get_str_part next_ctx, op
-
-      value = '${text}${stop_value}${str_part.value}'
-      {end} = str_part.loc
-
-      [{type: 'string:text', value, loc: {start, end}}, final_ctx]
-
-
-
-get_parts = fn ctx, op:
-  [str_part, next_ctx] = get_str_part ctx, op
-  match curr_value next_ctx:
-    '$':
-      [expr_part, parts_ctx] = get_expr_part next_ctx
-      [parts, final_ctx] = get_parts parts_ctx, op
-      [[str_part, expr_part, ...parts], final_ctx]
-    else:
-      [[str_part], next_ctx]
-
+      [, err_ctx] = add_error ctx,
+        'Unexpected end of code.'
+        ctx.next_token
+      [[], err_ctx]
 
 
 get_str_ind = fn str, min_ind:
@@ -103,7 +114,16 @@ get_unindent = fn ctx, parts:
 get_unindented_text = fn ctx, op:
   {start} = curr_loc ctx
 
-  [parts, next_ctx] = get_parts ctx, op
+  [[first_part, ...parsed_parts], next_ctx] = get_parts ctx, op
+
+  parts = match first_part:
+    {type: 'string:text'}:
+      [first_part, ...parsed_parts]
+    else:
+      expr = get_str_empty ctx
+      [expr, first_part, ...parsed_parts]
+
+  {end} = curr_loc next_ctx
 
   unindent = get_unindent ctx, parts
 
@@ -123,14 +143,13 @@ get_unindented_text = fn ctx, op:
     else:
       [first, ...rest]
 
-  {end} = curr_loc next_ctx
   [{type: 'string', op, exprs, loc: {start, end}}, next_ctx]
 
 
 
-string = fn op:
+string = fn token_type:
   dict:
-    ...prefix op
+    ...left_binding token_type
 
     lbp: fn lbp: fn ctx, left:
       match true:
@@ -141,19 +160,19 @@ string = fn op:
 
     led: fn: fn ctx, left:
       {loc: {start}} = left
+      op = curr_value ctx
 
       [{loc: {end}, ...str}, next_ctx] = get_unindented_text ctx, op
-
       [{...str, tag: left, loc: {start, end}}, next_ctx]
 
     nud: fn: fn ctx:
-      [str, next_ctx] = get_unindented_text ctx, op
-      [{...str, tag: false}, next_ctx]
-
+      op = curr_value ctx
+      get_unindented_text ctx, op
 
 
 
 add_string = fn ctx:
   pipe ctx:
-    add_operator string "'"
-    add_operator string '"'
+    add_literal string 'str-start'
+    add_separator terminator 'str-expr-end'
+

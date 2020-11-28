@@ -1,4 +1,4 @@
-{advance_expected} = import '@fink/prattler/parser.fnk'
+{advance} = import '@fink/prattler/parser.fnk'
 
 {add_named_block, indented_block} = import '../block/init.fnk'
 {single_expression} = import '../block/expr.fnk'
@@ -8,14 +8,11 @@
 get_condition = fn ctx:
   [left, next_ctx] = single_expression ctx, 0
   match left:
-    {type: 'comment'}:
-      [left, next_ctx]
-
     {type: 'block', op: 'else'}:
       [left, next_ctx]
 
     else:
-      [left, advance_expected next_ctx, ':']
+      [left, advance next_ctx]
 
 
 
@@ -26,12 +23,10 @@ get_result = fn ctx:
 
 
 cond_result_expr = fn ctx:
+  # [{comments, ...left}, result_ctx] = get_condition ctx
   [left, result_ctx] = get_condition ctx
 
   match left:
-    {type: 'comment'}:
-      [left, result_ctx]
-
     {type: 'block', op: 'else'}:
       [left, result_ctx]
 
@@ -39,6 +34,7 @@ cond_result_expr = fn ctx:
       [right, next_ctx] = get_result result_ctx
       {start} = left.loc
       {end} = right.loc
+      # [{type: 'match:expr', left, right, loc: {start, end}, comments}, next_ctx]
       [{type: 'match:expr', left, right, loc: {start, end}}, next_ctx]
 
 

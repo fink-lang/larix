@@ -1,77 +1,77 @@
-{symbol} = import '@fink/prattler/symbols.fnk'
-{curr_loc} = import '@fink/prattler/parser.fnk'
+{left_binding, non_binding} = import '@fink/prattler/expressions.fnk'
+{curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
 
 {next_is_new_expr} = import './block/indentation.fnk'
 {single_expression} = import './block/expr.fnk'
 
 
 
-infix_led = fn type, op, lbp: fn ctx, left:
+infix_led = fn expr_type, lbp: fn ctx, left:
+  op = curr_value ctx
+
   {loc: {start}} = left
   [right, next_ctx] = single_expression ctx, lbp
   {loc: {end}} = right
 
-  [{type, op, left, right, loc: {start, end}}, next_ctx]
+  [{type: expr_type, op, left, right, loc: {start, end}}, next_ctx]
 
 
-left_binding = fn lbp: fn ctx:
-  match ctx:
-    next_is_new_expr ?:
-      0
-    else:
-      lbp
 
-
-non_binding = fn: fn: 0
-
-
-infix = fn op, type:
+maybe_left_binging = fn token_type:
   dict:
-    ...symbol op
+    ...left_binding token_type
 
-    lbp: left_binding
+    lbp: fn lbp: fn ctx:
+      match ctx:
+        next_is_new_expr ?:
+          0
+        else:
+          lbp
 
-    led: fn lbp: infix_led type, op, lbp + 1
 
-
-infix_right = fn op, type:
+infix = fn token_type, expr_type:
   dict:
-    ...symbol op
+    ...maybe_left_binging token_type
 
-    lbp: left_binding
-
-    led: fn lbp: infix_led type, op, lbp - 1
+    led: fn lbp: infix_led expr_type, lbp + 1
 
 
-prefix = fn op, type:
+
+infix_right = fn token_type, expr_type:
   dict:
-    ...symbol op
+    ...maybe_left_binging token_type
 
-    lbp: non_binding
+    led: fn lbp: infix_led expr_type, lbp - 1
+
+
+
+prefix = fn token_type, expr_type:
+  dict:
+    ...non_binding token_type
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc ctx
+      op = curr_value ctx
+
       [right, next_ctx] = single_expression ctx, lbp
       {end} = right.loc
 
-      [{type, op, right, loc: {start, end}}, next_ctx]
+      [{type: expr_type, op, right, loc: {start, end}}, next_ctx]
 
 
-literal = fn op, type:
+
+literal = fn token_type, expr_type:
   dict:
-    ...symbol op
-
-    lbp: non_binding
+    ...non_binding token_type
 
     nud: fn: fn ctx:
       loc = curr_loc ctx
-      # value = curr_value ctx
-      [{type, value: op, loc}, ctx]
+      value = curr_value ctx
+      [{type: expr_type, value, loc}, ctx]
 
 
-terminator = fn op:
+
+terminator = fn token_type:
   dict:
-    ...symbol op
-
-    lbp: left_binding
+    ...maybe_left_binging token_type
 

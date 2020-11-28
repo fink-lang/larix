@@ -1,42 +1,22 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
-{starts_with} = import '@fink/std-lib/str.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
 
-{next_is_new_expr} = import '../block/indentation.fnk'
-
-{prefix, infix, infix_right} = import '../symbols.fnk'
+{prefix, infix, infix_right} = import '../expressions.fnk'
 
 
-arithm = fn op: infix op, 'arithm'
-arithm_right = fn op: infix_right op, 'arithm:right'
+arithm = fn token_type:
+  infix token_type, 'arithm'
 
 
+arithm_right = fn token_type:
+  infix_right token_type, 'arithm:right'
 
-minus = fn op:
-  {nud} = prefix op, 'arithm:prefix'
-
-  dict:
-    ...arithm op
-
-    lbp: fn lbp: fn ctx:
-
-      match ctx:
-        next_is_new_expr ?:
-          0
-
-        # TODO: this is a prattler internal interface
-        {tokenizer: {partial_token: {value: starts_with ?, ' '}}}:
-          lbp
-
-        else:
-          0
-
-    nud
 
 
 add_arithmetic_operators = fn ctx:
   pipe ctx:
     add_operator arithm '+'
-    add_operator minus '-'
+    add_operator arithm '-'
+    add_operator prefix 'prefix_neg', 'arithm:prefix'
 
     add_operator arithm '*'
     add_operator arithm '/'

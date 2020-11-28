@@ -9,7 +9,6 @@ block filter (1:0-4:0)
       ident (2:2-2:6) item
       number (2:9-2:10) 2
     number (2:14-2:15) 0
-  # trailing comment
 `;
 
 exports[`fold item, accu: ... parses 1`] = `
@@ -22,7 +21,6 @@ block fold (1:0-4:0)
   arithm + (2:2-2:13)
     ident (2:2-2:6) item
     ident (2:9-2:13) accu
-  # trailing comment
 `;
 
 exports[`map item: ... parses 1`] = `
@@ -32,7 +30,6 @@ block map (1:0-4:0)
   arithm * (2:2-2:10)
     ident (2:2-2:6) item
     number (2:9-2:10) 2
-  # trailing comment
 `;
 
 exports[`unfold accu: ... parses 1`] = `
@@ -49,7 +46,6 @@ block unfold (1:0-3:0)
 exports[`unfold accu: ... parses no args 1`] = `
 block unfold (1:0-4:0):
   ident (2:2-2:5) foo
-  # trailing comment
 `;
 
 exports[`unfold accu: ... parses with item, accu result 1`] = `
@@ -90,5 +86,4 @@ block while (1:0-4:0)
       ident (2:2-2:6) item
       number (2:9-2:10) 2
     number (2:14-2:15) 0
-  # trailing comment
 `;

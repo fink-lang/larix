@@ -1,20 +1,40 @@
-{next_is, collect_text, advance} = import '@fink/prattler/parser.fnk'
+{curr_indentation} = import '../block/indentation.fnk'
 
 
-collect_single_comment = fn ctx, op:
-  [text, next_ctx] = collect_text ctx,  '\n'
-  [{op, ...text}, next_ctx]
+
+get_comments = fn ctx:
+  ind = curr_indentation ctx
+
+  [...comments] = pipe ctx.ignored_tokens:
+    filter token: match token:
+      {type: 'ignorable'}: false
+      {loc: {start: {column: ind}}}: true
+
+    map {type, value, loc}:
+      match type:
+        'comment-sl':
+          {type: 'comment', op: '#', loc, value: value.slice 1}
+        else:
+          {type: 'comment', op: '---', loc, value: value.slice 3, -3}
+
+  [comments, {...ctx, ignored_tokens: []}]
 
 
-collect_comments = fn ctx, op:
-  [comment, next_ctx] = collect_single_comment ctx, op
+# TODO implement trailing comments
+# get_trailing_comments = fn ctx:
+#   ind = curr_indentation ctx
 
-  match next_ctx:
-    next_is ?, op:
-      [comments, final_ctx] = collect_comments
-        advance next_ctx
-        op
-      [[comment, ...comments], final_ctx]
-    else:
-      [[comment], next_ctx]
+#   [...comments] = pipe ctx.ignored_tokens:
+#     filter token: match token:
+#       {type: 'ignorable'}: false
+#       {loc: {start: {column: ? >= ind}}}: true
+
+#     map {type, value, loc}:
+#       match type:
+#         'comment-sl':
+#           {type: 'comment', op: '#', loc, value: value.slice 1}
+#         else:
+#           {type: 'comment', op: '---', loc, value: value.slice 3, -3}
+
+#   [comments, ctx]
 

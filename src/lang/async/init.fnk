@@ -1,9 +1,9 @@
-{add_keyword} = import '@fink/prattler/symbols.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
 
-{prefix} = import '../symbols.fnk'
+{prefix} = import '../expressions.fnk'
 
 
 add_async = fn ctx:
   pipe ctx:
-    add_keyword prefix 'await', 'prefix'
+    add_operator prefix 'await', 'prefix'
 

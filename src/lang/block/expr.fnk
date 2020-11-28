@@ -1,14 +1,11 @@
-{advance, expression, next_is, next_is_end, has_errors} = import '@fink/prattler/parser.fnk'
+{advance, expression, next_is, has_errors} = import '@fink/prattler/parser.fnk'
 {curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
 
-{collect_single_comment} = import '../comments/collect.fnk'
-{next_is_call_arg} = import '../call/opless.fnk'
-{call_expr} = import '../call/expr.fnk'
-
 {update_indentation, push_block, pop_block} = import './indentation.fnk'
-{end_of_block_indent, next_is_unindented} = import './indentation.fnk'
-{next_is_new_expr, next_is_indented} = import './indentation.fnk'
+{next_is_unindented} = import './indentation.fnk'
+{next_is_indented} = import './indentation.fnk'
+{get_comments} = import '../comments/collect.fnk'
 
 
 
@@ -17,32 +14,25 @@ empty_expr = fn {loc: {end}}:
 
 
 
-get_end_symb = fn {blocks: [block, ...blocks]}:
-  match block:
-    {end_symbol: end_of_block_indent}: get_end_symb {blocks}
-    else: block.end_symbol
+get_end_symb = fn {blocks: [block]}:
+  block.end_symbol
 
 
 
-end_symb_str = fn ctx:
-  symb = get_end_symb ctx
-  match symb:
-    # {end_of_block_indent: true}: 'end of block'
-    {end_of_code: true}: 'end of code'
-    else: '`${symb}`'
+end_of_block_tokens = [':', '}', ']', ')', 'str-expr-end', 'jsx-expr-end', 'end']
 
 
 
 next_is_end_of_block = fn ctx:
-  end_symbol = get_end_symb ctx
-
   match ctx:
-    next_is_end ?, end_symbol: true
-    next_is_unindented ?: true
-    # TODO: should be responsibility of enclosing block
-    next_is ?, ':': true
-    next_is ?, '/>': true
-    else: false
+    {next_token: {type: ? in end_of_block_tokens}}:
+      true
+
+    next_is_unindented ?:
+      true
+
+    else:
+      false
 
 
 
@@ -93,7 +83,7 @@ get_all = fn ctx, single_expr:
           match at_start:
             false:
               [, err_ctx] = add_error ctx,
-                'Expected `,` or indented new line or ${end_symb_str ctx}.'
+                'Expected `,` or indented new line or ${get_end_symb ctx}.'
                 ctx.next_token
 
               [true, [exprs, err_ctx]]
@@ -116,70 +106,22 @@ expressions = fn ctx, end_symbol, single_expr:
 
   block_ctx = push_block ctx, end_symbol
 
-  [all_exprs, next_ctx] = get_all block_ctx, single_expr
-
-  [exprs, comments] = pipe all_exprs:
-    fold expr, [exprs]=[[]]:
-      match expr:
-        {type: 'comment'}:
-          {exprs: trailing} = expr
-          [exprs, {trailing}]
-        else:
-          [[...exprs, expr], {}]
+  [exprs, next_ctx] = get_all block_ctx, single_expr
 
   end_ctx = pop_block next_ctx
 
   {end} = curr_loc end_ctx
-  [{type: 'exprs', exprs, comments, loc: {start, end}}, end_ctx]
-
-
-
-# TODO: move to ../comments/?
-add_trailing_comment = fn expr, ctx:
-  match ctx:
-    next_is_nl ?:
-      [expr, ctx]
-
-    next_is ?, '#':
-      comment_ctx = advance ctx
-      [item, next_ctx] = collect_single_comment comment_ctx, '#'
-      comments = {...expr.comments, trailing: [item]}
-
-      [{...expr, comments}, next_ctx]
-
-    else:
-      [expr, ctx]
-
-
-
-expression_with_comment = fn ctx, lbp:
-  [expr, next_ctx] = expression ctx, lbp
-  add_trailing_comment expr, next_ctx
+  [{type: 'exprs', exprs, loc: {start, end}}, end_ctx]
 
 
 
 single_expression = fn ctx, lbp=0:
-  [expr, next_ctx] = expression_with_comment ctx, lbp
+  [leading, expr_ctx] = get_comments ctx
 
-  match next_ctx:
-    has_errors ?:
-      [expr, next_ctx]
+  [expr, next_ctx] = expression expr_ctx, lbp
+  [{...expr, comments: {leading}}, next_ctx]
 
-    next_is ?, ',':
-      [expr, next_ctx]
-
-    next_is_end_of_block ?:
-      [expr, next_ctx]
-
-    next_is_new_expr ?:
-      [expr, next_ctx]
+  # [trailing, end_ctx] = get_trailing_comments next_ctx
+  # [{...expr, comments: {leading, trailing}}, end_ctx]
 
 
-    not ctx.jsx and next_is_call_arg expr, lbp, ?:
-      indented_block = fn ctx, block_expr=single_expression:
-        expressions ctx, end_of_block_indent, block_expr
-
-      call_expr next_ctx, expr, '', indented_block
-
-    else:
-      [expr, next_ctx]

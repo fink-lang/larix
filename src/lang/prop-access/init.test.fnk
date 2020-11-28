@@ -24,10 +24,6 @@ describe 'prop access', fn:
       parse_expr 'foo._spam'
       to_match_snapshot
 
-    expect
-      parse_expr 'foo.∑'
-      to_match_snapshot
-
 
   it 'parses with taken keywords', fn:
     expect

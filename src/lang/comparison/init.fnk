@@ -1,45 +1,15 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
-{starts_with} = import '@fink/std-lib/str.fnk'
-
-{infix} = import '../symbols.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
+{infix} = import '../expressions.fnk'
 
 
-comp = fn op: infix op, 'comp'
+comp = fn token_type: infix token_type, 'comp'
 
 
-
-# TODO: can overloading (jsx, <) be handled better
-lt = fn op:
-  dict:
-    ...comp op
-
-    lbp: fn lbp: fn ctx:
-      match ctx:
-        # TODO: this is a prattler internal interface
-        {tokenizer: {partial_token: {value: starts_with ?, ' '}}}:
-          lbp
-
-        else:
-          0
-
-
-gt = fn op:
-  dict:
-    ...comp op
-
-    lbp: fn lbp: fn ctx:
-      match ctx:
-        {jsx: true}: 0
-        else: lbp
-
-
-
-# TODO just enforce space before and after e.g. < to allow jsx overloading?
 add_comparison_operators = fn ctx:
   pipe ctx:
     add_operator comp '=='
     add_operator comp '!='
     add_operator comp '>='
     add_operator comp '<='
-    add_operator gt '>'
-    add_operator lt '<'
+    add_operator comp '>'
+    add_operator comp '<'

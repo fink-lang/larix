@@ -1,13 +1,15 @@
-{add_operator, add_separator} = import '@fink/prattler/symbols.fnk'
+{add_separator, add_operator} = import '@fink/prattler/expressions.fnk'
 
-{terminator} = import '../symbols.fnk'
+{terminator} = import '../expressions.fnk'
+
 {jsx} = import './jsx.fnk'
 
 
 add_jsx = fn ctx:
   pipe ctx:
-    add_operator jsx '<'
-    add_operator jsx '<>'
-    add_separator terminator '/>'
-    add_separator terminator '</'
-    add_separator terminator '</>'
+    add_operator jsx 'jsx-frag-open'
+    add_operator jsx 'jsx-elem-start'
+    add_separator terminator 'jsx-expr-start'
+    add_separator terminator 'jsx-expr-end'
+    add_separator terminator 'jsx-elem-end'
+    add_separator terminator 'jsx-elem-close'

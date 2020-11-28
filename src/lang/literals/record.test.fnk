@@ -63,7 +63,7 @@ describe 'object {...}', fn:
 
   it 'parses calculated prop', fn:
     expect
-      parse_expr '{foo, (bar+ni): 123, spam}'
+      parse_expr '{foo, (bar + ni): 123, spam}'
       to_match_snapshot
 
 
@@ -77,7 +77,7 @@ describe 'object {...}', fn:
 
   it 'parses unicode as keys', fn:
     expect
-      parse_expr '{π, ƒ, ∑}'
+      parse_expr '{π, ƒ}'
       to_match_snapshot
 
 
@@ -89,7 +89,7 @@ describe 'dict', fn:
         dict:
           foo
           # prop comment
-          (bar+ni): 123
+          (bar + ni): 123
           spam
           # trailing comment
       '

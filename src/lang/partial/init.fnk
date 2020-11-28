@@ -1,7 +1,23 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
-{literal} = import '../symbols.fnk'
+{non_binding, add_operator} = import '@fink/prattler/expressions.fnk'
+{curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
+
+{maybe_call_expr} = import '../call/expr.fnk'
+
+
+
+partial = fn token_type, expr_type:
+  dict:
+    ...non_binding token_type
+
+    nud: fn: fn ctx:
+      loc = curr_loc ctx
+      op = curr_value ctx
+      expr = {type: expr_type, value: op, loc}
+
+      maybe_call_expr expr, ctx
+
 
 
 add_partial = fn ctx:
   pipe ctx:
-    add_operator literal '?', 'partial'
+    add_operator partial '?', 'partial'

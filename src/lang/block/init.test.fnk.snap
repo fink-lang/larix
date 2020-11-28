@@ -110,8 +110,6 @@ module (1:0-17:1)
     # leading comment
     # for next line
     ident (14:2-14:6) spam
-      # trailing same line comment
-    # trailing block comment
 `;
 
 exports[`parse failures errors due to end of indentation 1`] = `
@@ -159,7 +157,7 @@ Expected \`,\` or indented(>=3) new line or \`)\`.
 
 `;
 
-exports[`parse failures errors due to missing closing symbol 1`] = `
+exports[`parse failures errors due to missing closing token 1`] = `
 module (1:0-1:4)
   group (1:0-1:4)
     number (1:1-1:2) 1

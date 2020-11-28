@@ -1,26 +1,32 @@
-{advance, next_matches, has_errors} = import '@fink/prattler/parser.fnk'
-{add_operator} = import '@fink/prattler/symbols.fnk'
+{advance, has_errors} = import '@fink/prattler/parser.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
-{rx} = import '@fink/std-lib/regex.fnk'
 
-{infix} = import '../symbols.fnk'
+{ident_or_keyword} = import '../../lexer/tokens.fnk'
+
+{infix} = import '../expressions.fnk'
+
 {single_expression} = import '../block/expr.fnk'
 {identifier} = import '../identifier/init.fnk'
+{maybe_call_expr} = import '../call/expr.fnk'
 
 
 
 member_expr = fn ctx, lbp:
-  match ctx:
-    next_matches ?, rx'^[\'"(]':
+  match ctx.next_token:
+    {type: 'str-start'}:
       single_expression ctx, lbp
 
-    next_matches ?, rx'^[0-9[\]{}),?:*/+-]':
+    {type: '('}:
+      single_expression {...ctx, no_oppless_call: true}, lbp
+
+    {type: ? in ident_or_keyword}:
+      identifier advance ctx
+
+    else:
       add_error ctx,
         'Expected member key to be an ident, string or group expr.'
         ctx.next_token
-
-    else:
-      identifier advance ctx
 
 
 
@@ -38,8 +44,8 @@ prop_access = fn op, type:
 
         else:
           {loc: {end}} = right
-
-          [{type, op, left, right, loc: {start, end}}, next_ctx]
+          expr = {type, op, left, right, loc: {start, end}}
+          maybe_call_expr expr, next_ctx
 
 
 

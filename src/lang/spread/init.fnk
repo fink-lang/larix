@@ -1,17 +1,18 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
-{next_is, curr_loc} = import '@fink/prattler/parser.fnk'
+{add_operator} = import '@fink/prattler/expressions.fnk'
+{next_is, curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
 
-{prefix} = import '../symbols.fnk'
+{prefix} = import '../expressions.fnk'
 {single_expression} = import '../block/expr.fnk'
 
 
 
-spread = fn op, type:
+spread = fn token_type, expr_type:
   dict:
-    ...prefix op
+    ...prefix token_type
 
     nud: fn lbp: fn ctx:
       {start} = curr_loc ctx
+      op = curr_value ctx
 
       [right, next_ctx] = match ctx:
         next_is ?, ',':
@@ -22,7 +23,7 @@ spread = fn op, type:
 
       {end} = curr_loc next_ctx
 
-      [{type, op, right, loc: {start, end}}, next_ctx]
+      [{type: expr_type, op, right, loc: {start, end}}, next_ctx]
 
 
 

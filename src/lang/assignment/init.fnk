@@ -1,10 +1,7 @@
-{add_operator} = import '@fink/prattler/symbols.fnk'
-{infix_right} = import '../symbols.fnk'
-
-
-assign = fn op: infix_right op, 'assign'
+{add_operator} = import '@fink/prattler/expressions.fnk'
+{infix_right} = import '../expressions.fnk'
 
 
 add_assignment_operators = fn ctx:
   pipe ctx:
-    add_operator assign '='
+    add_operator infix_right '=', 'assign'

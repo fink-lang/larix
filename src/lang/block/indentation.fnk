@@ -1,11 +1,13 @@
-{curr_loc, next_loc, next_is, next_is_end} = import '@fink/prattler/parser.fnk'
+{curr_loc, next_loc, next_is_end} = import '@fink/prattler/parser.fnk'
 {advance, has_errors} = import '@fink/prattler/parser.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
 
 
 
+# TODO: remove?
 end_of_block_indent = {end_of_block_indent: true}
-end_of_code = {end_of_code: true}
+end_of_code = 'end'
+
 
 
 curr_indentation = fn {blocks}:
@@ -13,14 +15,17 @@ curr_indentation = fn {blocks}:
   curr_ind
 
 
+
 min_indentation = fn {blocks}:
   [{min_ind}] = blocks
   min_ind
 
 
+
 next_is_new_expr = fn ctx:
   {start: {column}} = next_loc ctx
   column <= curr_indentation ctx
+
 
 
 next_is_unindented = fn ctx:
@@ -33,6 +38,7 @@ next_is_unindented = fn ctx:
       false
 
 
+
 next_is_indented = fn ctx:
   curr_ind = curr_indentation ctx
   {end: {line: curr_line}} = curr_loc ctx
@@ -41,24 +47,22 @@ next_is_indented = fn ctx:
   curr_line < next_line and curr_ind < next_ind
 
 
+
 pop_block = fn ctx:
   {blocks: [{end_symbol}, ...blocks]} = ctx
   next_ctx = {...ctx, blocks}
 
   match end_symbol:
-    end_of_block_indent:
+    ? == end_of_block_indent or ? == end_of_code:
       match next_ctx:
-        next_is_end ?: advance next_ctx
-        else: next_ctx
-
-    end_of_code:
-      match next_ctx:
-        next_is_end ?: advance next_ctx
-        else: next_ctx
+        next_is_end ?:
+          advance next_ctx
+        else:
+          next_ctx
 
     else:
       match ctx:
-        next_is ?, end_symbol:
+        {next_token: {type: end_symbol}}:
           advance next_ctx
 
         has_errors ?:
@@ -71,6 +75,7 @@ pop_block = fn ctx:
             ctx.next_token
 
           err_ctx
+
 
 
 push_block = fn ctx, end_symbol:
@@ -86,6 +91,7 @@ push_block = fn ctx, end_symbol:
   {...ctx, blocks: [block, ...blocks]}
 
 
+
 update_indentation = fn ctx:
   {start: {column}} = next_loc ctx
   {blocks: [block, ...blocks]} = ctx
@@ -93,6 +99,7 @@ update_indentation = fn ctx:
   indented_block = {...block, curr_ind: column, min_ind: column}
 
   {...ctx, blocks: [indented_block, ...blocks]}
+
 
 
 init_indentation = fn ctx:
