@@ -34,6 +34,10 @@ describe 'prop access', fn:
       parse_expr 'foo.fn'
       to_match_snapshot
 
+    expect
+      parse_expr 'fn foo=rec.list: false'
+      to_match_snapshot
+
 
   it 'parses member with str expr', fn:
     expect
