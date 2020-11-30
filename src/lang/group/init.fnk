@@ -10,18 +10,17 @@ group = fn token_type:
   rec:
     ...prefix token_type
 
-    nud: fn: fn {no_oppless_call, ...ctx}:
+    nud: fn: fn {group_call, ...ctx}:
       [{exprs, comments, loc}, next_ctx] = terminated_block ctx, ')'
 
       expr = {type: 'group', exprs, comments, loc}
 
       match true:
         # TODO: why is jsx getting lost in terminated block
-        ctx.jsx or no_oppless_call:
+        ctx.jsx or group_call == false:
           [expr, next_ctx]
         else:
           maybe_call_expr expr, next_ctx
-
 
 
 

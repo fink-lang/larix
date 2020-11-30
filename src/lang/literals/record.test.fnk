@@ -70,8 +70,21 @@ describe 'record {...}', fn:
   it 'parses keywords as keys', fn:
     expect
       parse_expr '
-        {fn, match, fold, unfold, map, find, filter, await, attempt}
+        {fn, match, fold, unfold, map, find, filter, await, attempt, rec, list}
       '
+      to_match_snapshot
+
+    expect
+      parse_expr '
+        rec:
+          fn: 123
+          rec: 345
+          list: 123
+      '
+      to_match_snapshot
+
+    expect
+      parse_expr '{rec=123}'
       to_match_snapshot
 
 
@@ -79,6 +92,34 @@ describe 'record {...}', fn:
     expect
       parse_expr '{π, ƒ}'
       to_match_snapshot
+
+
+  it 'parses member expr as key', fn:
+    expect
+      parse_expr '{foo.bar: 134, spam}'
+      to_match_snapshot
+
+    expect
+      parse_expr '
+        rec:
+          foo.bar: 1234
+          spam
+          rec.list: 1234
+      '
+      to_match_snapshot
+
+    expect
+      parse_expr '{foo.bar.(spam): 1234}'
+      to_match_snapshot
+
+    expect
+      parse_expr '{foo.bar=123}'
+      to_match_snapshot
+
+    expect
+      parse_expr '{rec.list: lst=123, ni}'
+      to_match_snapshot
+
 
 
 

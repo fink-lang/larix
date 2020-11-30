@@ -23,11 +23,11 @@ get_loc = fn start, text:
 
 fink_lex = rx'
   ^(
-    (?<keyword>\b(
+    (?<keyword>(
       fn|match|fold|unfold|else|map|filter|while|until
       |await|import|try|throw|rec|list|true|false|pipe
       |in|or|and|not
-    )\b)
+    )(?=\s|:))
     |(?<ignorable>\s+)
     |(?<comment_sl>#.*?(?=\n))
     |(?<comment_ml>---[\s\S]*?---)
@@ -253,10 +253,12 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
 
 
 
-# TODO: should prattler allow registering for token-type + value
-# if so, we could simply test on type being 'keyword'
-ident_or_keyword = list:
-  'ident', 'import', 'fn', 'pipe', 'match', 'else'
+
+# TODO: should prattler allow registering expr builders for token-type + value
+# if so, we could simply test on token type being 'keyword' rather than
+# testing type in keywords or just use 'ident' for keywords
+keywords = list:
+  'import', 'fn', 'pipe', 'match', 'else'
   'fold', 'unfold', 'map', 'filter', 'while', 'until'
   'list', 'rec', 'await', 'try', 'throw',
   'and', 'or', 'not', 'in', 'true', 'false'

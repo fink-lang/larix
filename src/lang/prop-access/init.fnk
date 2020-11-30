@@ -2,7 +2,7 @@
 {add_operator} = import '@fink/prattler/expressions.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
 
-{ident_or_keyword} = import '../../lexer/tokens.fnk'
+{keywords} = import '../../lexer/tokens.fnk'
 
 {infix} = import '../expressions.fnk'
 
@@ -18,9 +18,12 @@ member_expr = fn ctx, lbp:
       single_expression ctx, lbp
 
     {type: '('}:
-      single_expression {...ctx, no_oppless_call: true}, lbp
+      single_expression {...ctx, group_call: false}, lbp
 
-    {type: ? in ident_or_keyword}:
+    {type: 'ident'}:
+      identifier advance ctx
+
+    {type: ? in keywords}:
       identifier advance ctx
 
     else:
