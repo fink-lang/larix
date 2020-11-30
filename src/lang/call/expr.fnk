@@ -5,13 +5,16 @@
 {end_of_block_indent, next_is_new_expr} = import '../block/indentation.fnk'
 
 
+# TODO: move to lexer?
+expr_end_tokens = [',', ':', '}', ']', ')', 'str-expr-end', 'jsx-expr-end']
+
 
 next_is_call_arg = fn callee, ctx:
   match ctx:
     {jsx: true}: false
     next_is_end ?: false
     # TODO
-    {next_token: {type: ? in [',', ':', '}', ']', ')', 'str-expr-end', 'jsx-expr-end']}}: false
+    {next_token: {type: ? in expr_end_tokens}}: false
     0 < next_lbp ?, callee: false
     else: true
 
