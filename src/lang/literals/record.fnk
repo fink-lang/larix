@@ -2,7 +2,7 @@
 {add_error} = import '@fink/prattler/errors.fnk'
 {add_operator, add_separator} = import '@fink/prattler/expressions.fnk'
 
-{ident_or_keyword} = import '../../lexer/tokens.fnk'
+{keywords} = import '../../lexer/tokens.fnk'
 
 {prefix, terminator} = import '../expressions.fnk'
 {terminated_block, add_named_block} = import '../block/init.fnk'
@@ -21,34 +21,17 @@ value_expr = fn ctx:
 
 
 
-default_assignment = fn ctx, left:
-  expr_ctx = advance ctx
-
-  [right, next_ctx] = single_expression expr_ctx, 0
-  {loc: {end}} = right
-
-  [{type: 'assign', op: '=', left, right, loc: {...left.loc, end}}, next_ctx]
-
-
-
 key_expr = fn ctx:
   match ctx.next_token:
-    {type: ? in ident_or_keyword}:
-      [key, key_ctx] = identifier advance ctx
-
-      match key_ctx:
-        next_is ?, '=':
-          default_assignment key_ctx, key
-        else:
-          [key, key_ctx]
-
-
-    {type: ? in ['...', '(', 'str-start']}:
+    {type: ? in ['ident', '...', '(', 'str-start']}:
       single_expression ctx, 0
+
+    {type: ? in keywords}:
+      identifier advance ctx
 
     else:
        add_error ctx,
-        "Expected prop-key but found '${ctx.next_token.value}'."
+        "Expected record-key but found '${ctx.next_token.value}'."
         ctx.next_token
 
 
@@ -60,9 +43,10 @@ get_key_val = fn ctx, key_or_default:
       [left, ctx]
 
     else:
-      [key, value, next_ctx] = match key_or_default.type:
-        'assign':
+      [key, value, next_ctx] = match key_or_default:
+        {type: 'assign'}:
           [key_or_default.left, key_or_default, ctx]
+
         else:
           key_or_default
           [value, next_ctx] = value_expr ctx
