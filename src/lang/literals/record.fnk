@@ -63,7 +63,11 @@ get_key_val = fn ctx, key_or_default:
 
 key_val_expr = fn ctx:
   [key_or_default, value_ctx] = key_expr ctx
-  get_key_val value_ctx, key_or_default
+  match key_or_default:
+    {type: 'spread'}:
+      [key_or_default, value_ctx]
+    else:
+      get_key_val value_ctx, key_or_default
 
 
 

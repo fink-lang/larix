@@ -100,9 +100,8 @@ rec (1:0-1:12)
 
 exports[`partial parses record 2`] = `
 rec (1:0-1:18)
-  rec:kv (1:1-1:5)
-    spread ... (1:1-1:5)
-      partial (1:4-1:5) ?
+  spread ... (1:1-1:5)
+    partial (1:4-1:5) ?
   rec:kv (1:7-1:17)
     ident (1:7-1:10) foo
     string ' (1:12-1:17)

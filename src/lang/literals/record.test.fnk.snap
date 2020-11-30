@@ -447,9 +447,8 @@ exports[`record {...} parses spread prop 1`] = `
 rec (1:0-1:13)
   rec:kv (1:1-1:4)
     ident (1:1-1:4) foo
-  rec:kv (1:6-1:12)
-    spread ... (1:6-1:12)
-      ident (1:9-1:12) bar
+  spread ... (1:6-1:12)
+    ident (1:9-1:12) bar
 `;
 
 exports[`record {...} parses unicode as keys 1`] = `
