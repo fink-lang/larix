@@ -76,9 +76,7 @@ record = fn token_type:
     ...prefix token_type
 
     nud: fn: fn ctx:
-      # {start} = curr_loc ctx
       [{exprs, loc}, next_ctx] = terminated_block ctx, '}', key_val_expr
-
       [{type: 'rec', exprs, loc}, next_ctx]
 
 
