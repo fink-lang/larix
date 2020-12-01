@@ -80,7 +80,7 @@ source = '
   try:
     foo
 
-  [ni] = [1234]
+  [ni] = [1234, "spam"]
   na = [...ni]
   fn foo: {foo}
 
@@ -113,4 +113,5 @@ describe analyze, fn:
     expect
       analyze source, collect_scopes
       to_match_snapshot
+
 

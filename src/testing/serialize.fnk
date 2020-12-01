@@ -116,8 +116,7 @@ serialize_str = fn node, serialize, indent:
 
   tag = match node:
     {tag: false}: ''
-    {tag: {}}: ' ${node.tag.value}'
-    else: ''
+    else: ' ${node.tag.value}'
 
   [lne, ...lns] = pipe node.exprs:
     map part:

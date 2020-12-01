@@ -143,7 +143,7 @@ get_unindented_text = fn ctx, op:
     else:
       [first, ...rest]
 
-  [{type: 'string', op, exprs, loc: {start, end}}, next_ctx]
+  [{type: 'string', op, exprs, tag: false, loc: {start, end}}, next_ctx]
 
 
 
