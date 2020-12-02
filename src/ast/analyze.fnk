@@ -117,6 +117,17 @@ is_binding_ident = fn expr, ctx:
       false
 
 
+has_kv_parent = fn expr, ctx:
+  parent = get_parent expr, ctx
+  match parent:
+    {type: 'rec:kv', left: expr}:
+      true
+    {type: 'member'}:
+      has_kv_parent parent, ctx
+    else:
+      false
+
+
 
 is_referencing = fn expr, ctx:
   match expr:
@@ -128,6 +139,7 @@ is_referencing = fn expr, ctx:
         {type: 'rec:kv', left: expr, right: false}: true
         {type: 'rec:kv', left: expr}: false
         {type: 'member', right: expr}: false
+        {type: 'member', left: expr}: not has_kv_parent parent, ctx
         {type: 'jsx:attr', name: expr, value: ? != false}: false
         else: true
 

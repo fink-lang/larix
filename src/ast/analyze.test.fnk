@@ -61,7 +61,7 @@ source = '
     ni + undef
 
   {ni, na: {nu}} = {foo}
-  {(ni): nini=nu} = {foo: bar, (ni): nu}
+  {(ni): nini=nu, foo.bar: spam} = {foo: bar, (ni): nu, foo.bar.spam: 134}
 
   match bar foo:
     nu:
@@ -80,8 +80,8 @@ source = '
   try:
     foo
 
-  [ni] = [1234, "spam"]
-  na = [...ni]
+  [ni, ..., nu] = [1234, "spam"]
+  na = [...ni, false, true]
   fn foo: {foo}
 
   map await ham:

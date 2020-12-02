@@ -36,6 +36,10 @@ describe 'tokenizer', fn:
         "shrub"
         "ni \${ham} spam"
         foo.bar ...ni
+        [true, false]
+        true, false
+        a not b
+        foo in bar
       '
       to_match_snapshot
 

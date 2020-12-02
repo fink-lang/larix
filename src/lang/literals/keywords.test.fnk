@@ -20,3 +20,12 @@ describe 'keywords', fn:
         bar = falseish
       '
       to_match_snapshot
+
+
+  it 'parses inside exprs', fn:
+    expect
+      parse '
+        [false, true]
+        {false: true, true: false}
+      '
+      to_match_snapshot

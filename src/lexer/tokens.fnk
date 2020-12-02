@@ -23,11 +23,12 @@ get_loc = fn start, text:
 
 fink_lex = rx'
   ^(
-    (?<keyword>(
+    (?<block>(
       fn|match|fold|unfold|else|map|filter|while|until
-      |await|import|try|throw|rec|list|true|false|pipe
-      |in|or|and|not
+      |await|import|try|throw|rec|list|pipe
     )(?=\s|:))
+    |(?<kwop>(in|or|and|not)(?=\s))
+    |(?<value>(true|false)\b)
     |(?<ignorable>\s+)
     |(?<comment_sl>#.*?(?=\n))
     |(?<comment_ml>---[\s\S]*?---)
@@ -96,6 +97,8 @@ jsx_elem_lex = rx'
     (?<ignorable>\s+)
     |(?<comment_sl>#.*?(?=\n))
     |(?<comment_ml>---[\s\S]*?---)
+
+    |(?<value>(true|false)\b)
 
     |(?<str_start>\'|")
 
