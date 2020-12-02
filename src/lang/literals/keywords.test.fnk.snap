@@ -10,6 +10,20 @@ module (1:0-3:0)
     ident (2:6-2:14) falseish
 `;
 
+exports[`keywords parses inside exprs 1`] = `
+module (1:0-3:0)
+  list (1:0-1:13)
+    literal (1:1-1:6) false
+    literal (1:8-1:12) true
+  rec (2:0-2:26)
+    rec:kv (2:1-2:12)
+      ident (2:1-2:6) false
+      literal (2:8-2:12) true
+    rec:kv (2:14-2:25)
+      ident (2:14-2:18) true
+      literal (2:20-2:25) false
+`;
+
 exports[`keywords parses true 1`] = `
 module (1:0-3:0)
   assign = (1:0-1:10)

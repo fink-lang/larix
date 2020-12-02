@@ -253,5 +253,5 @@ block fn (1:0-1:22)
       ident (1:7-1:10) rec
       ident (1:11-1:15) list
   :
-  ident (1:17-1:22) false
+  literal (1:17-1:22) false
 `;
