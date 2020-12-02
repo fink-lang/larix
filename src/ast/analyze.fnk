@@ -139,11 +139,7 @@ is_referencing = fn expr, ctx:
 find_binding = fn expr, ctx:
   expr_scope = get_scope expr, ctx
 
-  name = match expr:
-    {type: 'ident'}: expr.value
-    # {type: 'jsx:elem'}: expr.name
-    # {type: 'jsx:attr'}: expr.name
-
+  name = expr.value
 
   [binding=false] = pipe ctx.bindings:
     reverse
