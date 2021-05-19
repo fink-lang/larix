@@ -9,13 +9,13 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=14.13.0"
   },
   "type": "module",
   "exports": {
-    "./": {
-      "import": "./",
-      "require": "./cjs/"
+    "./*": {
+      "import": "./*",
+      "require": "./cjs/*"
     }
   },
   "version": "0.0.0-semantically-released",
