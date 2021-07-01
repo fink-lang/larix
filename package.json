@@ -38,8 +38,7 @@
     "build:fnk-cjs": "fnk --module-type cjs --src ./src --out-dir build/pkg/cjs --ignore './src/**/*.test.fnk'",
     "build:files-cjs": "cp package-cjs.json ./build/pkg/cjs/package.json",
     "build:files": "cp package.json ./README.md ./LICENSE ./build/pkg/",
-    "test": "run test:build-helpers jest",
-    "test:build-helpers": "fnk --module-type cjs --src ./src/testing --out-dir build/test-helpers",
+    "test": "run jest",
     "jest": "jest --verbose --runInBand --no-cache ",
     "cd": "run clean test build release",
     "release": "semantic-release"
