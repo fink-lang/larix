@@ -185,6 +185,14 @@ jsx:elem (1:0-3:6) div
     "\\n"
 `;
 
+exports[`JSX parses hyphenated attr: <Foobar spam_ham="ni" /> 1`] = `
+jsx:elem (1:0-1:24) Foobar
+  jsx:attr (1:8-1:21)
+    ident (1:8-1:16) spam-ham
+    string " (1:17-1:21)
+      'ni'
+`;
+
 exports[`JSX parses self closing elem with expr attr: <Foobar spam={ni} /> 1`] = `
 jsx:elem (1:0-1:20) Foobar
   jsx:attr (1:8-1:17)

@@ -10,7 +10,7 @@ export default {
 
   resolver: '@fink/jest/cjs/module-resolver.js',
 
-  snapshotSerializers: ['<rootDir>/build/test-helpers/snapshot.js'],
+  snapshotSerializers: ['<rootDir>/src/testing/snapshot.fnk'],
   snapshotResolver: '@fink/jest/snapshot-resolver.js',
 
   modulePathIgnorePatterns: ['<rootDir>/build/'],

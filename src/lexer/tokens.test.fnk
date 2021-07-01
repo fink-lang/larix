@@ -29,6 +29,10 @@ describe 'tokenizer', fn:
     expect
       foo '
         01234567
+        foo_bar
+        foo-bar
+        _foo_bar
+        _foo_bar_123
         foo bar
         (shrub)
         (spam ni, hi)
@@ -79,6 +83,14 @@ describe 'JSX tokenizer', fn:
         <>
           <foo />
         </>
+      '
+      to_match_snapshot
+
+
+  it 'tokenizes hyphenated attr', fn:
+    expect
+      foo '
+        <Foobar spam-ham />
       '
       to_match_snapshot
 

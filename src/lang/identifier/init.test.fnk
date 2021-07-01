@@ -12,5 +12,10 @@ describe 'indentifiers', fn:
 
   it 'parses a non-word', fn:
     expect
-      parse_expr '  π  '
+      parse_expr ' π '
+      to_match_snapshot
+
+  it 'parses a hyphenated', fn:
+    expect
+      parse_expr ' foo-bar '
       to_match_snapshot
