@@ -188,7 +188,7 @@ jsx:elem (1:0-3:6) div
 exports[`JSX parses hyphenated attr: <Foobar spam_ham="ni" /> 1`] = `
 jsx:elem (1:0-1:24) Foobar
   jsx:attr (1:8-1:21)
-    ident (1:8-1:16) spam_ham
+    ident (1:8-1:16) spam-ham
     string " (1:17-1:21)
       'ni'
 `;
