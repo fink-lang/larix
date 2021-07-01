@@ -24,6 +24,12 @@ describe 'JSX', fn:
       to_match_snapshot
 
 
+  it 'parses hyphenated attr: <Foobar spam_ham="ni" />', fn:
+    expect
+      parse_expr '<Foobar spam-ham="ni" />'
+      to_match_snapshot
+
+
   it "parses self closing elem with str attr: <Foobar spam='ni' />", fn:
     expect
       parse_expr "<Foobar spam='ni' />"

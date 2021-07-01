@@ -66,6 +66,25 @@ end (51-51) (7:0-7:0)
   \\"\\""
 `;
 
+exports[`JSX tokenizer tokenizes hyphenated attr 1`] = `
+"jsx-elem-start (0-1) (1:0-1:1)
+  \\"<\\"
+ident (1-7) (1:1-1:7)
+  \\"Foobar\\"
+ignorable (7-8) (1:7-1:8)
+  \\" \\"
+ident (8-16) (1:8-1:16)
+  \\"spam_ham\\"
+ignorable (16-17) (1:16-1:17)
+  \\" \\"
+jsx-elem-close (17-19) (1:17-1:19)
+  \\"/>\\"
+ignorable (19-20) (1:19-2:0)
+  \\"\\\\n\\"
+end (20-20) (2:0-2:0)
+  \\"\\""
+`;
+
 exports[`JSX tokenizer tokenizes jsx 1`] = `
 "jsx-elem-start (0-1) (1:0-1:1)
   \\"<\\"

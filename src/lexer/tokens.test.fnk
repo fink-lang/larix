@@ -83,6 +83,14 @@ describe 'JSX tokenizer', fn:
       to_match_snapshot
 
 
+  it 'tokenizes hyphenated attr', fn:
+    expect
+      foo '
+        <Foobar spam-ham />
+      '
+      to_match_snapshot
+
+
   it 'tokenizes expr-attr', fn:
     expect
       foo '
