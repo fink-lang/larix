@@ -30,6 +30,7 @@ describe 'tokenizer', fn:
       foo '
         01234567
         foo_bar
+        foo-bar
         _foo_bar
         _foo_bar_123
         foo bar

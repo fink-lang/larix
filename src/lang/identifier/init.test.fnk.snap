@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`indentifiers parses a non-word 1`] = `ident (1:2-1:3) π`;
+exports[`indentifiers parses a hyphenated 1`] = `ident (1:1-1:8) foo-bar`;
+
+exports[`indentifiers parses a non-word 1`] = `ident (1:1-1:2) π`;
 
 exports[`indentifiers parses a word 1`] = `ident (1:2-1:8) foobar`;
