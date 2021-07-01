@@ -74,7 +74,7 @@ ident (1-7) (1:1-1:7)
 ignorable (7-8) (1:7-1:8)
   \\" \\"
 ident (8-16) (1:8-1:16)
-  \\"spam_ham\\"
+  \\"spam-ham\\"
 ignorable (16-17) (1:16-1:17)
   \\" \\"
 jsx-elem-close (17-19) (1:17-1:19)
