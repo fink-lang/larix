@@ -1,4 +1,5 @@
-{curr_loc, curr_value} = import '@fink/prattler/parser.fnk'
+{advance, curr_loc, curr_value, next_is} = import '@fink/prattler/parser.fnk'
+
 {add_separator, add_operator} = import '@fink/prattler/expressions.fnk'
 
 {prefix, terminator} = import '../expressions.fnk'
@@ -23,12 +24,27 @@ named_block = fn token_type, expr_type, block_expr:
     ...prefix token_type
 
     nud: fn: fn ctx:
-      {start} = curr_loc ctx
+      {start, end} = curr_loc ctx
       op = curr_value ctx
 
-      [{exprs: args}, body_ctx] = terminated_block ctx, ':'
-      [{exprs, comments, loc}, next_ctx] = indented_block body_ctx, block_expr
-      [{type: expr_type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
+      match ctx:
+        next_is ?, 'fn':
+          [expr, next_ctx] = single_expression ctx
+          args = [expr]
+          callee = {type: 'ident', value: token_type, loc: {start, end}}
+          [{type: 'call', callee, args, loc: {...expr.loc, start}}, next_ctx]
+
+        next_is ?, '=':
+          op = '='
+          left = {type: 'ident', value: token_type, loc: {start, end}}
+          [right, next_ctx] = single_expression advance ctx
+          [{type: 'assign', op, left, right, loc: {start, end: right.loc.end}}, next_ctx]
+
+        else:
+          [{exprs: args}, body_ctx] = terminated_block ctx, ':'
+
+          [{exprs, comments, loc}, next_ctx] = indented_block body_ctx, block_expr
+          [{type: expr_type, op, args, exprs, comments, loc: {start, end: loc.end}}, next_ctx]
 
 
 

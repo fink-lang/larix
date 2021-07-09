@@ -26,6 +26,7 @@ key_expr = fn ctx:
     {type: ? in ['ident', '...', '(', 'str-start']}:
       single_expression ctx, 0
 
+    # TODO should this be {value: ? in keywords} and be the first match?
     {type: ? in keywords}:
       identifier advance ctx
 

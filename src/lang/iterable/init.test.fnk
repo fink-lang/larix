@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
-{parse_expr} = import '../../parser.fnk'
+{parse, parse_expr} = import '../../parser.fnk'
 
 
 describe 'fold item, accu: ...', fn:
@@ -89,3 +89,66 @@ describe 'until item: ...', fn:
       '
       to_match_snapshot
 
+
+
+describe 'fn-blocks', fn:
+  it 'parses imports', fn:
+    expect
+      parse '
+        {fold, unfold, map, filter, while, until} = import "@fink/std-lib/iter.fnk"
+      '
+      to_match_snapshot
+
+  it 'parses map', fn:
+    expect
+      parse '
+        map = fn: false
+        map fn item:
+          item * 2
+      '
+      to_match_snapshot
+
+  it 'parses filter', fn:
+    expect
+      parse '
+        filter = fn: false
+        filter fn item:
+          item > 2
+      '
+      to_match_snapshot
+
+  it 'parses unfold', fn:
+    expect
+      parse '
+        unfold = fn: false
+        unfold fn item:
+          item
+      '
+      to_match_snapshot
+
+  it 'parses fold', fn:
+    expect
+      parse '
+        fold = fn: false
+        fold fn item:
+          item
+      '
+      to_match_snapshot
+
+  it 'parses while', fn:
+    expect
+      parse '
+        while = fn: false
+        while fn item:
+          item
+      '
+      to_match_snapshot
+
+  it 'parses until', fn:
+    expect
+      parse '
+        until = fn: false
+        until fn item:
+          item
+      '
+      to_match_snapshot
