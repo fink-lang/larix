@@ -1,4 +1,4 @@
-{reverse} = import '@fink/std-lib/iter.fnk'
+{map_ac, filter, reverse} = import '@fink/std-lib/iter.fnk'
 
 
 
@@ -35,7 +35,11 @@ is_parent = fn parent, expr, ctx:
 
 
 
-add_parents = map [expr, parent], , {parents={}, ...ctx}:
+with_analyze = map_ac fn item, , ctx={}: [item, , ctx]
+
+
+
+add_parents = map_ac fn [expr, parent], , {parents={}, ...ctx}:
   expr_id = get_expr_id expr
 
   next_ctx = rec:
@@ -155,8 +159,8 @@ find_binding = fn expr, ctx:
 
   [binding=false] = pipe ctx.bindings:
     reverse
-    filter {value}: name == value
-    filter binding_expr:
+    filter fn {value}: name == value
+    filter fn binding_expr:
       binding_scope = get_scope binding_expr, ctx
       is_parent binding_scope, expr_scope, ctx
 
@@ -201,7 +205,7 @@ add_ref = fn expr, ctx:
 
 
 
-add_binding_refs = map [expr, parent], , ctx:
+add_binding_refs = map_ac fn [expr, parent], , ctx:
   next_ctx = match expr:
     is_referencing ?, ctx:
       add_ref expr, ctx
@@ -216,7 +220,7 @@ add_binding_refs = map [expr, parent], , ctx:
 
 
 
-add_duplicate_bindings = map [expr, parent], ids=[], ctx:
+add_duplicate_bindings = map_ac fn [expr, parent], ids=[], ctx:
   match expr:
     is_binding_ident ?, ctx:
       scope_id = get_expr_id get_scope expr, ctx

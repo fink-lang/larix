@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 {obj_to_json} = import '@fink/std-lib/json.fnk'
-{join} = import '@fink/std-lib/iter.fnk'
+{map, while, join} = import '@fink/std-lib/iter.fnk'
 
 {tokenize} = import './tokens.fnk'
 
@@ -9,8 +9,8 @@
 foo = fn source:
   pipe source:
     tokenize
-    until token: token.type == 'end'
-    map {type, value, loc: {start, end}}:
+    while fn token: token.type != 'end'
+    map fn {type, value, loc: {start, end}}:
       pos = '(${start.pos}-${end.pos})'
       loc = '(${start.line}:${start.column}-${end.line}:${end.column})'
       match value:

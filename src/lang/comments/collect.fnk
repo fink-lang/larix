@@ -1,3 +1,5 @@
+{map, filter} = import '@fink/std-lib/iter.fnk'
+
 {curr_indentation} = import '../block/indentation.fnk'
 
 
@@ -6,11 +8,11 @@ get_comments = fn ctx:
   ind = curr_indentation ctx
 
   [...comments] = pipe ctx.ignored_tokens:
-    filter token: match token:
+    filter fn token: match token:
       {type: 'ignorable'}: false
       {loc: {start: {column: ind}}}: true
 
-    map {type, value, loc}:
+    map fn {type, value, loc}:
       match type:
         'comment-sl':
           {type: 'comment', op: '#', loc, value: value.slice 1}
@@ -25,11 +27,11 @@ get_comments = fn ctx:
 #   ind = curr_indentation ctx
 
 #   [...comments] = pipe ctx.ignored_tokens:
-#     filter token: match token:
+#     filter fn token: match token:
 #       {type: 'ignorable'}: false
 #       {loc: {start: {column: ? >= ind}}}: true
 
-#     map {type, value, loc}:
+#     map fn {type, value, loc}:
 #       match type:
 #         'comment-sl':
 #           {type: 'comment', op: '#', loc, value: value.slice 1}

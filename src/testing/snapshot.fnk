@@ -1,3 +1,5 @@
+{map, fold} = import '@fink/std-lib/iter.fnk'
+
 {serialize} = import './serialize.fnk'
 
 
@@ -7,9 +9,9 @@ print = fn ast:
       {errors} = ast
 
       errors_text = pipe errors:
-        map {error}:
+        map fn {error}:
           error
-        fold err, str='':
+        fold fn err, str='':
           '${str}${err}\n'
 
       '
