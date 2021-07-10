@@ -1,6 +1,6 @@
 {slice} = import '@fink/std-lib/str.fnk'
 {match_all, rx, split} = import '@fink/std-lib/regex.fnk'
-{length} = import '@fink/std-lib/iter.fnk'
+{unfold_ac, length} = import '@fink/std-lib/iter.fnk'
 
 
 
@@ -245,7 +245,7 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
     matchers: [[fink_lex, 0], []]
 
   pipe:
-    unfold  , {code, start, matchers}=initial_ctx:
+    unfold_ac fn , {code, start, matchers}=initial_ctx:
       [token, next_start] = get_next_token matchers, code, start
 
       curr_matchers = update_matcher_state token, matchers

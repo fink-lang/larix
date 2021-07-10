@@ -1,19 +1,21 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
+{map, fold, flatten} = import '@fink/std-lib/iter.fnk'
+
 
 {parse} = import '../parser.fnk'
 
-{add_parents, add_binding_refs, add_duplicate_bindings, get_expr_id, get_scope} = import './analyze.fnk'
+{with_analyze, add_parents, add_binding_refs, add_duplicate_bindings, get_expr_id, get_scope} = import './analyze.fnk'
 {walk} = import './traverse.fnk'
 
 
 
-collect_exprs = fold [expr], , , ctx={}: [expr, , ctx]
+collect_exprs = fold fn [expr], , , ctx: [expr, ctx]
 
 
 collect_bindings = fn parsed:
   [, {bindings}] = collect_exprs parsed
-  [...bindings | map expr: get_expr_id expr]
+  [...bindings | map fn expr: get_expr_id expr]
 
 
 
@@ -21,16 +23,17 @@ collect_refs = fn parsed:
   [, {refs}] = collect_exprs parsed
 
   list:
-    ...refs | map [expr_id, exprs]:
-      ... exprs | map expr:
-        '${get_expr_id expr} -> ${expr_id}'
-
+    ...pipe refs:
+      map fn [expr_id, exprs]:
+        exprs | map fn expr:
+          '${get_expr_id expr} -> ${expr_id}'
+      flatten
 
 
 collect_scopes = fn parsed:
   [, ctx] = collect_exprs parsed
   list:
-    ... ctx.bindings | map expr:
+    ... ctx.bindings | map fn expr:
       '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
 
 
@@ -38,8 +41,9 @@ collect_scopes = fn parsed:
 collect_duplicate_bindings = fn parsed:
   [, ctx] = collect_exprs parsed
   list:
-    ... ctx.rebindings | map expr:
+    ... ctx.rebindings | map fn expr:
       '${get_expr_id expr}  ${get_expr_id get_scope expr, ctx}'
+
 
 
 
@@ -47,6 +51,7 @@ analyze = fn source, collector:
   pipe source:
     parse ?, 'test.fnk'
     walk [?]
+    with_analyze
     add_parents
     add_binding_refs
     add_duplicate_bindings
@@ -84,7 +89,7 @@ source = '
   na = [...ni, false, true]
   fn foo: {foo}
 
-  map await ham:
+  map fn ham:
     ham + 1
 '
 

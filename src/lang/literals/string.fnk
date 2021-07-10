@@ -5,7 +5,7 @@
 
 {rx, match_all, replace_all} = import '@fink/std-lib/regex.fnk'
 {starts_with, slice} = import '@fink/std-lib/str.fnk'
-{length} = import '@fink/std-lib/iter.fnk'
+{map, filter, flatten, length} = import '@fink/std-lib/iter.fnk'
 {min} = import '@fink/std-lib/math.fnk'
 {max_int} = import '@fink/std-lib/num.fnk'
 
@@ -88,7 +88,7 @@ get_parts = fn ctx:
 get_str_ind = fn str, min_ind:
   matched = match_all str, rx'\n([ ]{${min_ind},})'
   pipe matched:
-    map [, spaces]: length spaces
+    map fn [, spaces]: length spaces
 
 
 
@@ -96,13 +96,15 @@ get_unindent = fn ctx, parts:
   min_ind = 1 + curr_indentation ctx
 
   ind = pipe parts:
-    filter part:
+    filter fn part:
       match part:
         {type: 'string:text'}: true
         else: false
 
-    map part:
-      ...get_str_ind part.value, min_ind
+    map fn part:
+      get_str_ind part.value, min_ind
+
+    flatten
 
     min max_int, ...?
 
@@ -128,7 +130,7 @@ get_unindented_text = fn ctx, op:
   unindent = get_unindent ctx, parts
 
   [first, ...rest] = pipe parts:
-    map part:
+    map fn part:
       match part:
         {type: 'string:text'}:
           value = unindent part.value

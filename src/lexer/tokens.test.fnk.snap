@@ -21,9 +21,7 @@ ignorable (17-18) (1:17-1:18)
 jsx-elem-close (18-20) (1:18-1:20)
   \\"/>\\"
 ignorable (20-21) (1:20-2:0)
-  \\"\\\\n\\"
-end (21-21) (2:0-2:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`JSX tokenizer tokenizes fragment 1`] = `
@@ -61,9 +59,7 @@ jsx-text (46-47) (5:8-6:0)
 jsx-elem-close (47-50) (6:0-6:3)
   \\"</>\\"
 ignorable (50-51) (6:3-7:0)
-  \\"\\\\n\\"
-end (51-51) (7:0-7:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`JSX tokenizer tokenizes hyphenated attr 1`] = `
@@ -80,9 +76,7 @@ ignorable (16-17) (1:16-1:17)
 jsx-elem-close (17-19) (1:17-1:19)
   \\"/>\\"
 ignorable (19-20) (1:19-2:0)
-  \\"\\\\n\\"
-end (20-20) (2:0-2:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`JSX tokenizer tokenizes jsx 1`] = `
@@ -137,9 +131,7 @@ jsx-expr-end (40-41) (1:40-1:41)
 jsx-elem-close (41-47) (1:41-1:47)
   \\"</foo>\\"
 ignorable (47-48) (1:47-2:0)
-  \\"\\\\n\\"
-end (48-48) (2:0-2:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`JSX tokenizer tokenizes jsx 2`] = `
@@ -160,9 +152,7 @@ jsx-text (12-13) (2:9-3:0)
 jsx-elem-close (13-16) (3:0-3:3)
   \\"</>\\"
 ignorable (16-17) (3:3-4:0)
-  \\"\\\\n\\"
-end (17-17) (4:0-4:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`tokenizer tokenizes 1`] = `
@@ -327,9 +317,7 @@ ignorable (178-179) (16:6-16:7)
 ident (179-182) (16:7-16:10)
   \\"bar\\"
 ignorable (182-183) (16:10-17:0)
-  \\"\\\\n\\"
-end (183-183) (17:0-17:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;
 
 exports[`tokenizer tokenizes str exprs 1`] = `
@@ -351,7 +339,5 @@ str-end (13-14) (1:13-1:14)
   \\"\\\\\\"\\"
 } (14-15) (1:14-1:15)
 ignorable (15-16) (1:15-2:0)
-  \\"\\\\n\\"
-end (16-16) (2:0-2:0)
-  \\"\\""
+  \\"\\\\n\\""
 `;

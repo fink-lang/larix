@@ -1,6 +1,7 @@
 {advance, expression, next_is, has_errors} = import '@fink/prattler/parser.fnk'
 {curr_loc, next_loc} = import '@fink/prattler/parser.fnk'
 {add_error} = import '@fink/prattler/errors.fnk'
+{unfold, filter} = import '@fink/std-lib/iter.fnk'
 
 {update_indentation, push_block, pop_block} = import './indentation.fnk'
 {next_is_unindented} = import './indentation.fnk'
@@ -46,7 +47,7 @@ next_is_nl = fn ctx:
 get_all = fn ctx, single_expr:
   # TODO this is a monster, needs breakdown
   [[, [exprs, next_ctx]]] = pipe [, [[], ctx, true, false]]:
-    unfold [, [exprs, ctx, at_start, was_comma]]:
+    unfold fn [, [exprs, ctx, at_start, was_comma]]:
       match ctx:
         has_errors ?:
           [true, [exprs, ctx]]
@@ -95,7 +96,7 @@ get_all = fn ctx, single_expr:
 
               [false, [[...exprs, expr], next_ctx, next_is_start, false]]
 
-    filter [done]: done
+    filter fn [done]: done
 
   [exprs, next_ctx]
 
