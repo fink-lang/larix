@@ -70,7 +70,7 @@ describe 'record {...}', fn:
   it 'parses keywords as keys', fn:
     expect
       parse_expr '
-        {fn, match, fold, unfold, map, find, filter, await, attempt, rec, list}
+        {fn, match, pipe, rec, list, await, throw, try}
       '
       to_match_snapshot
 
