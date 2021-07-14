@@ -11,7 +11,6 @@
 {add_func} = import './func/init.fnk'
 {add_group} = import './group/init.fnk'
 {add_assignment_operators} = import './assignment/init.fnk'
-{add_iterables} = import './iterable/init.fnk'
 {add_spread_operator} = import './spread/init.fnk'
 {add_async} = import './async/init.fnk'
 {add_import} = import './import/init.fnk'
@@ -32,7 +31,6 @@ init_language = fn ctx:
     add_func
 
     add_conditionals
-    add_iterables
 
     add_assignment_operators
 

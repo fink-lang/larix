@@ -24,8 +24,11 @@ get_loc = fn start, text:
 fink_lex = rx'
   ^(
     (?<block>(
-      fn|match|fold|unfold|else|map|filter|while|until
-      |await|import|try|throw|rec|list|pipe
+      fn|pipe|match|else|
+      rec|list|
+      import|
+      await|
+      try|throw
     )(?=\s|:))
     |(?<kwop>(in|or|and|not)(?=\s))
     |(?<value>(true|false)\b)
@@ -262,7 +265,6 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
 # testing type in keywords or just use 'ident' for keywords
 keywords = list:
   'import', 'fn', 'pipe', 'match', 'else'
-  'fold', 'unfold', 'map', 'filter', 'while', 'until'
   'list', 'rec', 'await', 'try', 'throw',
   'and', 'or', 'not', 'in', 'true', 'false'
 

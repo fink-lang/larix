@@ -280,29 +280,23 @@ rec (1:0-1:2)
 `;
 
 exports[`record {...} parses keywords as keys 1`] = `
-rec (1:0-1:71)
+rec (1:0-1:47)
   rec:kv (1:1-1:3)
     ident (1:1-1:3) fn
   rec:kv (1:5-1:10)
     ident (1:5-1:10) match
   rec:kv (1:12-1:16)
-    ident (1:12-1:16) fold
-  rec:kv (1:18-1:24)
-    ident (1:18-1:24) unfold
-  rec:kv (1:26-1:29)
-    ident (1:26-1:29) map
-  rec:kv (1:31-1:35)
-    ident (1:31-1:35) find
-  rec:kv (1:37-1:43)
-    ident (1:37-1:43) filter
-  rec:kv (1:45-1:50)
-    ident (1:45-1:50) await
-  rec:kv (1:52-1:59)
-    ident (1:52-1:59) attempt
-  rec:kv (1:61-1:64)
-    ident (1:61-1:64) rec
-  rec:kv (1:66-1:70)
-    ident (1:66-1:70) list
+    ident (1:12-1:16) pipe
+  rec:kv (1:18-1:21)
+    ident (1:18-1:21) rec
+  rec:kv (1:23-1:27)
+    ident (1:23-1:27) list
+  rec:kv (1:29-1:34)
+    ident (1:29-1:34) await
+  rec:kv (1:36-1:41)
+    ident (1:36-1:41) throw
+  rec:kv (1:43-1:46)
+    ident (1:43-1:46) try
 `;
 
 exports[`record {...} parses keywords as keys 2`] = `

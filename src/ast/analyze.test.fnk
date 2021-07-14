@@ -1,6 +1,6 @@
 {describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
-{map, fold, flatten} = import '@fink/std-lib/iter.fnk'
+{map, fold: fold_, flatten} = import '@fink/std-lib/iter.fnk'
 
 
 {parse} = import '../parser.fnk'
@@ -10,7 +10,7 @@
 
 
 
-collect_exprs = fold fn [expr], , , ctx: [expr, ctx]
+collect_exprs = fold_ [], fn [expr], , , ctx: [expr, ctx]
 
 
 collect_bindings = fn parsed:
