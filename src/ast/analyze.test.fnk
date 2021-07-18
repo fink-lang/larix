@@ -6,7 +6,7 @@
 {parse} = import '../parser.fnk'
 
 {with_analyze, add_parents, add_binding_refs, add_duplicate_bindings, get_expr_id, get_scope} = import './analyze.fnk'
-{walk} = import './traverse.fnk'
+{walk_expr} = import './traverse.fnk'
 
 
 
@@ -50,7 +50,7 @@ collect_duplicate_bindings = fn parsed:
 analyze = fn source, collector:
   pipe source:
     parse ?, 'test.fnk'
-    walk [?]
+    walk_expr
     with_analyze
     add_parents
     add_binding_refs
