@@ -14,18 +14,18 @@ Array [
   "ident:ni@12:4-12:6",
   "ident:Spam@18:0-18:4",
   "ident:children@18:11-18:19",
-  "ident:ni@27:1-27:3",
-  "ident:nu@27:10-27:12",
-  "ident:na@28:0-28:2",
-  "ident:foo@29:3-29:6",
-  "ident:ham@31:7-31:10",
+  "ident:ni@24:1-24:3",
+  "ident:nu@24:10-24:12",
+  "ident:na@25:0-25:2",
+  "ident:foo@26:3-26:6",
+  "ident:ham@28:7-28:10",
 ]
 `;
 
 exports[`analyze gets duplicate bindings 1`] = `
 Array [
-  "ident:ni@27:1-27:3  module@1:0-33:0",
-  "ident:nu@27:10-27:12  module@1:0-33:0",
+  "ident:ni@24:1-24:3  module@1:0-30:0",
+  "ident:nu@24:10-24:12  module@1:0-30:0",
 ]
 `;
 
@@ -35,7 +35,6 @@ Array [
   "ident:foo@7:18-7:21 -> ident:foo@1:0-1:3",
   "ident:foo@10:10-10:13 -> ident:foo@1:0-1:3",
   "ident:foo@12:9-12:12 -> ident:foo@1:0-1:3",
-  "ident:foo@25:2-25:5 -> ident:foo@1:0-1:3",
   "ident:bar@8:39-8:42 -> ident:bar@3:0-3:3",
   "ident:bar@10:6-10:9 -> ident:bar@3:0-3:3",
   "ident:spam@4:7-4:11 -> ident:spam@3:9-3:13",
@@ -44,7 +43,7 @@ Array [
   "ident:undef@5:7-5:12 -> unbound",
   "ident:div@16:1-16:4 -> unbound",
   "ident:ham@21:24-21:27 -> unbound",
-  "ident:map@31:0-31:3 -> unbound",
+  "ident:map@28:0-28:3 -> unbound",
   "ident:ni@8:2-8:4 -> ident:ni@7:1-7:3",
   "ident:ni@8:45-8:47 -> ident:ni@7:1-7:3",
   "ident:ni@21:6-21:8 -> ident:ni@7:1-7:3",
@@ -55,30 +54,30 @@ Array [
   "ident:ni@13:8-13:10 -> ident:ni@12:4-12:6",
   "ident:Spam@21:1-21:5 -> ident:Spam@18:0-18:4",
   "ident:children@19:5-19:13 -> ident:children@18:11-18:19",
-  "ident:ni@28:9-28:11 -> ident:ni@27:1-27:3",
-  "ident:foo@29:9-29:12 -> ident:foo@29:3-29:6",
-  "ident:ham@32:2-32:5 -> ident:ham@31:7-31:10",
+  "ident:ni@25:9-25:11 -> ident:ni@24:1-24:3",
+  "ident:foo@26:9-26:12 -> ident:foo@26:3-26:6",
+  "ident:ham@29:2-29:5 -> ident:ham@28:7-28:10",
 ]
 `;
 
 exports[`analyze gets scopes 1`] = `
 Array [
-  "ident:foo@1:0-1:3  module@1:0-33:0",
-  "ident:bar@3:0-3:3  module@1:0-33:0",
+  "ident:foo@1:0-1:3  module@1:0-30:0",
+  "ident:bar@3:0-3:3  module@1:0-30:0",
   "ident:spam@3:9-3:13  block:fn@3:6-5:12",
   "ident:ham@3:19-3:22  block:fn@3:6-5:12",
   "ident:ni@4:2-4:4  block:fn@3:6-5:12",
-  "ident:ni@7:1-7:3  module@1:0-33:0",
-  "ident:nu@7:10-7:12  module@1:0-33:0",
-  "ident:nini@8:7-8:11  module@1:0-33:0",
-  "ident:spam@8:25-8:29  module@1:0-33:0",
+  "ident:ni@7:1-7:3  module@1:0-30:0",
+  "ident:nu@7:10-7:12  module@1:0-30:0",
+  "ident:nini@8:7-8:11  module@1:0-30:0",
+  "ident:spam@8:25-8:29  module@1:0-30:0",
   "ident:ni@12:4-12:6  match:expr@11:2-13:11",
-  "ident:Spam@18:0-18:4  module@1:0-33:0",
+  "ident:Spam@18:0-18:4  module@1:0-30:0",
   "ident:children@18:11-18:19  block:fn@18:7-19:17",
-  "ident:ni@27:1-27:3  module@1:0-33:0",
-  "ident:nu@27:10-27:12  module@1:0-33:0",
-  "ident:na@28:0-28:2  module@1:0-33:0",
-  "ident:foo@29:3-29:6  block:fn@29:0-29:13",
-  "ident:ham@31:7-31:10  block:fn@31:4-33:0",
+  "ident:ni@24:1-24:3  module@1:0-30:0",
+  "ident:nu@24:10-24:12  module@1:0-30:0",
+  "ident:na@25:0-25:2  module@1:0-30:0",
+  "ident:foo@26:3-26:6  block:fn@26:0-26:13",
+  "ident:ham@28:7-28:10  block:fn@28:4-30:0",
 ]
 `;
