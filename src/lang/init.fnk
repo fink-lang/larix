@@ -16,7 +16,6 @@
 {add_import} = import './import/init.fnk'
 {add_prop_access} = import './prop-access/init.fnk'
 {add_ignorable_tokens} = import './whitespace/init.fnk'
-{add_js_ops} = import './js-compat/init.fnk'
 {add_partial} = import './partial/init.fnk'
 {add_ident} = import './identifier/init.fnk'
 
@@ -48,8 +47,6 @@ init_language = fn ctx:
     add_import
 
     add_literals
-
-    add_js_ops
 
     add_call_operators
 

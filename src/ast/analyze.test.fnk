@@ -82,9 +82,6 @@ source = '
   <Spam ni shrub=nu spam={ham + 1}>
   </Spam>
 
-  try:
-    foo
-
   [ni, ..., nu] = [1234, "spam"]
   na = [...ni, false, true]
   fn foo: {foo}
