@@ -27,8 +27,7 @@ fink_lex = rx'
       fn|pipe|match|else|
       rec|list|
       import|
-      await|
-      try|throw
+      await
     )(?=\s|:))
     |(?<kwop>(in|or|and|not)(?=\s))
     |(?<value>(true|false)\b)
@@ -265,7 +264,7 @@ tokenize = fn code, start={pos: 0, line: 1, column: 0}:
 # testing type in keywords or just use 'ident' for keywords
 keywords = list:
   'import', 'fn', 'pipe', 'match', 'else'
-  'list', 'rec', 'await', 'try', 'throw',
+  'list', 'rec', 'await'
   'and', 'or', 'not', 'in', 'true', 'false'
 
 
