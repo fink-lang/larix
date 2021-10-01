@@ -56,10 +56,6 @@ get_scope = fn expr, ctx:
   parent = get_parent expr, ctx
 
   match parent:
-    --- istanbul ignore next ---
-    false:
-      expr
-
     {type: 'module'}:
       parent
 
