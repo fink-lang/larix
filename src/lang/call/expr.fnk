@@ -22,7 +22,12 @@ next_is_call_arg = fn callee, ctx:
 
 call_expr = fn ctx, callee, arg_block:
   {start} = callee.loc
-  [{exprs: args, comments, loc}, next_ctx] = arg_block ctx
+  [{exprs, comments, loc}, next_ctx] = arg_block ctx
+  args = match exprs:
+    [?, ?]: exprs
+    [{type: 'empty'}]: []
+    else: exprs
+
   [{type: 'call', callee, args, comments, loc: {...loc, start}}, next_ctx]
 
 

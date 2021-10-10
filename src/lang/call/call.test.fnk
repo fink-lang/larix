@@ -38,16 +38,6 @@ describe 'call expr', fn:
   it 'parses no args call expr', fn:
     expect
       parse '
-        foo ()
-        [(foo ()), bar]
-        list:
-          foo ()
-          bar
-      '
-      to_match_snapshot
-
-    expect
-      parse '
         foo _
         [(foo _), bar]
         list:

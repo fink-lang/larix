@@ -1,4 +1,4 @@
-{describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
+{skip, describe, it, expect, to_match_snapshot} = import '@fink/jest/test.fnk'
 
 {parse} = import '../../parser.fnk'
 
@@ -21,6 +21,18 @@ describe 'small pipe |', fn:
     expect
       parse '
         foo = 134 | is_int
+      '
+      to_match_snapshot
+
+
+  # TODO: add support to allow block like pipe using |
+  skip.it 'pipes like block', fn:
+    expect
+      parse '
+        ni = 134
+          | foo
+          | bar spam
+          | ham
       '
       to_match_snapshot
 
